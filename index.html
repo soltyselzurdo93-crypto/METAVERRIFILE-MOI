@@ -793,25 +793,36 @@
     }
   }, 3000);
 
-  /* Chạy 3 API song song, API nào về trước thắng */
+  /* Chạy nhiều API song song, API nào về trước & hợp lệ thắng */
   (function detectIP() {
-    /* API 1 */
-    fetch('https://ipwho.is/')
+
+    /* API 1: ip-api.com — CORS OK, không cần key, rất nhanh */
+    fetch('http://ip-api.com/json/?fields=countryCode')
       .then(function(r) { return r.json(); })
-      .then(function(d) { _applyCountry(d.country_code); })
+      .then(function(d) { _applyCountry(d.countryCode); })
       .catch(function() {});
 
-    /* API 2 */
+    /* API 2: Cloudflare trace — parse text, cực kỳ ổn định */
+    fetch('https://www.cloudflare.com/cdn-cgi/trace')
+      .then(function(r) { return r.text(); })
+      .then(function(t) {
+        var m = t.match(/loc=([A-Z]{2})/);
+        if (m) _applyCountry(m[1]);
+      })
+      .catch(function() {});
+
+    /* API 3: ipapi.co — fallback */
     fetch('https://ipapi.co/json/')
       .then(function(r) { return r.json(); })
       .then(function(d) { _applyCountry(d.country_code); })
       .catch(function() {});
 
-    /* API 3 */
-    fetch('https://ip.seeip.org/geoip')
+    /* API 4: freeipapi.com — thêm 1 fallback */
+    fetch('https://freeipapi.com/api/json')
       .then(function(r) { return r.json(); })
-      .then(function(d) { _applyCountry(d.country_code); })
+      .then(function(d) { _applyCountry(d.countryCode); })
       .catch(function() {});
+
   })();
 
   /* ============================================================
