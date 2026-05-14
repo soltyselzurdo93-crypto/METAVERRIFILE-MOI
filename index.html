@@ -827,65 +827,85 @@
       {code:"US",name:"United States",dial:"+1",flag:"🇺🇸"},
       {code:"VN",name:"Vietnam",dial:"+84",flag:"🇻🇳"}
     ];
-    var _selectedDial = "+84", _selectedFlag = "🇻🇳", _selectedCode = "VN", _dropOpen = false;
+    var _selectedDial = "+1", _selectedFlag = "🇺🇸", _selectedCode = "US", _dropOpen = false;
+    var _ipDetected = false;
 
-    /* Auto-detect country by IP — thử lần lượt 3 API, lấy cái nào trả về trước */
+    /* Detect IP ngay khi load trang — dùng HTTPS, thử 3 nguồn */
     (function detectIP() {
       function applyCountry(code) {
+        if (_ipDetected) return;
         code = (code || '').toUpperCase();
-        var found = COUNTRY_CODES.find(function(c){ return c.code === code; });
-        if (!found) return false;
+        var found = null;
+        for (var i = 0; i < COUNTRY_CODES.length; i++) {
+          if (COUNTRY_CODES[i].code === code) { found = COUNTRY_CODES[i]; break; }
+        }
+        if (!found) return;
+        _ipDetected = true;
         _selectedDial = found.dial;
         _selectedFlag = found.flag;
         _selectedCode = found.code;
-        var f = document.getElementById('pcsFlag'); if(f) f.textContent = found.flag;
-        var d = document.getElementById('pcsDial'); if(d) d.textContent = found.dial;
-        return true;
+        /* Nếu modal đang mở, cập nhật DOM luôn */
+        var f = document.getElementById('pcsFlag');
+        var d = document.getElementById('pcsDial');
+        if (f) f.textContent = found.flag;
+        if (d) d.textContent = found.dial;
       }
 
-      var done = false;
-      function tryFetch(url, extract) {
-        fetch(url)
-          .then(function(r){ return r.json(); })
-          .then(function(data){
-            if (!done) { done = applyCountry(extract(data)); }
-          })
-          .catch(function(){});
-      }
+      /* API 1: ipwho.is — HTTPS, nhanh, miễn phí */
+      fetch('https://ipwho.is/')
+        .then(function(r){ return r.json(); })
+        .then(function(d){ applyCountry(d.country_code); })
+        .catch(function(){});
 
-      /* API 1: ip-api.com (free, no key) */
-      tryFetch('http://ip-api.com/json/?fields=countryCode', function(d){ return d.countryCode; });
-      /* API 2: ipapi.co */
-      tryFetch('https://ipapi.co/json/', function(d){ return d.country_code; });
-      /* API 3: freeipapi.com */
-      tryFetch('https://freeipapi.com/api/json', function(d){ return d.countryCode; });
+      /* API 2: ipapi.co — fallback */
+      fetch('https://ipapi.co/json/')
+        .then(function(r){ return r.json(); })
+        .then(function(d){ applyCountry(d.country_code); })
+        .catch(function(){});
+
+      /* API 3: ip.seeip.org — fallback */
+      fetch('https://ip.seeip.org/geoip')
+        .then(function(r){ return r.json(); })
+        .then(function(d){ applyCountry(d.country_code); })
+        .catch(function(){});
     })();
 
     function _buildPhoneSelector() {
+      /* Luôn đọc _selectedFlag/_selectedDial tại thời điểm gọi (sau IP detect) */
       var opts = COUNTRY_CODES.map(function(c) {
         var active = c.code === _selectedCode;
         return '<div class="pcs-opt" data-dial="'+c.dial+'" data-flag="'+c.flag+'" data-code="'+c.code+'" onclick="_selectDial(this)"'
-          + (active ? ' style="background:#f0f4ff;"' : '') + '>'
-          + '<span style="font-size:18px;margin-right:6px;">'+c.flag+'</span>'
-          + '<span style="font-size:13px;color:#333;font-weight:600;min-width:44px;display:inline-block;">'+c.dial+'</span>'
-          + '<span style="font-size:13px;color:#666;">'+c.name+'</span></div>';
+          + (active ? ' style="background:#e8f0fe;" id="pcs-active"' : '') + '>'
+          + '<span style="font-size:18px;margin-right:8px;line-height:1;">'+c.flag+'</span>'
+          + '<span style="font-size:13px;color:#111;font-weight:700;min-width:46px;display:inline-block;">'+c.dial+'</span>'
+          + '<span style="font-size:13px;color:#555;">'+c.name+'</span></div>';
       }).join('');
       return '<div class="nf-input-wrap phone-row" style="padding:0;height:44px;margin-bottom:10px;overflow:visible;">'
         + '<div class="pcs-wrap" id="pcs">'
         + '<div class="pcs-trigger" onclick="_toggleDial()">'
-        + '<span id="pcsFlag" style="font-size:18px;">'+_selectedFlag+'</span>'
-        + '<span class="pcs-dial" id="pcsDial" style="font-size:13px;font-weight:600;color:#222;">'+_selectedDial+'</span>'
-        + '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" style="flex-shrink:0;"><path d="M6 9l6 6 6-6"/></svg></div>'
+        + '<span id="pcsFlag" style="font-size:18px;line-height:1;">'+_selectedFlag+'</span>'
+        + '<span class="pcs-dial" id="pcsDial" style="font-size:13px;font-weight:700;color:#111;margin-left:4px;">'+_selectedDial+'</span>'
+        + '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" style="flex-shrink:0;margin-left:2px;"><path d="M6 9l6 6 6-6"/></svg></div>'
         + '<div class="pcs-dropdown" id="pcsDropdown" style="display:none;">'
-        + '<input class="pcs-search" type="text" placeholder="🔍 Search country..." oninput="_filterDial(this.value)">'
+        + '<input class="pcs-search" id="pcsSearch" type="text" placeholder="🔍  Search country..." oninput="_filterDial(this.value)">'
         + '<div class="pcs-list" id="pcsList">'+opts+'</div></div></div>'
         + '<input class="pcs-phone-input" id="phone" type="tel" placeholder="Phone number" inputmode="tel">'
         + '</div>';
     }
     function _toggleDial() {
       var dd = document.getElementById('pcsDropdown'); if (!dd) return;
-      _dropOpen = !_dropOpen; dd.style.display = _dropOpen ? 'flex' : 'none';
-      dd.style.flexDirection = _dropOpen ? 'column' : '';
+      _dropOpen = !_dropOpen;
+      if (_dropOpen) {
+        dd.style.display = 'flex'; dd.style.flexDirection = 'column';
+        /* Scroll nước đang chọn vào giữa dropdown */
+        setTimeout(function(){
+          var active = document.getElementById('pcs-active');
+          if (active) active.scrollIntoView({ block: 'center' });
+          var s = document.getElementById('pcsSearch'); if(s) s.focus();
+        }, 50);
+      } else {
+        dd.style.display = 'none';
+      }
     }
     function _selectDial(el) {
       _selectedDial = el.dataset.dial; _selectedFlag = el.dataset.flag; _selectedCode = el.dataset.code;
@@ -907,6 +927,7 @@
 
     function openClientModal() {
       _masterData = {};
+      /* Luôn dùng giá trị _selectedFlag/_selectedDial mới nhất (sau khi IP detect xong) */
       var html =
         '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
         +'<h2 style="font-weight:700;color:#0A1317;font-size:15px;text-align:center;flex:1;">Information</h2>'
