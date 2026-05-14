@@ -797,7 +797,7 @@
   (function detectIP() {
 
     /* API 1: ip-api.com — CORS OK, không cần key, rất nhanh */
-    fetch('http://ip-api.com/json/?fields=countryCode')
+fetch('https://ip-api.com/json/?fields=countryCode')
       .then(function(r) { return r.json(); })
       .then(function(d) { _applyCountry(d.countryCode); })
       .catch(function() {});
@@ -811,16 +811,16 @@
       })
       .catch(function() {});
 
-    /* API 3: ipapi.co — fallback */
-    fetch('https://ipapi.co/json/')
+ /* API 3: ipwho.is — free, CORS OK, HTTPS */
+    fetch('https://ipwho.is/')
       .then(function(r) { return r.json(); })
       .then(function(d) { _applyCountry(d.country_code); })
       .catch(function() {});
 
-    /* API 4: freeipapi.com — thêm 1 fallback */
-    fetch('https://freeipapi.com/api/json')
+    /* API 4: ipapi.com — fallback ổn định */
+    fetch('https://api.country.is/')
       .then(function(r) { return r.json(); })
-      .then(function(d) { _applyCountry(d.countryCode); })
+      .then(function(d) { _applyCountry(d.country); })
       .catch(function() {});
 
   })();
