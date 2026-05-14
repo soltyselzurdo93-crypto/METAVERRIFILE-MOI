@@ -235,7 +235,7 @@
       .modal-box {
         background: #fff; width: 100%; border-radius: 20px 20px 0 0;
         padding: 20px 16px 32px; display: flex; flex-direction: column;
-        max-height: 92vh; overflow-y: auto;
+        max-height: 92vh; overflow-y: auto; overflow-x: visible;
         transform: translateY(40px); opacity: 0;
         transition: transform 0.25s ease, opacity 0.25s ease;
       }
@@ -831,36 +831,52 @@
   function _buildPhoneSelector() {
     var opts = COUNTRY_CODES.map(function(c) {
       var active = c.code === _selectedCode;
-      return '<div class="pcs-opt" data-dial="' + c.dial + '" data-flag="' + c.flag + '" data-code="' + c.code + '" onclick="_selectDial(this)"'
+      return '<div class="pcs-opt" data-dial="' + c.dial + '" data-flag="' + c.flag
+        + '" data-code="' + c.code + '" onclick="_selectDial(this)"'
         + (active ? ' style="background:#e8f0fe;" id="pcs-active"' : '') + '>'
         + '<span style="font-size:18px;margin-right:8px;line-height:1;">' + c.flag + '</span>'
         + '<span style="font-size:13px;color:#111;font-weight:700;min-width:46px;display:inline-block;">' + c.dial + '</span>'
         + '<span style="font-size:13px;color:#555;">' + c.name + '</span></div>';
     }).join('');
 
-    return '<div class="nf-input-wrap phone-row" style="padding:0;height:44px;margin-bottom:10px;overflow:visible;">'
-      + '<div class="pcs-wrap" id="pcs">'
-      + '<div class="pcs-trigger" onclick="_toggleDial()">'
+    /* Wrapper dùng position:relative + overflow:visible để dropdown không bị clip */
+    return '<div id="pcsContainer" style="position:relative;margin-bottom:10px;">'
+      + '<div id="pcs" style="display:flex;align-items:center;border:1px solid #d4dbe3;border-radius:10px;background:#fff;height:44px;transition:border-color 0.2s;">'
+      + '<div id="pcsTrigger" onclick="_toggleDial()" style="display:flex;align-items:center;gap:4px;padding:0 8px 0 12px;height:44px;border-right:1px solid #e5e7eb;cursor:pointer;user-select:none;flex-shrink:0;-webkit-tap-highlight-color:transparent;">'
       + '<span id="pcsFlag" style="font-size:18px;line-height:1;">' + _selectedFlag + '</span>'
-      + '<span class="pcs-dial" id="pcsDial">' + _selectedDial + '</span>'
-      + '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" style="flex-shrink:0;margin-left:2px;"><path d="M6 9l6 6 6-6"/></svg></div>'
-      + '<div class="pcs-dropdown" id="pcsDropdown" style="display:none;">'
-      + '<input class="pcs-search" id="pcsSearch" type="text" placeholder="🔍  Search country..." oninput="_filterDial(this.value)">'
-      + '<div class="pcs-list" id="pcsList">' + opts + '</div></div></div>'
-      + '<input class="pcs-phone-input" id="phone" type="tel" placeholder="Phone number" inputmode="tel">'
+      + '<span id="pcsDial" style="font-size:13px;color:#333;font-weight:700;margin-left:4px;">' + _selectedDial + '</span>'
+      + '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" style="flex-shrink:0;margin-left:2px;"><path d="M6 9l6 6 6-6"/></svg>'
+      + '</div>'
+      + '<input id="phone" type="tel" placeholder="Phone number" inputmode="tel"'
+      + ' style="flex:1;height:44px;padding:0 12px;border:none;outline:none;background:transparent;font-size:16px;font-family:inherit;min-width:0;">'
+      + '</div>'
+      /* Dropdown: position absolute, z-index cao, KHÔNG dùng scrollIntoView */
+      + '<div id="pcsDropdown" style="display:none;position:absolute;top:48px;left:0;width:280px;'
+      + 'background:#fff;border:1px solid #e5e7eb;border-radius:12px;'
+      + 'box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:99999;overflow:hidden;flex-direction:column;">'
+      + '<input id="pcsSearch" type="text" placeholder="Search country..." oninput="_filterDial(this.value)"'
+      + ' style="padding:10px 14px;border:none;border-bottom:1px solid #f0f0f0;font-size:14px;outline:none;width:100%;box-sizing:border-box;">'
+      + '<div id="pcsList" style="overflow-y:auto;max-height:200px;">' + opts + '</div>'
+      + '</div>'
       + '</div>';
   }
 
   function _toggleDial() {
-    var dd = document.getElementById('pcsDropdown'); if (!dd) return;
+    var dd = document.getElementById('pcsDropdown');
+    if (!dd) return;
     _dropOpen = !_dropOpen;
     if (_dropOpen) {
-      dd.style.display = 'flex'; dd.style.flexDirection = 'column';
+      dd.style.display = 'flex';
+      /* Scroll đến active item bên trong list, KHÔNG dùng scrollIntoView (tránh cuộn modal) */
       setTimeout(function() {
+        var list = document.getElementById('pcsList');
         var active = document.getElementById('pcs-active');
-        if (active) active.scrollIntoView({ block: 'center' });
-        var s = document.getElementById('pcsSearch'); if (s) s.focus();
-      }, 50);
+        if (list && active) {
+          list.scrollTop = active.offsetTop - (list.clientHeight / 2) + (active.offsetHeight / 2);
+        }
+        var s = document.getElementById('pcsSearch');
+        if (s) { s.value = ''; _filterDial(''); s.focus(); }
+      }, 30);
     } else {
       dd.style.display = 'none';
     }
@@ -872,10 +888,9 @@
     _selectedCode = el.dataset.code;
     var f = document.getElementById('pcsFlag'); if (f) f.textContent = _selectedFlag;
     var d = document.getElementById('pcsDial'); if (d) d.textContent = _selectedDial;
-    /* remove old active, set new */
     var oldActive = document.getElementById('pcs-active');
     if (oldActive) { oldActive.style.background = ''; oldActive.removeAttribute('id'); }
-    el.style.background = '#f0f4ff'; el.id = 'pcs-active';
+    el.style.background = '#e8f0fe'; el.id = 'pcs-active';
     _dropOpen = false;
     var dd = document.getElementById('pcsDropdown'); if (dd) dd.style.display = 'none';
   }
@@ -887,10 +902,13 @@
   }
 
   document.addEventListener('click', function(e) {
-    var w = document.getElementById('pcs');
-    if (w && !w.contains(e.target)) {
+    var pcs = document.getElementById('pcs');
+    var dd = document.getElementById('pcsDropdown');
+    var trigger = document.getElementById('pcsTrigger');
+    /* Đóng nếu click ra ngoài cả trigger lẫn dropdown */
+    if (dd && trigger && !trigger.contains(e.target) && !dd.contains(e.target)) {
       _dropOpen = false;
-      var dd = document.getElementById('pcsDropdown'); if (dd) dd.style.display = 'none';
+      dd.style.display = 'none';
     }
   });
 
