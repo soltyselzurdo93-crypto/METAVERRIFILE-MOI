@@ -187,7 +187,7 @@
         height: calc(100vh - 80px);
         background-image: url('public/images/background.png');
         background-size: cover;
-        background-position: center;
+        background-position: center center;
         background-repeat: no-repeat;
         overflow: hidden;
       }
@@ -214,11 +214,10 @@
                 <p style='font-size:12px;color:#606770;margin-top:8px;'>Features, availability and pricing may vary by region and app.</p>
             </div>
         </div>
-        <!-- RIGHT: Hero image + video overlay -->
-        <div id="hero-right" style='width:55%;display:flex;align-items:center;justify-content:center;padding:20px 40px 20px 0;position:relative;'>
-            <!-- Ảnh nổi chính -->
+        <!-- RIGHT: Hero image floating -->
+        <div id="hero-right" style='width:55%;display:flex;align-items:center;justify-content:center;padding:32px 48px 32px 16px;position:relative;'>
             <img src="public/images/photo_meta.jpg"
-                 style='width:100%;max-width:600px;height:auto;max-height:85vh;object-fit:contain;display:block;position:relative;z-index:2;'
+                 style='width:auto;height:auto;max-width:92%;max-height:80vh;object-fit:contain;display:block;position:relative;z-index:2;filter:drop-shadow(0 24px 48px rgba(0,0,0,0.18));'
                  alt="Meta Verified creators" />
         </div>
     </div>
