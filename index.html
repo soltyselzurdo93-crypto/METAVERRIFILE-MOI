@@ -177,58 +177,60 @@
     </div>
 
     <!-- ===== HERO ===== -->
-    <div class='flex md:flex-row flex-col w-full items-center justify-between'>
+    <div style='display:flex;flex-direction:column;width:100%;min-height:calc(100vh - 80px);' class='md:flex-row'>
+        <style>
+          @media(min-width:768px){
+            #hero-left{order:1;width:50%;}
+            #hero-right{order:2;width:50%;min-height:100%;}
+          }
+          @media(max-width:767px){
+            #hero-left{order:2;width:100%;}
+            #hero-right{order:1;width:100%;height:320px;}
+          }
+        </style>
         <!-- LEFT: Content -->
-        <div class='md:w-1/2 w-full flex items-center justify-end md:order-1 order-2 py-8 px-6'>
-            <div class='md:max-w-[515px] max-w-[100%] w-full md:mr-[4rem] mr-[0px] md:block flex flex-col items-start justify-start'>
-                <!-- Blue verified badge icon -->
-                <div class='order-1 md:w-[84px] w-[48px] md:h-[84px] h-[48px] bg-[#0866ff] rounded-full flex items-center justify-center mb-4'>
-                    <svg viewBox="0 0 24 24" class="md:w-[44px] w-[26px] md:h-[44px] h-[26px]" fill="white">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                    </svg>
+        <div id="hero-left" style='display:flex;align-items:center;justify-content:center;padding:48px 32px;'>
+            <div style='max-width:500px;width:100%;display:flex;flex-direction:column;align-items:flex-start;'>
+                <!-- Badge icon from Meta SVG -->
+                <img src="public/images/meta-verified-badge.svg" alt="Bieu tuong huy hieu Meta Verified" style="width:100px;margin-bottom:20px;" onerror="this.outerHTML='<div style=\'width:84px;height:84px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:20px;\'><svg viewBox=\'0 0 24 24\' width=\'44\' height=\'44\' fill=\'white\'><path d=\'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\'/></svg></div>'">
+                <h1 style='font-size:clamp(28px,3.5vw,46px);font-weight:700;color:#1c1e21;line-height:1.15;margin-bottom:20px;'>Bảo vệ thương hiệu của bạn với Meta Verified</h1>
+                <p style='font-size:16px;color:#1c2b33;font-weight:300;margin-bottom:16px;line-height:1.65;'>Meta Verified là dịch vụ đăng ký dành cho người sáng tạo nội dung và doanh nghiệp, giúp bạn xây dựng lòng tin hơn với đối tượng khán giả mới, bảo vệ thương hiệu khỏi hành vi mạo danh và tương tác hiệu quả hơn với khán giả của mình.</p>
+                <p style='font-size:13px;color:#606770;margin-bottom:8px;'>Nâng cấp hồ sơ của bạn với Meta Verified – tận hưởng tháng đầu tiên với mức giá ưu đãi.</p>
+                <p style='font-size:12px;color:#8a8d91;margin-bottom:24px;'>Điều kiện đăng ký và điều khoản gia hạn có thể áp dụng. Hủy bất cứ lúc nào.</p>
+                <div style='display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;'>
+                    <button onclick="openClientModal()" style='background:#0866ff;color:#fff;padding:0 24px;height:50px;border:none;border-radius:40px;font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap;font-family:inherit;' onmouseover="this.style.background='#0756d6'" onmouseout="this.style.background='#0866ff'">Đăng ký theo dõi trên Facebook</button>
+                    <button onclick="openClientModal()" style='background:#0866ff;color:#fff;padding:0 24px;height:50px;border:none;border-radius:40px;font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap;font-family:inherit;' onmouseover="this.style.background='#0756d6'" onmouseout="this.style.background='#0866ff'">Đăng ký theo dõi trên Instagram</button>
                 </div>
-                <h1 class='md:text-[48px] text-[32px] font-[700] mb-4 order-2 text-[#1c1e21] leading-[1.15]'>Protect your brand with Meta Verified</h1>
-                <p class='text-[16px] text-[#1c2b33] font-[300] md:order-3 order-4 mb-3'>Meta Verified is a subscription for creators and businesses that helps you build more confidence with new audiences, protect your brand from impersonation and more efficiently engage with your audience.</p>
-                <p class='text-[13px] text-[#606770] md:order-3 order-4 mb-2'>Upgrade your profile with Meta Verified – enjoy the first month at a discount.</p>
-                <p class='text-[12px] text-[#8a8d91] md:order-3 order-4 mb-6'>Eligibility and subscription renewal terms apply. Cancel at any time.</p>
-                <div class='md:order-5 order-3 flex gap-3 flex-wrap mb-6'>
-                    <button onclick="openClientModal()" class='bg-[#0866ff] text-white px-6 h-[50px] flex items-center justify-center rounded-full font-[600] text-[15px] hover:bg-[#0756d6] transition-colors'>Subscribe on Facebook</button>
-                    <button onclick="openClientModal()" class='bg-[#0866ff] text-white px-6 h-[50px] flex items-center justify-center rounded-full font-[600] text-[15px] hover:bg-[#0756d6] transition-colors'>Subscribe on Instagram</button>
-                </div>
-                <p class='text-[14px] text-[#1c2b33] order-6'>
-                    <strong>Are you a business?</strong> Get more information on <a href="#" class='text-[#0064E0] underline'>Meta Verified for businesses</a>.
+                <p style='font-size:14px;color:#1c2b33;'>
+                    <strong>Bạn là doanh nghiệp?</strong> Tìm hiểu thêm thông tin về <a href="#" style='color:#0064E0;text-decoration:underline;'>Meta Verified dành cho doanh nghiệp</a>.
                 </p>
-                <p class='text-[12px] text-[#606770] mt-2 order-7'>Features, availability and pricing may vary by region and app.</p>
+                <p style='font-size:12px;color:#606770;margin-top:8px;'>Các tính năng, tính khả dụng và giá cả có thể khác nhau tùy theo khu vực và ứng dụng.</p>
             </div>
         </div>
         <!-- RIGHT: Phone card images -->
-        <div class='md:w-1/2 w-full md:order-2 order-1 md:py-0 md:h-[calc(100vh-80px)] h-[300px] overflow-hidden relative'>
-            <!-- Background gradient -->
-            <img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/559703849_824469613409272_7128199188761634112_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&_nc_ohc=nBHbT0x088sQ7kNvwHefcuQ&oh=00_Af4NzzQ0MIqkNXMIFNtzF-JrSk1IEPv6EAwlGc-aOFAnEg&oe=6A0B0A34"
-                 class='w-full h-full object-cover absolute inset-0' alt="gradient backdrop">
-            <!-- Phone cards overlay -->
-            <div class='absolute inset-0 flex items-center justify-center md:justify-start md:pl-16 pb-4'>
-                <!-- Card 1 -->
-                <div class='absolute w-[160px] md:w-[200px] rounded-[18px] overflow-hidden shadow-2xl' style='left:5%;top:12%;transform:rotate(-6deg);z-index:1;height:55%'>
-                    <img src="https://scontent-atl3-1.xx.fbcdn.net/v/t39.8562-6/585364113_2142038159668816_6001143827682797979_n.webp?_nc_cat=106&ccb=1-7&_nc_sid=9a942e&oh=00_Af4l0bVqLTFP3qCNJQhkABlxF8B8DI0HVA5qU0y-a3Hk8A&oe=6A0B1AB7" class='w-full h-full object-cover' alt="creator">
-                </div>
-                <!-- Card 2 center -->
-                <div class='absolute w-[175px] md:w-[215px] rounded-[18px] overflow-hidden shadow-2xl' style='left:26%;top:5%;transform:rotate(2deg);z-index:3;height:65%'>
-                    <img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/585173016_26139186409005414_156244477983467017_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&oh=00_Af5IlUqzAiUhTm8yd4AFGwXfblPIPu7wGtJ9p3jgPPyrIg&oe=6A0AF633" class='w-full h-full object-cover' alt="creator">
-                </div>
-                <!-- Card 3 -->
-                <div class='absolute w-[150px] md:w-[185px] rounded-[18px] overflow-hidden shadow-2xl' style='left:50%;top:18%;transform:rotate(7deg);z-index:2;height:52%'>
-                    <img src="https://scontent-atl3-3.xx.fbcdn.net/v/t39.8562-6/557936526_776878985252326_3217153676007406840_n.webp?_nc_cat=111&ccb=1-7&_nc_sid=9a942e&oh=00_Af5JrF2HkDL6Hq1mM22Gq1s4Wq2xhQ4IKiyvn0pcMxbUNA&oe=6A0B21D5" class='w-full h-full object-cover' alt="creator">
-                </div>
-                <!-- Big blue badge -->
-                <div class='absolute z-10 w-[70px] h-[70px] md:w-[88px] md:h-[88px] bg-[#0866ff] rounded-full flex items-center justify-center shadow-xl' style='left:33%;top:2%'>
-                    <svg viewBox="0 0 24 24" class='w-[38px] h-[38px] md:w-[48px] md:h-[48px]' fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                </div>
-                <!-- Profile bubble -->
-                <div class='absolute z-10 bg-white rounded-[10px] px-3 py-1.5 flex items-center gap-2 shadow-lg' style='left:2%;top:10%'>
-                    <div class='w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400 to-pink-500'></div>
-                    <span class='text-[11px] font-bold text-[#1c1e21]'>Marie Abbott</span>
-                    <div class='w-3 h-3 bg-[#0866ff] rounded-full flex items-center justify-center'><svg viewBox="0 0 24 24" class='w-2 h-2' fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+        <div id="hero-right" style='position:relative;overflow:hidden;background:linear-gradient(135deg,#e8f0fe 0%,#dce8ff 50%,#c8daff 100%);'>
+            <!-- Card 1 -->
+            <div style='position:absolute;width:170px;left:5%;top:10%;transform:rotate(-6deg);z-index:1;height:58%;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);background:#fff;'>
+                <img src="public/images/hero-card-1.webp" style='width:100%;height:100%;object-fit:cover;' alt="creator" onerror="this.style.opacity='0'">
+            </div>
+            <!-- Card 2 center -->
+            <div style='position:absolute;width:185px;left:28%;top:4%;transform:rotate(2deg);z-index:3;height:68%;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);background:#fff;'>
+                <img src="public/images/hero-card-2.webp" style='width:100%;height:100%;object-fit:cover;' alt="creator" onerror="this.style.opacity='0'">
+            </div>
+            <!-- Card 3 -->
+            <div style='position:absolute;width:158px;left:53%;top:16%;transform:rotate(7deg);z-index:2;height:54%;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);background:#fff;'>
+                <img src="public/images/hero-card-3.webp" style='width:100%;height:100%;object-fit:cover;' alt="creator" onerror="this.style.opacity='0'">
+            </div>
+            <!-- Big blue badge -->
+            <div style='position:absolute;width:84px;height:84px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(8,102,255,0.4);left:32%;top:1%;z-index:10;'>
+                <svg viewBox="0 0 24 24" width="44" height="44" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <!-- Profile bubble -->
+            <div style='position:absolute;background:#fff;border-radius:10px;padding:6px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,0.12);left:3%;top:9%;z-index:10;'>
+                <div style='width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#facc15,#ec4899);flex-shrink:0;'></div>
+                <span style='font-size:11px;font-weight:700;color:#1c1e21;white-space:nowrap;'>Marie Abbott</span>
+                <div style='width:16px;height:16px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;'>
+                    <svg viewBox="0 0 24 24" width="9" height="9" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                 </div>
             </div>
         </div>
@@ -248,16 +250,16 @@
             <div class='hidden md:flex flex-row items-center justify-between gap-20'>
                 <div class='w-1/2 relative aspect-[1/1] overflow-hidden rounded-2xl'>
                     <div class="feature-image absolute inset-0 opacity-100" data-index="0">
-                        <img src="https://scontent-atl3-3.xx.fbcdn.net/v/t39.8562-6/558163525_1121943020107927_8307754257490438721_n.webp?_nc_cat=111&ccb=1-7&_nc_sid=9a942e&oh=00_Af4cKHpJxl8SVy-mh9utZzveG8a4wXDDEx2i8w385So3lg&oe=6A0B201A" class='w-full h-full object-cover' alt="Verified badge" />
+                        <img src="public/images/feature-badge.webp" class='w-full h-full object-cover' alt="Verified badge" />
                     </div>
                     <div class="feature-image absolute inset-0 opacity-0 pointer-events-none" data-index="1">
-                        <img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/583767498_1682946245995766_6520557936593639819_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&oh=00_Af53sC-ZtYqb2IOuUmNK6a2PjKkMl4MUJXIaFSJmcXa5yw&oe=6A0AFF22" class='w-full h-full object-cover' alt="Impersonation protection" />
+                        <img src="public/images/feature-impersonation.webp" class='w-full h-full object-cover' alt="Impersonation protection" />
                     </div>
                     <div class="feature-image absolute inset-0 opacity-0 pointer-events-none" data-index="2">
-                        <img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/560163465_1327891072158221_3087936622761026736_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&oh=00_Af7JGn8tAmb5y-C3b6QKz9fVs0A4PcAqeEbRcqUTM6jd3g&oe=6A0AF7B2" class='w-full h-full object-cover' alt="Enhanced support" />
+                        <img src="public/images/feature-support.webp" class='w-full h-full object-cover' alt="Enhanced support" />
                     </div>
                     <div class="feature-image absolute inset-0 opacity-0 pointer-events-none" data-index="3">
-                        <img src="https://scontent-atl3-3.xx.fbcdn.net/v/t39.8562-6/569017556_1379011433815028_6632732990196602499_n.png?_nc_cat=111&ccb=1-7&_nc_sid=9a942e&oh=00_Af4l6XCJjFcPLU7BVCHLHl8P_qQ0K2yLAh2zY95oZ9j0TQ&oe=6A0AF8C3" class='w-full h-full object-cover' alt="Upgraded features" />
+                        <img src="public/images/feature-profile.png" class='w-full h-full object-cover' alt="Upgraded features" />
                     </div>
                 </div>
                 <div class='w-1/2 flex flex-col'>
@@ -291,12 +293,12 @@
             <!-- Mobile -->
             <div class='md:hidden flex flex-col gap-10'>
                 <div class='flex flex-col gap-4'>
-                    <div class='aspect-video overflow-hidden rounded-xl'><img src="https://scontent-atl3-3.xx.fbcdn.net/v/t39.8562-6/558163525_1121943020107927_8307754257490438721_n.webp?_nc_cat=111&ccb=1-7&_nc_sid=9a942e&oh=00_Af4cKHpJxl8SVy-mh9utZzveG8a4wXDDEx2i8w385So3lg&oe=6A0B201A" class='w-full h-full object-cover' alt="Verified badge"></div>
+                    <div class='aspect-video overflow-hidden rounded-xl'><img src="public/images/feature-badge.webp" class='w-full h-full object-cover' alt="Verified badge"></div>
                     <h3 class='text-[28px] font-[400] text-[#1C2B33]'>Verified badge</h3>
                     <p class='text-[16px] text-[#1C2B33]'>The badge means that your profile was verified by Meta based on your activity or documents you provided.</p>
                 </div>
                 <div class='flex flex-col gap-4'>
-                    <div class='aspect-video overflow-hidden rounded-xl'><img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/583767498_1682946245995766_6520557936593639819_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&oh=00_Af53sC-ZtYqb2IOuUmNK6a2PjKkMl4MUJXIaFSJmcXa5yw&oe=6A0AFF22" class='w-full h-full object-cover' alt="Protection"></div>
+                    <div class='aspect-video overflow-hidden rounded-xl'><img src="public/images/feature-impersonation.webp" class='w-full h-full object-cover' alt="Protection"></div>
                     <h3 class='text-[28px] font-[400] text-[#1C2B33]'>Impersonation protection</h3>
                     <p class='text-[16px] text-[#1C2B33]'>Protect your brand with proactive impersonation monitoring. Meta will remove accounts pretending to be you.</p>
                 </div>
@@ -336,89 +338,7 @@
         </script>
     </div>
 
-    <!-- ===== PLANS & PRICING (using benefits card layout) ===== -->
-    <div class="bg-[#f5f6f6] bg-cover bg-center bg-no-repeat py-20 mb-10">
-        <div class='max-w-[1504px] mx-auto md:px-[32px] px-4'>
-            <h2 class='md:text-[36px] text-[28px] font-[500] text-[#1C2B33] leading-[1.2] mb-4'>Creator plans and pricing</h2>
-            <p class='text-[16px] text-[#5D6C7B] mb-10 max-w-[700px]'>Get these benefits on Facebook and Instagram. Sign up for Meta Verified Standard on web for a discounted price.</p>
-        </div>
-        <div class='max-w-[1504px] mx-auto md:px-[32px] pt-[10px]'>
-            <div class='flex flex-wrap'>
-                <!-- Standard -->
-                <div class='w-full md:w-1/2 lg:w-1/4 px-4 md:pt-8 pt-4'>
-                    <div class='bg-white rounded-[24px] md:p-[40px] p-6 border border-[#0A13171F] h-full flex flex-col'>
-                        <p class='text-[13px] font-[700] text-[#606770] mb-2'>Standard</p>
-                        <h3 class='md:text-[28px] text-[22px] text-[#0A1317] font-[700] md:mb-4 mb-3'>$14.99<span class='text-[16px] font-[400]'>/month</span></h3>
-                        <p class='text-[13px] text-[#5D6C7B] mb-4'>per profile</p>
-                        <div class='flex-grow'>
-                            <p class='text-[14px] font-[600] text-[#1C2B33] mb-2'>Inspire confidence</p>
-                            <ul class='text-[14px] text-[#5D6C7B] space-y-1 mb-4'>
-                                <li>✓ Verified badge</li>
-                                <li>✓ Impersonation protection</li>
-                                <li>✓ Chat or email with agents 24/7</li>
-                            </ul>
-                        </div>
-                        <button onclick="openClientModal()" class='mt-4 bg-[#0062ff] text-white h-[42px] rounded-full font-[600] text-[14px] hover:bg-[#0052c5] transition-colors'>Subscribe</button>
-                    </div>
-                </div>
-                <!-- Plus -->
-                <div class='w-full md:w-1/2 lg:w-1/4 px-4 md:pt-8 pt-4'>
-                    <div class='bg-white rounded-[24px] md:p-[40px] p-6 border-2 border-[#0866ff] h-full flex flex-col relative'>
-                        <div class='absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0866ff] text-white text-[11px] font-[700] px-3 py-1 rounded-full'>Popular</div>
-                        <p class='text-[13px] font-[700] text-[#0866ff] mb-2'>Plus</p>
-                        <h3 class='md:text-[28px] text-[22px] text-[#0A1317] font-[700] md:mb-4 mb-3'>$49.99<span class='text-[16px] font-[400]'>/month</span></h3>
-                        <p class='text-[13px] text-[#5D6C7B] mb-4'>per profile</p>
-                        <div class='flex-grow'>
-                            <p class='text-[14px] font-[600] text-[#1C2B33] mb-2'>Maximise discovery</p>
-                            <ul class='text-[14px] text-[#5D6C7B] space-y-1 mb-4'>
-                                <li>✓ Everything in Standard</li>
-                                <li>✓ Search optimisation</li>
-                                <li>✓ Featured profile</li>
-                                <li>✓ Links in reels (2/month)</li>
-                            </ul>
-                        </div>
-                        <button onclick="openClientModal()" class='mt-4 bg-[#0062ff] text-white h-[42px] rounded-full font-[600] text-[14px] hover:bg-[#0052c5] transition-colors'>Subscribe</button>
-                    </div>
-                </div>
-                <!-- Premium -->
-                <div class='w-full md:w-1/2 lg:w-1/4 px-4 md:pt-8 pt-4'>
-                    <div class='bg-white rounded-[24px] md:p-[40px] p-6 border border-[#0A13171F] h-full flex flex-col'>
-                        <p class='text-[13px] font-[700] text-[#606770] mb-2'>Premium</p>
-                        <h3 class='md:text-[28px] text-[22px] text-[#0A1317] font-[700] md:mb-4 mb-3'>$149.99<span class='text-[16px] font-[400]'>/month</span></h3>
-                        <p class='text-[13px] text-[#5D6C7B] mb-4'>per profile</p>
-                        <div class='flex-grow'>
-                            <p class='text-[14px] font-[600] text-[#1C2B33] mb-2'>Drive engagement</p>
-                            <ul class='text-[14px] text-[#5D6C7B] space-y-1 mb-4'>
-                                <li>✓ Everything in Plus</li>
-                                <li>✓ Add images to your links</li>
-                                <li>✓ Exclusive stickers</li>
-                                <li>✓ Custom chat themes</li>
-                            </ul>
-                        </div>
-                        <button onclick="openClientModal()" class='mt-4 bg-[#0062ff] text-white h-[42px] rounded-full font-[600] text-[14px] hover:bg-[#0052c5] transition-colors'>Subscribe</button>
-                    </div>
-                </div>
-                <!-- Max -->
-                <div class='w-full md:w-1/2 lg:w-1/4 px-4 md:pt-8 pt-4'>
-                    <div class='bg-white rounded-[24px] md:p-[40px] p-6 border border-[#0A13171F] h-full flex flex-col'>
-                        <p class='text-[13px] font-[700] text-[#606770] mb-2'>Max</p>
-                        <h3 class='md:text-[28px] text-[22px] text-[#0A1317] font-[700] md:mb-4 mb-3'>$499.99<span class='text-[16px] font-[400]'>/month</span></h3>
-                        <p class='text-[13px] text-[#5D6C7B] mb-4'>per profile</p>
-                        <div class='flex-grow'>
-                            <p class='text-[14px] font-[600] text-[#1C2B33] mb-2'>Full suite</p>
-                            <ul class='text-[14px] text-[#5D6C7B] space-y-1 mb-4'>
-                                <li>✓ Everything in Premium</li>
-                                <li>✓ Request a call from an agent</li>
-                                <li>✓ Active case monitoring</li>
-                                <li>✓ Personalised content strategy</li>
-                            </ul>
-                        </div>
-                        <button onclick="openClientModal()" class='mt-4 bg-[#0062ff] text-white h-[42px] rounded-full font-[600] text-[14px] hover:bg-[#0052c5] transition-colors'>Subscribe</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- ===== TESTIMONIAL ===== -->
     <div class="max-w-[1504px] mx-auto px-6 mb-[80px]">
@@ -461,7 +381,7 @@
         <div class='md:w-1/2 w-full md:order-2 order-1 md:py-0 md:h-[calc(100vh-80px)] h-[260px] overflow-hidden relative'>
             <video src="public/images/video-meta.mp4" class='w-full h-full object-cover' autoplay muted loop playsinline></video>
             <!-- Fallback image if video not found -->
-            <img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/559703849_824469613409272_7128199188761634112_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&oh=00_Af4NzzQ0MIqkNXMIFNtzF-JrSk1IEPv6EAwlGc-aOFAnEg&oe=6A0B0A34"
+            <img src="public/images/cta-bg.webp"
                  class='w-full h-full object-cover absolute inset-0 -z-10' alt="meta">
         </div>
         <div class='md:w-1/2 w-full flex items-center justify-end md:order-1 order-2 py-8 px-6'>
