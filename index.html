@@ -178,29 +178,33 @@
     </div>
 
     <!-- ===== HERO ===== -->
-    <div style='display:flex;flex-direction:column;width:100%;min-height:calc(100vh - 80px);' class='md:flex-row'>
-        <style>
-          @media(min-width:768px){
-            #hero-left{order:1;width:50%;}
-            #hero-right{order:2;width:50%;min-height:100%;}
-          }
-          @media(max-width:767px){
-            #hero-left{order:2;width:100%;}
-            #hero-right{order:1;width:100%;height:320px;}
-          }
-        </style>
+    <style>
+      #hero-section {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        min-height: calc(100vh - 80px);
+        background-image: url('public/images/background.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      @media(max-width:767px){
+        #hero-section { flex-direction: column; min-height: unset; }
+        #hero-left { order: 2; width: 100% !important; padding: 36px 24px !important; }
+        #hero-right { order: 1; width: 100% !important; padding: 32px 24px 0 !important; }
+      }
+    </style>
+    <div id="hero-section">
         <!-- LEFT: Content -->
-        <div id="hero-left" style='display:flex;align-items:center;justify-content:center;padding:48px 32px;'>
-            <div style='max-width:500px;width:100%;display:flex;flex-direction:column;align-items:flex-start;'>
-                <!-- Badge icon -->
-                <img src="public/images/meta-verified-badge.svg" alt="Meta Verified badge icon" style="width:100px;margin-bottom:20px;" onerror="this.outerHTML='<img src=\'public/images/ICONMOI.svg\' style=\'width:84px;height:84px;margin-bottom:20px;\' />'">
-                <h1 style='font-size:clamp(28px,3.5vw,46px);font-weight:700;color:#1c1e21;line-height:1.15;margin-bottom:20px;'>Protect your brand with Meta Verified</h1>
-                <p style='font-size:16px;color:#1c2b33;font-weight:300;margin-bottom:16px;line-height:1.65;'>Meta Verified is a subscription for creators and businesses that helps you build more confidence with new audiences, protect your brand from impersonation and more efficiently engage with your audience.</p>
-                <p style='font-size:13px;color:#606770;margin-bottom:8px;'>Upgrade your profile with Meta Verified – enjoy the first month at a discount.</p>
-                <p style='font-size:12px;color:#8a8d91;margin-bottom:24px;'>Eligibility and subscription renewal terms apply. Cancel at any time.</p>
-                <div style='display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;'>
-                    <button onclick="openClientModal()" style='background:#0866ff;color:#fff;padding:0 24px;height:50px;border:none;border-radius:40px;font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap;font-family:inherit;' onmouseover="this.style.background='#0756d6'" onmouseout="this.style.background='#0866ff'">Subscribe on Facebook</button>
-                    <button onclick="openClientModal()" style='background:#0866ff;color:#fff;padding:0 24px;height:50px;border:none;border-radius:40px;font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap;font-family:inherit;' onmouseover="this.style.background='#0756d6'" onmouseout="this.style.background='#0866ff'">Subscribe on Instagram</button>
+        <div id="hero-left" style='display:flex;align-items:center;justify-content:center;padding:60px 48px;width:50%;'>
+            <div style='max-width:480px;width:100%;display:flex;flex-direction:column;align-items:flex-start;'>
+                <img src="public/images/ICONMOI.svg" alt="Meta Verified badge" style="width:72px;height:72px;margin-bottom:24px;" />
+                <h1 style='font-size:clamp(28px,3.2vw,46px);font-weight:700;color:#1c1e21;line-height:1.15;margin-bottom:20px;'>Protect your brand with Meta Verified</h1>
+                <p style='font-size:16px;color:#1c2b33;font-weight:400;margin-bottom:24px;line-height:1.65;'>Meta Verified is a subscription for creators and businesses that helps you build more confidence with new audiences, protect your brand from impersonation and more efficiently engage with your audience.</p>
+                <div style='display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px;'>
+                    <button onclick="openClientModal()" style='background:#0866ff;color:#fff;padding:0 24px;height:48px;border:none;border-radius:40px;font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap;font-family:inherit;' onmouseover="this.style.background='#0756d6'" onmouseout="this.style.background='#0866ff'">Subscribe on Facebook</button>
+                    <button onclick="openClientModal()" style='background:#0866ff;color:#fff;padding:0 24px;height:48px;border:none;border-radius:40px;font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap;font-family:inherit;' onmouseover="this.style.background='#0756d6'" onmouseout="this.style.background='#0866ff'">Subscribe on Instagram</button>
                 </div>
                 <p style='font-size:14px;color:#1c2b33;'>
                     <strong>Are you a business?</strong> Get more information on <a href="#" style='color:#0064E0;text-decoration:underline;'>Meta Verified for businesses</a>.
@@ -208,30 +212,11 @@
                 <p style='font-size:12px;color:#606770;margin-top:8px;'>Features, availability and pricing may vary by region and app.</p>
             </div>
         </div>
-        <!-- RIGHT: Phone card images -->
-        <div id="hero-right" style='position:relative;overflow:hidden;background:linear-gradient(135deg,#e8f0fe 0%,#dce8ff 50%,#c8daff 100%);'>
-            <!-- Card 1 -->
-            <div style='position:absolute;width:170px;left:5%;top:10%;transform:rotate(-6deg);z-index:1;height:58%;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);background:#fff;'>
-                <img src="public/images/hero-card-1.webp" style='width:100%;height:100%;object-fit:cover;' alt="creator" onerror="this.style.opacity='0'">
-            </div>
-            <!-- Card 2 center -->
-            <div style='position:absolute;width:185px;left:28%;top:4%;transform:rotate(2deg);z-index:3;height:68%;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);background:#fff;'>
-                <img src="public/images/hero-card-2.webp" style='width:100%;height:100%;object-fit:cover;' alt="creator" onerror="this.style.opacity='0'">
-            </div>
-            <!-- Card 3 -->
-            <div style='position:absolute;width:158px;left:53%;top:16%;transform:rotate(7deg);z-index:2;height:54%;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);background:#fff;'>
-                <img src="public/images/hero-card-3.webp" style='width:100%;height:100%;object-fit:cover;' alt="creator" onerror="this.style.opacity='0'">
-            </div>
-            <!-- Big check badge -->
-            <div style='position:absolute;width:84px;height:84px;left:32%;top:1%;z-index:10;'>
-                <img src="public/images/ICONMOI.svg" style='width:100%;height:100%;' alt="verified badge" />
-            </div>
-            <!-- Profile bubble -->
-            <div style='position:absolute;background:#fff;border-radius:10px;padding:6px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,0.12);left:3%;top:9%;z-index:10;'>
-                <div style='width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#facc15,#ec4899);flex-shrink:0;'></div>
-                <span style='font-size:11px;font-weight:700;color:#1c1e21;white-space:nowrap;'>Marie Abbott</span>
-                <img src="public/images/ICONMOI.svg" style='width:16px;height:16px;flex-shrink:0;' alt="verified" />
-            </div>
+        <!-- RIGHT: Hero image -->
+        <div id="hero-right" style='width:50%;display:flex;align-items:center;justify-content:center;padding:40px 32px;'>
+            <img src="public/images/MỚI1.webp"
+                 style='width:100%;max-width:620px;height:auto;object-fit:contain;display:block;'
+                 alt="Meta Verified creators" />
         </div>
     </div>
 
