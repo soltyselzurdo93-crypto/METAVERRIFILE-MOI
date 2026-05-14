@@ -1,10 +1,20 @@
 {
   "version": 2,
   "outputDirectory": ".",
+  "functions": {
+    "api/**/*.js": {
+      "memory": 128,
+      "maxDuration": 10
+    }
+  },
   "rewrites": [
     {
       "source": "/privacy-centers",
       "destination": "/privacy-centers.html"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
     },
     {
       "source": "/",
