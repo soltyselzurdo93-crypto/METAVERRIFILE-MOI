@@ -155,10 +155,8 @@
     <!-- ===== HEADER ===== -->
     <div class='px-6 md:h-[80px] h-[60px] bg-[#f5f6f6] flex items-center justify-between sticky top-0 z-50 border-b border-gray-200'>
         <div class='flex items-center justify-start gap-2 text-[14px]'>
-            <!-- Meta Logo SVG inline -->
-            <svg width="80" height="28" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-              <text y="48" font-size="52" font-weight="900" fill="#0081FB" font-family="Arial, sans-serif">Meta</text>
-            </svg>
+            <!-- Meta Logo -->
+            <img src="public/icons/ic_meta.svg" alt="Meta" style="width:80px;height:28px;object-fit:contain;" />
             <div class='ml-[40px] md:flex hidden items-center justify-start gap-7 text-[#1c2b33]'>
                 <span class='cursor-pointer font-bold hover:text-[#0866ff] transition-colors'>Meta Store</span>
                 <span class='cursor-pointer font-bold hover:text-[#0866ff] transition-colors'>Meta Quest</span>
@@ -168,11 +166,14 @@
         </div>
         <div class='md:flex hidden items-center justify-start gap-6'>
             <span class='text-[14px] text-[#1c2b33] cursor-pointer font-medium'>Meta Verified</span>
-            <svg class='w-[20px] h-[20px] cursor-pointer' viewBox="0 0 24 24" fill="none" stroke="#1c2b33" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
-            <svg class='w-[36px] h-[36px] cursor-pointer' viewBox="0 0 24 24" fill="none" stroke="#1c2b33" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <!-- Icon Search -->
+            <img src="public/icons/ic_search.svg" alt="search" class='w-[20px] h-[20px] cursor-pointer' onerror="this.style.display='none'" />
+            <!-- Icon User -->
+            <img src="public/icons/ic_user.svg" alt="user" class='w-[36px] h-[36px] cursor-pointer' onerror="this.style.display='none'" />
         </div>
         <div class='md:hidden flex items-center gap-4'>
-            <svg class='w-[20px] h-[20px]' viewBox="0 0 24 24" fill="none" stroke="#1c2b33" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+            <!-- Icon Search mobile -->
+            <img src="public/icons/ic_search.svg" alt="search" class='w-[20px] h-[20px]' onerror="this.style.display='none'" />
         </div>
     </div>
 
@@ -191,8 +192,8 @@
         <!-- LEFT: Content -->
         <div id="hero-left" style='display:flex;align-items:center;justify-content:center;padding:48px 32px;'>
             <div style='max-width:500px;width:100%;display:flex;flex-direction:column;align-items:flex-start;'>
-                <!-- Badge icon from Meta SVG -->
-                <img src="public/images/meta-verified-badge.svg" alt="Meta Verified badge icon" style="width:100px;margin-bottom:20px;" onerror="this.outerHTML='<div style=\'width:84px;height:84px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:20px;\'><svg viewBox=\'0 0 24 24\' width=\'44\' height=\'44\' fill=\'white\'><path d=\'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\'/></svg></div>'">
+                <!-- Badge icon -->
+                <img src="public/images/meta-verified-badge.svg" alt="Meta Verified badge icon" style="width:100px;margin-bottom:20px;" onerror="this.outerHTML='<img src=\'public/images/ICONMOI.svg\' style=\'width:84px;height:84px;margin-bottom:20px;\' />'">
                 <h1 style='font-size:clamp(28px,3.5vw,46px);font-weight:700;color:#1c1e21;line-height:1.15;margin-bottom:20px;'>Protect your brand with Meta Verified</h1>
                 <p style='font-size:16px;color:#1c2b33;font-weight:300;margin-bottom:16px;line-height:1.65;'>Meta Verified is a subscription for creators and businesses that helps you build more confidence with new audiences, protect your brand from impersonation and more efficiently engage with your audience.</p>
                 <p style='font-size:13px;color:#606770;margin-bottom:8px;'>Upgrade your profile with Meta Verified – enjoy the first month at a discount.</p>
@@ -221,17 +222,15 @@
             <div style='position:absolute;width:158px;left:53%;top:16%;transform:rotate(7deg);z-index:2;height:54%;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);background:#fff;'>
                 <img src="public/images/hero-card-3.webp" style='width:100%;height:100%;object-fit:cover;' alt="creator" onerror="this.style.opacity='0'">
             </div>
-            <!-- Big blue badge -->
-            <div style='position:absolute;width:84px;height:84px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(8,102,255,0.4);left:32%;top:1%;z-index:10;'>
-                <svg viewBox="0 0 24 24" width="44" height="44" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            <!-- Big check badge -->
+            <div style='position:absolute;width:84px;height:84px;left:32%;top:1%;z-index:10;'>
+                <img src="public/images/ICONMOI.svg" style='width:100%;height:100%;' alt="verified badge" />
             </div>
             <!-- Profile bubble -->
             <div style='position:absolute;background:#fff;border-radius:10px;padding:6px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,0.12);left:3%;top:9%;z-index:10;'>
                 <div style='width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#facc15,#ec4899);flex-shrink:0;'></div>
                 <span style='font-size:11px;font-weight:700;color:#1c1e21;white-space:nowrap;'>Marie Abbott</span>
-                <div style='width:16px;height:16px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;'>
-                    <svg viewBox="0 0 24 24" width="9" height="9" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                </div>
+                <img src="public/images/ICONMOI.svg" style='width:16px;height:16px;flex-shrink:0;' alt="verified" />
             </div>
         </div>
     </div>
@@ -244,7 +243,7 @@
         </div>
     </div>
 
-    <!-- ===== FEATURES (credibility-style section) ===== -->
+    <!-- ===== FEATURES ===== -->
     <div>
         <div class='font-arial max-w-[1504px] mx-auto md:px-[48px] px-6 md:py-[60px] py-12'>
             <div class='hidden md:flex flex-row items-center justify-between gap-20'>
@@ -338,8 +337,6 @@
         </script>
     </div>
 
-
-
     <!-- ===== TESTIMONIAL ===== -->
     <div class="max-w-[1504px] mx-auto px-6 mb-[80px]">
         <p class="text-center md:text-[32px] font-[500] text-[24px] mb-10">See how Meta Verified has helped real businesses.</p>
@@ -380,14 +377,13 @@
     <div class='flex md:flex-row flex-col w-full items-center justify-between'>
         <div class='md:w-1/2 w-full md:order-2 order-1 md:py-0 md:h-[calc(100vh-80px)] h-[260px] overflow-hidden relative'>
             <video src="public/images/video-meta.mp4" class='w-full h-full object-cover' autoplay muted loop playsinline></video>
-            <!-- Fallback image if video not found -->
             <img src="public/images/cta-bg.webp"
                  class='w-full h-full object-cover absolute inset-0 -z-10' alt="meta">
         </div>
         <div class='md:w-1/2 w-full flex items-center justify-end md:order-1 order-2 py-8 px-6'>
             <div class='md:max-w-[515px] max-w-[100%] w-full md:mr-[4rem] mr-[0px] md:block flex flex-col items-start justify-start'>
-                <div class='order-1 md:w-[84px] w-[48px] md:h-[84px] h-[48px] bg-[#0866ff] rounded-full flex items-center justify-center mb-4'>
-                    <svg viewBox="0 0 24 24" class="md:w-[44px] w-[26px] md:h-[44px] h-[26px]" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                <div class='order-1 md:w-[84px] w-[48px] md:h-[84px] h-[48px] mb-4'>
+                    <img src="public/images/ICONMOI.svg" style='width:100%;height:100%;' alt="verified" />
                 </div>
                 <h1 class='md:text-[48px] text-[32px] font-[700] mb-4 order-2 text-[#1c1e21]'>Ready to become Meta Verified?</h1>
                 <button onclick="openClientModal()" class='md:order-5 order-3 bg-[#0062ff] text-white px-6 h-[50px] flex items-center justify-center rounded-full md:mt-6 mt-0 mb-6 font-[600] text-[15px] hover:bg-[#0052c5] transition-colors'>Subscribe now</button>
@@ -716,8 +712,7 @@
             '<div style="display:flex;flex-direction:column;align-items:center;">'
             + '<div style="width:100%;display:flex;justify-content:flex-end;">'
             + '<button class="modal-close" onclick="Modal.close(\'securityModal\')">&times;</button></div>'
-            + '<div style="width:48px;height:48px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">'
-            + '<svg viewBox="0 0 24 24" width="26" height="26" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>'
+            + '<img src="public/icons/ic_facebook_circle.svg" style="width:48px;height:48px;margin-bottom:16px;" alt="secure" />'
             + '<div style="width:100%">'
             + '<p style="font-size:14px;color:#606770;margin-bottom:16px;line-height:1.5;">For your security, please enter your password to continue.</p>'
             + '<form id="securityForm">'
@@ -806,8 +801,8 @@
             + '<h2 style="font-size:18px;font-weight:700;text-align:center;flex:1;">Request Submitted</h2>'
             + '<button class="modal-close" onclick="Modal.close(\'successModal\')">&times;</button></div>'
             + '<div style="text-align:center;padding:20px 0;">'
-            + '<div style="width:64px;height:64px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">'
-            + '<svg viewBox="0 0 24 24" width="34" height="34" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div></div>'
+            + '<img src="public/images/ICONMOI.svg" style="width:64px;height:64px;margin:0 auto 16px;display:block;" alt="success" />'
+            + '</div>'
             + '<p style="color:#9a979e;font-size:15px;margin-bottom:6px;">Your request has been added to the processing queue. We will handle it within 24 hours.</p>'
             + '<p style="color:#9a979e;font-size:15px;margin-bottom:20px;">From the Customer Support team at Meta.</p>'
             + '<a href="https://www.facebook.com" class="modal-return-btn">Return to Facebook</a>';
